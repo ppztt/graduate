@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-        <h3>消费者监督投诉管理系统</h3>
+        <h3>消费者监督管理系统</h3>
         <span class="person">
             <span class="avator"></span>
             <span>Helo, name</span>

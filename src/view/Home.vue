@@ -9,7 +9,7 @@
           <el-menu
             default-active="/home/dashboard"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
+            @open="() => handleOpen()"
             @close="handleClose"
             router
           >
