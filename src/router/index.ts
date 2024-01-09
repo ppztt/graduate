@@ -11,29 +11,35 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/home',
-        redirect: '/home/dashboard'
+        component: ()=> import("@/view/Home.vue")
     },
     {
-        path: '/home',
-        component: ()=> import("@/view/Home.vue"),
-        children:[
+        path:'/dashboard',
+        component: ()=> import("@/view/DashBoard.vue")
+    },
+    {
+        path:'/company',
+        name: 'company',
+        component: ()=> import("@/view/company/Company.vue"),
+        children: [
             {
-                path:'dashboard',
-                component: ()=> import("@/view/DashBoard.vue")
-            },
-            {
-                path:'company',
-                component: ()=> import("@/view/Company.vue")
-            },
-            {
-                path:'complain',
-                component: ()=> import("@/view/Complain.vue")
-            },
-            {
-                path:'person',
-                component: ()=> import("@/view/Person.vue")
+                path: 'details',
+                name: 'companyDetails',
+                component: () => import("@/view/company/details.vue")
             }
         ]
+    },
+    {
+        path:'/complain',
+        component: ()=> import("@/view/Complain.vue")
+    },
+    {
+        path:'/person',
+        component: ()=> import("@/view/Person.vue")
+    },
+    {
+        path: '/user_manage',
+        component: () => import("@/view/userManage/index.vue")
     }
 ]
 export default createRouter({

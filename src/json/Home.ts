@@ -1,18 +1,22 @@
 export const menuList = [
     {
         name: "数据中心",
-        path:'/home/dashboard'
+        path:'/dashboard'
     },
     {
         name: "企业管理",
-        path: '/home/company'
+        path: '/company'
     },
     {
         name: "投诉管理",
-        path: '/home/complain'
+        path: '/complain'
     },
     {
         name: "个人中心",
-        path: '/home/person'
+        path: '/person'
+    },
+    {
+        name: "用户管理",
+        path: '/user_manage'
     }
 ]

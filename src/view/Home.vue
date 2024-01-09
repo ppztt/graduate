@@ -9,7 +9,7 @@
           <el-menu
             default-active="/home/dashboard"
             class="el-menu-vertical-demo"
-            @open="() => handleOpen()"
+            @open="handleOpen"
             @close="handleClose"
             router
           >
@@ -54,5 +54,8 @@ const handleClose = (key: string, keyPath: string[]) => {
 .el-menu{
   height: 100%;
   border-radius: 15px;
+}
+.el-aside{
+  min-height: calc(100vh - 90px);
 }
 </style>
