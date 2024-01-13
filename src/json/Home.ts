@@ -18,5 +18,9 @@ export const menuList = [
     {
         name: "用户管理",
         path: '/user_manage'
+    },
+    {
+        name: '角色管理',
+        path: '/role_manage'
     }
 ]

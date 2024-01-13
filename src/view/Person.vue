@@ -5,7 +5,7 @@
                 v-for="item in labelList"
                 :key="item.id"
                 :label="item.label">
-                <el-input v-model="form[item.id]" />
+                <el-input :placeholder="'请输入'+item.label" :input-style="{width: '200px'}" v-model="form[item.id]" />
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">修改</el-button>

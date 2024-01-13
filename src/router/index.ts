@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path:'/complain',
-        component: ()=> import("@/view/Complain.vue")
+        component: ()=> import("@/view/complain/Complain.vue")
     },
     {
         path:'/person',
@@ -40,6 +40,10 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/user_manage',
         component: () => import("@/view/userManage/index.vue")
+    },
+    {
+        path: '/role_manage',
+        component: () => import('@/view/roleManage/index.vue')
     }
 ]
 export default createRouter({

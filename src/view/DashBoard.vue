@@ -82,7 +82,6 @@ import Line from "@/components/Line.vue";
     color: #c2453c;
   }
 }
-
 .charts {
   display: flex;
   width: 100%;

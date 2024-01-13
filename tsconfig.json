@@ -22,11 +22,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     //配置 @
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
+    "baseUrl": "./",
+    "paths":{
+      "@": ["src"],
+      "@/*": ["src/*"],
     },
     "types": [
       "echarts"
