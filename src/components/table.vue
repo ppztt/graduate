@@ -2,7 +2,7 @@
     <div>
         <el-table 
             v-loading="loading" 
-            :data="unitDataList" 
+            :data="data" 
             :border="false" 
             height="250" 
             style="width:100%"

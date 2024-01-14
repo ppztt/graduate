@@ -24,11 +24,21 @@
           </el-menu>
         </el-aside>
         <el-main>
+          <div class="breadcrumb">
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item>
+                  首页
+                </el-breadcrumb-item>
+                <el-breadcrumb-item v-for="item in breadList" :key="item.path" :to="{ path: item.path }">
+                  {{ item.meta.title }}
+                </el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
           <router-view v-slot="{ Component }">
             <keep-alive>
               <component :is="Component"/>
             </keep-alive>
-        </router-view> 
+          </router-view> 
         </el-main>
       </el-container>
     </el-container>
@@ -36,15 +46,25 @@
 </template>
 
 <script setup lang="ts">
-import Header from "@/view/Header.vue";
-import { Menu as IconMenu } from "@element-plus/icons-vue";
-import { menuList } from "@/json/Home";
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
+    import { useRoute } from 'vue-router'
+    import { watch, reactive, ref } from 'vue'
+    import Header from "@/view/Header.vue";
+    import { Menu as IconMenu } from "@element-plus/icons-vue";
+    import { menuList } from "@/json/Home";
+
+    const route = useRoute()
+    
+    let breadList = ref([])
+
+    const handleOpen = (key: string, keyPath: string[]) => {
+      console.log(key, keyPath);
+    };
+    const handleClose = (key: string, keyPath: string[]) => {
+      console.log(key, keyPath);
+    };
+    watch(route, (nVal) => {
+      breadList.value = route.matched
+    })
 </script>
 
 <style lang="scss" scoped>
@@ -61,5 +81,13 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 .el-aside{
   min-height: calc(100vh - 90px);
+}
+.breadcrumb{
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 10px;
 }
 </style>

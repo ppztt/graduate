@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-show="route.name == 'company'">
         <div class="header">
             <div class="tools" ref="tools">
                 <!-- 工具栏 -->
@@ -167,14 +167,16 @@
         <!-- 录入弹出框 -->
         <company-dialog :isShowEnteringModal="isShowEnteringModal"></company-dialog>
     </div>
+    <router-view v-show="route.name !== 'company'"></router-view>
 </template>
 
 <script setup lang="ts">
     import { columns, statusArr } from './config.js'
     import { onMounted, reactive, ref } from 'vue';
+    import { useRoute } from 'vue-router'
     import { searchType, pagination } from '@/type/company'
     import companyDialog from './components/companyDialog.vue'
-
+    const route = useRoute()
     const statusList = [
         {
             id: 0,
@@ -209,7 +211,7 @@
     let type: string = ''
     let fullscreenLoading: boolean = false
     let canImport: boolean = false
-    let unitDataList: Array<Object> = []
+    let unitDataList = reactive([])
     let loading: boolean = false
     let pagination: pagination = {
         size: 10,

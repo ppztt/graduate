@@ -9,8 +9,7 @@
         status-icon
         :rules="rules"
         label-width="90px"
-        class="demo-ruleForm"
-      >
+        class="demo-ruleForm">
         <el-form-item label="账号： " prop="username">
           <el-input v-model="ruleForm.username" autocomplete="off" />
         </el-form-item>
@@ -18,8 +17,7 @@
           <el-input
             v-model="ruleForm.password"
             type="password"
-            autocomplete="off"
-          />
+            autocomplete="off"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" class="loginButton" @click="submitForm">登录</el-button>

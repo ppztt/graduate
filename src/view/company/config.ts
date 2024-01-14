@@ -4,6 +4,10 @@ interface colType {
     width?: number,
     fixed?: string
 }
+interface formType {
+    id: string
+    label: string
+}
 
 export const columns: Array<colType> = [
     {
@@ -67,3 +71,38 @@ export const columns: Array<colType> = [
 ]
 
 export const statusArr: Array<string> = ['在期', '过期', '待审核', '审核不通过']
+
+export const detailLabel: Array<formType> = [
+    {
+        id: 'regName',
+        label: '经营者名称'
+    },
+    {
+        id: 'storeName',
+        label: '店铺名称'
+    },
+    {
+        id: 'address',
+        label: '经营场所地区'
+    },
+    {
+        id: 'creditCode',
+        label: '统一社会信用代码'
+    },
+    {
+        id: 'validity',
+        label: '有效期'
+    },
+    {
+        id: 'businessCategory',
+        label: '经营类别'
+    },
+    {
+        id: 'principalName',
+        label: '负责人姓名'
+    },
+    {
+        id: 'principalTel',
+        label: '联系电话'
+    }
+]
