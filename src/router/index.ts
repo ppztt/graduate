@@ -7,14 +7,11 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/login',
+        name: 'login',
         component: ()=> import("@/view/Login.vue")
     },
     {
-        path: '/home',
-        component: ()=> import("@/view/Home.vue")
-    },
-    {
-        path:'/dashboard',
+        path:'/home',
         meta: {title: '数据中心'},
         component: ()=> import("@/view/DashBoard.vue")
     },

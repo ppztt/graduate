@@ -102,6 +102,6 @@
         height: 60px;
         background: #fff;
         padding: 20px;
-        border-bottom: 1px solid #ccc;
+        margin-bottom: 10px;
     }
 </style>

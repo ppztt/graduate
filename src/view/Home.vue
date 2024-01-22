@@ -47,14 +47,14 @@
 
 <script setup lang="ts">
     import { useRoute } from 'vue-router'
-    import { watch, reactive, ref } from 'vue'
+    import { watch, ref } from 'vue'
     import Header from "@/view/Header.vue";
     import { Menu as IconMenu } from "@element-plus/icons-vue";
     import { menuList } from "@/json/Home";
 
     const route = useRoute()
     
-    let breadList = ref([])
+    let breadList = ref<any>([])
 
     const handleOpen = (key: string, keyPath: string[]) => {
       console.log(key, keyPath);
@@ -62,7 +62,7 @@
     const handleClose = (key: string, keyPath: string[]) => {
       console.log(key, keyPath);
     };
-    watch(route, (nVal) => {
+    watch(route, () => {
       breadList.value = route.matched
     })
 </script>

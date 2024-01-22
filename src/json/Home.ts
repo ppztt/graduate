@@ -1,7 +1,7 @@
 export const menuList = [
     {
-        name: "数据中心",
-        path:'/dashboard'
+        name: "首页",
+        path:'/home'
     },
     {
         name: "企业管理",

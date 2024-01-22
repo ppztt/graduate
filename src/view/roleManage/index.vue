@@ -17,7 +17,7 @@
                 :label="item.label">
             </el-table-column>
             <el-table-column label="操作" fixed="right" :align="'left'">
-                    <template #default="{row}">
+                    <template #default="{ row }">
                         <div class="actions">
                             <el-button class="action_btn blue_text" icon="el-icon-search">
                                 编辑
