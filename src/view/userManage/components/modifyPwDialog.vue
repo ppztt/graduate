@@ -6,7 +6,7 @@
         width="30%"
         @close="closeDialog">
         <el-form
-            ref="reviseForm"
+            ref="reviseFormRef"
             :model="reviseForm"
             :rules="reviseFormValidate"
             label-width="120px">
@@ -40,7 +40,8 @@
 
 <script setup lang="ts">
     import { reactive, ref, defineProps, defineEmits } from 'vue'
-    import { passwordForm } from '@/type/userManage'
+    import { passwordForm } from '@/type/userManage.ts'
+    import type { FormInstance, FormRules } from 'element-plus'
     const emit = defineEmits(['closeDialog'])
     const props = defineProps({
         isShow: {
@@ -51,6 +52,21 @@
             type: Object,
             default: {}
         }
+    })
+    const reviseFormRef = ref<FormInstance>()
+    const reviseFormValidate = reactive<FormRules<passwordForm>>({
+        oldPassword: [
+            { required: true, message: 'Please input Activity name', trigger: 'blur' },
+            { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+        ],
+        newPassword: [
+            { required: true, message: 'Please input Activity name', trigger: 'blur' },
+            { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+        ],
+        reNewPassword: [
+            { required: true, message: 'Please input Activity name', trigger: 'blur' },
+            { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+        ]
     })
     let reviseForm = reactive<passwordForm>({
         oldPassword: '',

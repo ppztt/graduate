@@ -73,7 +73,7 @@
             label: '描述'
         }
     ]
-    let roleList = []
+    let roleList: Array<roleType>= []
     let loading = ref<Boolean>(false)
     let dialogVisible = ref(false)
     let formData = reactive<roleType>({

@@ -2,7 +2,7 @@
     <div class="toolbar">
         <div class="left">
             <el-date-picker
-                class="w200"
+                class="w200 mr5"
                 v-model="dateTime"
                 type="daterange"
                 value-format="YYYY-MM-DD"
@@ -11,7 +11,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 :shortcuts="shortcuts"/>
-            <el-input v-model="orderNum" placeholder="请输入单号"  class="w200"/>
+            <el-input v-model="orderNum" placeholder="请输入单号"  class="w200 mr5"/>
             <el-input v-model="applyName" placeholder="请输入申请人姓名" class="w200" />
         </div>
         <div class="right">

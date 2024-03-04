@@ -1,9 +1,10 @@
-interface passwordForm {
+export interface passwordForm {
     oldPassword: string
     newPassword: string
     reNewPassword: string
 }
-interface addForm{
+export interface addForm{
+    roleId: number
     account: string
     address: string
     city: string
@@ -13,4 +14,8 @@ interface addForm{
     password: string
     phone: string
     realname: string
+}
+export interface roleType{
+    id: number
+    name: string
 }

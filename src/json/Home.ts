@@ -12,15 +12,15 @@ export const menuList = [
         path: '/complain'
     },
     {
-        name: "个人中心",
-        path: '/person'
-    },
-    {
         name: "用户管理",
         path: '/user_manage'
     },
     {
         name: '角色管理',
         path: '/role_manage'
+    },
+    {
+        name: "个人中心",
+        path: '/person'
     }
 ]

@@ -19,7 +19,7 @@
                 <el-select v-model="formData.roleId" placeholder="请选择所属角色">
                     <el-option
                         :disabled="roleId == 2 && (item.id === 1 || item.id === 2)"
-                        v-for="(item, index) in roleList"
+                        v-for="item in roleList"
                         :value="item.id"
                         :label="item.name"
                         :key="item.id">
@@ -92,7 +92,7 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button  type="primary" @click="sub('newAdd')">提交</el-button>
+            <el-button  type="primary" @click="submit('newAdd')">提交</el-button>
             <el-button  @click="reset()">重置</el-button>
         </span>
     </el-dialog>
@@ -100,7 +100,8 @@
 
 <script setup lang="ts">
     import { reactive, ref, defineProps, defineEmits } from 'vue'
-    import { addForm } from '@/type/userManage'
+    import { addForm, roleType } from '@/type/userManage'
+    import { districtType, regionType } from '@/type/company';
     const emit = defineEmits(['closeDialog'])
     const props = defineProps({
         isShow: {
@@ -116,6 +117,7 @@
             default: ''
         }
     })
+    let roleId: number = 0
     let formData = reactive<addForm>(
         {
                 account: "",
@@ -126,11 +128,37 @@
                 newPassword: "",
                 password: "",
                 phone: "",
-                realname: ""
+                realname: "",
+                roleId: 0
         })
-
+    let roleList = ref<Array<roleType>>([])
+    let regionData = ref<Array<regionType>>([])
+    let districtData = ref<Array<districtType>>([])
     const closeDialog = () => {
         emit('closeDialog', 'add')
+    }
+    const cityChange = (city: string) => {
+        console.log(city)
+    }
+    const districtChange = (district: string) => {
+        console.log(district)
+    }
+    const submit = (type: string) => {
+        console.log(type)
+    }
+    const reset = () => {
+        formData = {
+            account: "",
+            address: "",
+            city: "",
+            district: "",
+            email: "",
+            newPassword: "",
+            password: "",
+            phone: "",
+            realname: "",
+            roleId: 0
+        }
     }
 </script>
 
