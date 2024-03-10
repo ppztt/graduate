@@ -12,6 +12,7 @@ export default({
   mutations: {
     updateUserInfos(state: State, data: object) {
         state.userInfo = Object.assign({}, data)
+        localStorage.setItem('userInfo', JSON.stringify(data))
     },
     isLogin(state: State, data: boolean) {
       state.isLogin = data

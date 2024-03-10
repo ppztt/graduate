@@ -6,6 +6,7 @@ export interface personForm {
     role: string
 }
 export interface labelType {
-    id: string,
+    id: string
     label: string
+    required?: Boolean
 }

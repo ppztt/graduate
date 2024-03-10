@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" class="loginButton" @click="submitForm(ruleFormRef)">登录</el-button>
-          <el-button class="loginButton">重置</el-button>
+          <el-button class="loginButton" @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -42,7 +42,6 @@ const $api = proxy.$api
 const $error = proxy.$error
 const $success = proxy.$success
 const store = useStore()
-console.log(store)
 const router = useRouter();
 
 const ruleFormRef = ref<FormInstance>()

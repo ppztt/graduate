@@ -7,13 +7,16 @@ axios.defaults.timeout = 200000
 
 axios.interceptors.request.use(config => {
     // 在这里最主要的还是为请求头添加东西，最常见的就是token，后面是文件下载请求，可以改为blob
-    config.headers.Authorization = window.sessionStorage.getItem('token')
+    config.headers.Authorization = window.localStorage.getItem('token') || ''
     return config
 })
 
 axios.interceptors.response.use(
     res => {
         // 这部分可以做正常请求完数据后要做的事
+        if (res.headers.authorization && res.headers.authorization != '') {
+            localStorage.setItem('token', res.headers.authorization)
+        }
         return res.data
     },
     err => {
