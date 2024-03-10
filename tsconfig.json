@@ -26,6 +26,7 @@
     "paths":{
       "@": ["src"],
       "@/*": ["src/*"],
+      "vuex": ["./node_modules/vuex/types"]
     },
     "types": [
       "echarts"
@@ -36,7 +37,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue"
-  ],
+, "src/request/api.ts"  ],
   "references": [
     {
       "path": "./tsconfig.node.json"

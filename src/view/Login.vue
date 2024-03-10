@@ -20,7 +20,7 @@
             autocomplete="off"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="loginButton" @click="submitForm">登录</el-button>
+          <el-button type="primary" class="loginButton" @click="submitForm(ruleFormRef)">登录</el-button>
           <el-button class="loginButton">重置</el-button>
         </el-form-item>
       </el-form>
@@ -29,13 +29,23 @@
 </template>
   
   <script setup lang="ts">
-import { defineComponent, reactive, toRefs, ref } from "vue";
+import { reactive,  ref, getCurrentInstance} from "vue";
 import { LoginData } from "@/type/login";
-//   import { login } from "../request/api";
+import { response } from "@/type/common";
 import { useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
+import {useStore} from 'vuex'
 
+// 工具实例
+const { proxy }: any = getCurrentInstance()
+const $api = proxy.$api
+const $error = proxy.$error
+const $success = proxy.$success
+const store = useStore()
+console.log(store)
 const router = useRouter();
+
+const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive(new LoginData().ruleForm);
 const rules = {
   username: [
@@ -46,8 +56,8 @@ const rules = {
     },
     {
       min: 3,
-      max: 5,
-      message: "Length should be 3 to 5",
+      max: 12,
+      message: "长度为3-12位字符",
       trigger: "blur",
     },
   ],
@@ -60,18 +70,34 @@ const rules = {
     {
       min: 6,
       max: 15,
-      message: "Length should be 6 to 15",
+      message: "长度为6-15位字符",
       trigger: "blur",
     },
   ],
 };
 const submitForm = async (formEl: FormInstance | undefined) => {
-  // if (!formEl) return;
-  router.push('/home')
+  if (!formEl) return;
+  const params: Object = {
+    user_name: ruleForm.username,
+    password: ruleForm.password
+  }
+  formEl.validate((valid) => {
+    if(valid) {
+      $api.User.login(params).then((res:  response) => {
+        if(res.result) {
+          $success('登陆成功')
+          store.dispatch('user/updateUserInfo', res.data)
+          store.commit('user/isLogin', true)
+          router.push('/home')
+        } else {
+          $error(res.message)
+        }
+      })
+    }else {
+      $error('请检查是否填写正确')
+    }
+  })
 };
-// 登录
-const ruleFormRef = ref<FormInstance>();
-// 重置
 const resetForm = () => {
   ruleForm.username = "";
   ruleForm.password = "";
