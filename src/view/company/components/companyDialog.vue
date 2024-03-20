@@ -127,10 +127,21 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, defineProps, defineExpose, onMounted } from 'vue'
+    import { reactive, ref, defineProps, defineExpose, onMounted, getCurrentInstance } from 'vue'
     import { formType, userType, districtType, regionType } from '../../../type/company'
     import { formatDate } from '@/utils/index'
     import type { FormRules, FormInstance } from 'element-plus'
+
+    interface regionParams {
+        province: number | string
+        city: number | string
+        district: number | string
+    }
+
+
+    // 工具实例
+    const { proxy }: any = getCurrentInstance()
+    const $api = proxy.$api
 
     let isShow = ref(false)
 
@@ -140,9 +151,9 @@
     })
     let userInfo: userType = {}
     let activeManageType: Array<string> = []
-    let provinceList = reactive<Array<regionType>>([])
-    let cityList = reactive<Array<regionType>>([])
-    let districtList= reactive<Array<regionType>>([])
+    let provinceList = ref<Array<regionType>>([])
+    let cityList = ref<Array<regionType>>([])
+    let districtList= ref<Array<regionType>>([])
     const form = ref<FormInstance>(null)
     const formRules = reactive<FormRules>({
         regName: [{required: true, message: '请输入经营者注册名称', trigger: 'blur'}],
@@ -159,15 +170,24 @@
     const addAddress = () => {}
     const managementChange = () => {}
     const provinceChange = (val: string) => {
-        console.log(val)
+        const code: number | undefined = Number(provinceList.value.find(item => item.name === val)?.code)
+        getRegion('province', {
+            province: Number((code + '').slice(0, 2))
+        })
     }
-    const cityChange = (str: string, num: number) => {
-        console.log(str, num)
+    const cityChange = (val: string) => {
+        const code1: number | undefined = Number(provinceList.value.find(item => item.name === formData.province)?.code)
+        const code: number | undefined = Number(cityList.value.find(item => item.name === val)?.code)
+        getRegion('city', {
+            province: Number((code1 + '').slice(0, 2)),
+            city: Number((code + '').slice(3, 5))
+        })
     }
     const districtChange = (val: string, num: number) => {
         console.log(val, num)
     }
     const handleSubmit = (formEl: FormInstance | undefined) => {
+        if(!formEl) return
         formEl.validate((valid: Boolean) => {
             console.log(valid)
         }) 
@@ -178,10 +198,34 @@
     const showDialog = () => {
         isShow.value = true
     }
+    // 获取地区数据
+    const getRegion = async (type: string, assignParams = {}) => {
+        const params: regionParams = {
+            province: '',
+            city: '',
+            district: '',
+            ...assignParams
+        }
+        const res = await $api.Company.getRegion(params)
+        switch (type) {
+            case '':
+                provinceList.value = res.data
+                break;
+            case 'province':
+                cityList.value = [...res.data]
+                break
+            case 'district':
+                districtList.value = [...res.data]
+                break
+            default:
+                break;
+        }
+    }
     defineExpose({
         showDialog
     })
     onMounted(() => {
+        getRegion('')
     })
 </script>
 
