@@ -165,18 +165,19 @@
             </zt-table>
         </el-main>
         <!-- 录入弹出框 -->
-        <company-dialog :isShowEnteringModal="isShowEnteringModal"></company-dialog>
+        <company-dialog ref="company"></company-dialog>
     </div>
     <router-view v-show="route.name !== 'company'"></router-view>
 </template>
 
 <script setup lang="ts">
-    import { columns, statusArr } from './config.js'
+    // import { columns, statusArr } from './config.js'
     import { onMounted, reactive, ref } from 'vue';
     import { useRoute } from 'vue-router'
     import { searchType, pagination } from '@/type/company'
     import companyDialog from './components/companyDialog.vue'
     const route = useRoute()
+    const company = ref(null)
     const statusList = [
         {
             id: 0,
@@ -200,7 +201,6 @@
         }
     ]
     // 搜索录入相关信息
-    let isShowEnteringModal = ref(false);
     let searchObj: searchType = reactive({
         searchMsg: "",
         city: "",
@@ -221,7 +221,8 @@
 
     // 函数区域
     const showDialog = () => {
-        isShowEnteringModal.value = true
+        console.log(company.value)
+        company.value.showDialog()
     }
     const searchInfo = () => {}
     const beforeUploadAction = () => {}

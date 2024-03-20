@@ -26,6 +26,8 @@ export interface districtType {
     [key: string]: any
 }
 export interface regionType {
+    id: Number
     code: string
     name: string
+    [key: string]: any
 }

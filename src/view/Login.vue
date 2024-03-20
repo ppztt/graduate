@@ -80,7 +80,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     user_name: ruleForm.username,
     password: ruleForm.password
   }
-  formEl.validate((valid) => {
+  formEl.validate((valid: Boolean) => {
     if(valid) {
       $api.User.login(params).then((res:  response) => {
         if(res.result) {
@@ -93,7 +93,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         }
       })
     }else {
-      $error('请检查是否填写正确')
+      $error('请按照要求填写！')
     }
   })
 };

@@ -72,7 +72,7 @@
     let isShow = ref(false)
     let isEdit = ref(false)
     let dialogTitle = ref<string>('')
-    const closeDialog = (val) => {
+    const closeDialog = (val: string) => {
         switch (val) {
             case 'modifyPw':
                 modifyPw.value = false
@@ -82,7 +82,7 @@
                 break;
         }
     }
-    const showDialog = (val) => {
+    const showDialog = (val: string) => {
         switch (val) {
             case 'add':
                 console.log('add')
