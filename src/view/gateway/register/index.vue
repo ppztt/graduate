@@ -46,17 +46,15 @@
     import { response } from "@/type/common";
     import { useRouter } from "vue-router";
     import type { FormInstance } from "element-plus";
-    import {useStore} from 'vuex'
 
     // 工具实例
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const $error = proxy.$error
     const $success = proxy.$success
-    const store = useStore()
     const router = useRouter();
 
-    const ruleFormRef = ref<FormInstance>(null)
+    const ruleFormRef = ref<FormInstance>()
     const ruleForm = reactive(new LoginData().ruleForm);
     
     const validatePass = (rule: any, value: any, callback: any) => {
@@ -142,11 +140,11 @@
             role_level: 6
         }
         formEl.validate((valid: Boolean) => {
-            console.log(valid)
             if(valid) {
                 $api.User.addUser(params).then((res:  response) => {
                     if(res.result) {
                         $success('注册成功')
+                        router.push('/gateway/login')
                     } else {
                         $error(res.message)
                     }

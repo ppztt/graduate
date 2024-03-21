@@ -1,26 +1,26 @@
 export const menuList = [
     {
         name: "首页",
-        path:'/home'
+        path:'/back_way/dash_board'
     },
     {
         name: "企业管理",
-        path: '/company'
+        path: '/back_way/company'
     },
     {
         name: "投诉管理",
-        path: '/complain'
+        path: '/back_way/complain'
     },
     {
         name: "用户管理",
-        path: '/user_manage'
+        path: '/back_way/user_manage'
     },
     {
         name: '角色管理',
-        path: '/role_manage'
+        path: '/back_way/role_manage'
     },
     {
         name: "个人中心",
-        path: '/person'
+        path: '/back_way/person'
     }
 ]

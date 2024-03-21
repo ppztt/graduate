@@ -87,7 +87,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           $success('登陆成功')
           store.dispatch('user/updateUserInfo', res.data)
           store.commit('user/isLogin', true)
-          router.push('/back_way')
+          router.push('/back_way/dash_board')
         } else {
           $error(res.message)
         }

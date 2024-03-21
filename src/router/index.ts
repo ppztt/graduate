@@ -63,9 +63,22 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
-        path: '/gateway/register',
-        meta: {title: '用户注册'},
-        component: () => import('@/view/gateway/register/index.vue')
+        path: '/gateway',
+        redirect: '/gateway/login'
+    },
+    {
+        path: '/gateway',
+        component: () => import('@/App.vue'),
+        children: [
+            {
+                path: 'login',
+                component: () => import('@/view/gateway/login/index.vue')
+            },
+            {
+                path: 'register',
+                component: () => import('@/view/gateway/register/index.vue')
+            }
+        ]
     }
 ]
 export default createRouter({
