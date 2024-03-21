@@ -7,5 +7,8 @@ export default {
     },
     updatePersonInfo: (params: object, id: number) => {
         return put(`${reUrl}/admin/user/list/${id}`, params)
+    },
+    addUser: (params) => {
+        return post(`${reUrl}/admin/user/addUser`, params)
     }
 }

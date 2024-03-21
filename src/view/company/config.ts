@@ -53,19 +53,11 @@ export const columns: Array<colType> = [
         label: '统一社会信用代码'   
     },
     {
-        id: 'management',
-        label: '经营类别'   
-    },
-    {
-        id: 'details',
-        label: '详细类别'
-    },
-    {
         id: 'principal',
         label: '负责人'
     },
     {
-        id: 'phone',
+        id: 'principalTel',
         label: '手机号码'
     }
 ]

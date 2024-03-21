@@ -3,7 +3,7 @@
         v-model="isShow" 
         title="经营者-录入" 
         width="800"
-        @close="closeEnteringModal">
+        @close="closeEnteringModal(form)">
         <el-form 
             ref="form" 
             label-width="150px" 
@@ -47,7 +47,8 @@
                     v-model="formData.province"
                     placeholder="省份"
                     :clearable="true"
-                    @change="provinceChange(formData.province)" @clear="clear(index)">
+                    @change="provinceChange(formData.province)"
+                    @clear="clear('province')">
                     <el-option
                         v-for="item in provinceList"
                         :value="item.name"
@@ -60,7 +61,8 @@
                 <el-select
                     v-model="formData.city"
                     placeholder="市"
-                    @change="cityChange(formData.city)">
+                    @change="cityChange(formData.city)"
+                    @clear="clear('city')">
                     <el-option
                         v-for="item in cityList"
                         :value="item.name"
@@ -73,7 +75,8 @@
                 <el-select
                     placeholder="区/县"
                     v-model="formData.district"
-                    @change="districtChange(formData.district)">
+                    @change="districtChange(formData.district)"
+                    @clear="clear('district')">
                     <el-option
                         v-for="item in districtList"
                         :value="item.name"
@@ -86,7 +89,7 @@
                 <el-select
                     v-model="formData.town"
                     placeholder="镇/村"
-                    @change="townChange(formData.town)">
+                    @clear="clear('town')">
                     <el-option
                         v-for="item in townList"
                         :value="item.name"
@@ -94,6 +97,12 @@
                         :label="item.name">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="详细地址" prop="address">
+                <el-input
+                    v-model="formData.address"
+                    placeholder="请输入详细地址">
+                </el-input>
             </el-form-item>
             <el-form-item label="负责人姓名" prop="principal">
                 <el-input
@@ -127,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, defineProps, defineExpose, onMounted, getCurrentInstance } from 'vue'
+    import { reactive, ref, defineProps, defineExpose, onMounted, getCurrentInstance, defineEmits } from 'vue'
     import { formType, userType, districtType, regionType } from '../../../type/company'
     import { formatDate } from '@/utils/index'
     import type { FormRules, FormInstance } from 'element-plus'
@@ -140,6 +149,7 @@
 
 
     // 工具实例
+    const emit = defineEmits(['getMockData'])
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
 
@@ -154,46 +164,83 @@
     let provinceList = ref<Array<regionType>>([])
     let cityList = ref<Array<regionType>>([])
     let districtList= ref<Array<regionType>>([])
+    let townList= ref<Array<regionType>>([])
     const form = ref<FormInstance>(null)
     const formRules = reactive<FormRules>({
         regName: [{required: true, message: '请输入经营者注册名称', trigger: 'blur'}],
-        creditCode: [{required: true, message: '请输入统一社会信用代码', trigger: 'blur'}],
+        creditCode: [
+            {required: true, message: '请输入统一社会信用代码', trigger: 'blur'},
+            {pattern: /^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g, message: '请正确填写代码', trigger: 'blur'}
+        ],
         province: [{required: true, message: '请输入所属省份', trigger: 'blur'}],
         city: [{required: true, message: '请输入所属城市', trigger: 'blur'}],
         district: [{required: true, message: '请输入所属区/县', trigger: 'blur'}],
+        town: [{required: true, message: '请输入所属乡/镇', trigger: 'blur'}],
+        address: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
         principal: [{required: true, message: '请输入负责人姓名', trigger: 'blur'}],
         principalTel: [{required: true, message: '请输入负责人联系电话', trigger: 'blur'}]
     })
-    const regionData = reactive<Array<regionType>>([])
 
-    const closeEnteringModal = () => {}
-    const addAddress = () => {}
-    const managementChange = () => {}
+    const closeEnteringModal = (formEl: FormInstance | undefined) => {
+        if(!formEl) return
+        formEl.resetFields()
+        formData = reactive({
+            applicationDate: formatDate(new Date(), 'yyyy-MM-dd')
+        })
+    }
     const provinceChange = (val: string) => {
-        const code: number | undefined = Number(provinceList.value.find(item => item.name === val)?.code)
+        const code: number | undefined = Number(provinceList.value.find((item: regionType) => item.name === val)?.code)
         getRegion('province', {
             province: Number((code + '').slice(0, 2))
         })
     }
     const cityChange = (val: string) => {
-        const code1: number | undefined = Number(provinceList.value.find(item => item.name === formData.province)?.code)
-        const code: number | undefined = Number(cityList.value.find(item => item.name === val)?.code)
+        const code: number | undefined = Number(cityList.value.find((item: regionType) => item.name === val)?.code)
         getRegion('city', {
-            province: Number((code1 + '').slice(0, 2)),
-            city: Number((code + '').slice(3, 5))
+            province: (code + '').slice(0, 2),
+            city: (code + '').slice(2, 4)
         })
     }
-    const districtChange = (val: string, num: number) => {
-        console.log(val, num)
+    const districtChange = (val: string) => {
+        const code: number | undefined = Number(districtList.value.find((item: regionType) => item.name === val)?.code)
+        getRegion('district', {
+            province: (code + '').slice(0, 2),
+            city: (code + '').slice(2, 4),
+            district: (code + '').slice(4, 6)
+        })
     }
     const handleSubmit = (formEl: FormInstance | undefined) => {
         if(!formEl) return
+        const data = {...formData}
         formEl.validate((valid: Boolean) => {
-            console.log(valid)
-        }) 
+            localStorage.setItem('companyData', JSON.stringify(data))
+        })
+        emit('getMockData')
+        isShow.value = false
     }
-    const clear = (index: number) => {
-        console.log(index)
+    const clear = (val: string) => {
+        switch (val) {
+            case 'province':
+                provinceList.value = []
+                cityList.value = []
+                districtList.value = []
+                townList.value = []
+                break
+            case 'city':
+                cityList.value = []
+                districtList.value = []
+                townList.value = []
+                break;
+            case 'districtList':
+                districtList.value = []
+                townList.value = []
+                break
+            case 'town':
+                townList.value = []
+                break
+            default:
+                break;
+        }
     }
     const showDialog = () => {
         isShow.value = true
@@ -214,8 +261,11 @@
             case 'province':
                 cityList.value = [...res.data]
                 break
-            case 'district':
+            case 'city':
                 districtList.value = [...res.data]
+                break
+            case 'district':
+                townList.value = [...res.data]
                 break
             default:
                 break;

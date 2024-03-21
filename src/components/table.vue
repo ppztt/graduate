@@ -3,7 +3,7 @@
         <el-table 
             v-loading="loading" 
             :data="data" 
-            :border="false" 
+            :border="true" 
             height="250" 
             style="width:100%"
             @select="select"

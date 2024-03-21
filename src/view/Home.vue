@@ -11,13 +11,11 @@
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
-            router
-          >
+            router>
             <el-menu-item
               v-for="item in menuList"
               :key="item.path"
-              :index="item.path"
-            >
+              :index="item.path">
               <el-icon><icon-menu /></el-icon>
               <span>{{ item.name }}</span>
             </el-menu-item>
