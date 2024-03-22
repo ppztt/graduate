@@ -269,6 +269,17 @@
 
     const route = useRoute();
     const company = ref(null);
+    const paramsMap = {
+      '经营者注册名称': 'regName',
+      '社会统一信用代码': 'creditCode',
+      '所属省份': 'province',
+      '所属城市': 'city',
+      '所属区/县': 'district',
+      '所属城镇': 'town',
+      '详细地址': 'address',
+      '负责人姓名': 'principal',
+      '负责人联系方式': 'principalTel'
+    }
     const tableTitle = columns
     const statusList = [
     {
@@ -335,20 +346,17 @@
     };
     const searchInfo = () => {};
     const uploadFile = (e: any) => {
-        console.log(e)
         const files = e.file
         const fileReader = new FileReader()
         fileReader.onload = (e: any) => {
             try {
-                console.log(e)
                 const res = XLSX.read(e.target.result, {type: 'binary'})
-                console.log(res)
+                const list = XLSX.utils.sheet_to_json(res.Sheets['Sheet1'], {header: 1})
             } catch (error) {
                 
             }
         }
         fileReader.readAsBinaryString(files)
-
     }
     const exportData = () => {};
     const downLoadTemplate = () => {};
