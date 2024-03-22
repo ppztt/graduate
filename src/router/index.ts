@@ -77,6 +77,10 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'register',
                 component: () => import('@/view/gateway/register/index.vue')
+            },
+            {
+                path: 'home',
+                component: () => import('@/view/gateway/index.vue')
             }
         ]
     }

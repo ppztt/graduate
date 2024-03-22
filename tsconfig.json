@@ -26,7 +26,9 @@
     "paths":{
       "@": ["src"],
       "@/*": ["src/*"],
-      "vuex": ["./node_modules/vuex/types"]
+      "vuex": ["./node_modules/vuex/types"],
+      // 引入xlsx失败，在此处申明位置
+      "xlsx": ["./node_modules/xlsx"]
     },
     "types": [
       "echarts"

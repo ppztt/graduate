@@ -115,19 +115,12 @@
             <el-upload
               class="upload"
               :show-file-list="false"
-              accept="xlsm"
-              :before-upload="beforeUploadAction"
-              :on-success="uploadSucAction"
-              :on-error="uploadErrAction"
-              :action="'/xwh/applicants/preImport.do?type=' + type"
-            >
+              accept="xlsx"
+              :http-request="uploadFile">
               <el-button
                 icon="Download"
                 size="default"
-                type="primary"
-                :disabled="!canImport"
-                :title="!canImport ? '没有权限导入' : ''"
-              >
+                type="primary">
                 导入
               </el-button>
             </el-upload>
@@ -264,6 +257,7 @@
 </template>
 
 <script setup lang="ts">
+    import * as XLSX from 'xlsx'
     import { columns, statusArr } from './config.js'
     import { onMounted, reactive, ref, getCurrentInstance } from "vue";
     import { useRoute } from "vue-router";
@@ -340,9 +334,22 @@
         company.value.showDialog();
     };
     const searchInfo = () => {};
-    const beforeUploadAction = () => {};
-    const uploadSucAction = () => {};
-    const uploadErrAction = () => {};
+    const uploadFile = (e: any) => {
+        console.log(e)
+        const files = e.file
+        const fileReader = new FileReader()
+        fileReader.onload = (e: any) => {
+            try {
+                console.log(e)
+                const res = XLSX.read(e.target.result, {type: 'binary'})
+                console.log(res)
+            } catch (error) {
+                
+            }
+        }
+        fileReader.readAsBinaryString(files)
+
+    }
     const exportData = () => {};
     const downLoadTemplate = () => {};
     const deleteMoreConsumer = () => {};
