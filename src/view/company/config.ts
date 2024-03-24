@@ -40,11 +40,11 @@ export const columns: Array<colType> = [
         label: '有效期'   
     },
     {
-        id: 'createTime',
+        id: 'create_time',
         label: '创建时间'
     },
     {
-        id: 'startTime',
+        id: 'update_time',
         label: '通过时间'   
     },
     {
@@ -53,16 +53,11 @@ export const columns: Array<colType> = [
         label: '统一社会信用代码'   
     },
     {
-        id: 'principal',
+        id: 'charge_person_name',
         label: '负责人'
-    },
-    {
-        id: 'principalTel',
-        label: '手机号码'
     }
 ]
 
-export const statusArr: Array<string> = ['在期', '过期', '待审核', '审核不通过']
 
 export const detailLabel: Array<formType> = [
     {
@@ -98,3 +93,8 @@ export const detailLabel: Array<formType> = [
         label: '联系电话'
     }
 ]
+export const statusMap: any = {
+    'normal': '正常',
+    'examine': '审核中',
+    'expired': '已过期',
+}

@@ -33,9 +33,7 @@
             </el-breadcrumb>
           </div>
           <router-view v-slot="{ Component }">
-            <keep-alive>
-              <component :is="Component"/>
-            </keep-alive>
+            <component :is="Component"/>
           </router-view> 
         </el-main>
       </el-container>
@@ -49,7 +47,6 @@
     import Header from "@/view/Header.vue";
     import { Menu as IconMenu } from "@element-plus/icons-vue";
     import { menuList } from "@/json/Home";
-
     const route = useRoute()
     
     let breadList = ref<any>([])

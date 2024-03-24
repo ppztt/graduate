@@ -3,9 +3,8 @@
         <el-table 
             v-loading="loading" 
             :data="data" 
-            :border="true" 
-            height="250" 
-            style="width:100%"
+            :border="true"
+            style="width:100%; height: auto;"
             @select="select"
             @select-all="selectAll">
             <slot></slot>

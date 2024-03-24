@@ -104,9 +104,9 @@
                     placeholder="请输入详细地址">
                 </el-input>
             </el-form-item>
-            <el-form-item label="负责人姓名" prop="principal">
+            <el-form-item label="负责人姓名" prop="charge_person_name">
                 <el-input
-                    v-model="formData.principal"
+                    v-model="formData.charge_person_name"
                     placeholder="请输入负责人姓名">
                 </el-input>
             </el-form-item>
@@ -165,7 +165,7 @@
     let cityList = ref<Array<regionType>>([])
     let districtList= ref<Array<regionType>>([])
     let townList= ref<Array<regionType>>([])
-    const form = ref<FormInstance>(null)
+    const form = ref<FormInstance>()
     const formRules = reactive<FormRules>({
         regName: [{required: true, message: '请输入经营者注册名称', trigger: 'blur'}],
         creditCode: [
@@ -177,7 +177,7 @@
         district: [{required: true, message: '请输入所属区/县', trigger: 'blur'}],
         town: [{required: true, message: '请输入所属乡/镇', trigger: 'blur'}],
         address: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
-        principal: [{required: true, message: '请输入负责人姓名', trigger: 'blur'}],
+        charge_person_name: [{required: true, message: '请输入负责人姓名', trigger: 'blur'}],
         principalTel: [{required: true, message: '请输入负责人联系电话', trigger: 'blur'}]
     })
 

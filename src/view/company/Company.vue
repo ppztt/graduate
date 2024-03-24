@@ -131,9 +131,7 @@
               v-loading.fullscreen.lock="fullscreenLoading"
             >
               <el-button icon="Upload" size="default" type="primary">
-                <!-- <img class="left" src="@/assets/images/1_20.png" alt /> -->
                 导出
-                <!-- <img class="right" src="@/assets/images/1_15.png" alt /> -->
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
@@ -178,6 +176,7 @@
       <zt-table
         :loading="loading"
         :data="unitDataList"
+        :pagination="pagination"
         @select="addIDs"
         @select-all="addIDs"
         @handleSizeChange="handleSizeChange"
@@ -196,9 +195,8 @@
           :width="col.width"
           :fixed="col.fixed">
           <template #default="{ row }">
-            <span v-if="col.id === 'status'">{{ statusArr[row[col.id]] }}</span>
-            <span v-else-if="col.id === 'validity'">
-              <span>{{ row.startTime }}</span>
+            <span v-if="col.id === 'validity'">
+              <span>{{ row.startTime || '--' }}</span>
               <span v-if="row.startTime">~</span>
               <span>{{ row.endTime }}</span>
             </span>
@@ -208,6 +206,12 @@
               <span>{{ row.district || "" }}</span>
               <span>{{ row.town || "" }}</span>
               <span>{{ row.address }}</span>
+            </span>
+            <span v-else-if="col.id === 'status'">
+              {{ statusMap[row[col.id]] || "--" }}
+            </span>
+            <span v-else-if="['create_time', 'update_time'].includes(col.id)">
+              {{ formatDate(row[col.id], 'yyyy-MM-dd hh:mm:ss') || "--" }}
             </span>
             <span v-else>{{ row[col.id] || "--" }}</span>
           </template>
@@ -258,14 +262,17 @@
 
 <script setup lang="ts">
     import * as XLSX from 'xlsx'
-    import { columns, statusArr } from './config.js'
+    import { columns, statusMap } from './config.js'
     import { onMounted, reactive, ref, getCurrentInstance } from "vue";
     import { useRoute } from "vue-router";
     import { searchType, pagination, regionType } from "@/type/company";
     import companyDialog from "./components/companyDialog.vue";
+    import { formatDate } from '@/utils/index.ts'
 
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
+    const $success = proxy.$success
+    const $error = proxy.$error
 
     const route = useRoute();
     const company = ref(null);
@@ -277,81 +284,135 @@
       '所属区/县': 'district',
       '所属城镇': 'town',
       '详细地址': 'address',
-      '负责人姓名': 'principal',
+      '负责人姓名': 'charge_person_name',
+      '负责人身份证号': 'charge_person_code',
       '负责人联系方式': 'principalTel'
     }
     const tableTitle = columns
     const statusList = [
-    {
-        id: 0,
-        name: "全部",
-    },
-    {
-        id: 1,
-        name: "在期",
-    },
-    {
-        id: 2,
-        name: "过期",
-    },
-    {
-        id: 3,
-        name: "待审核",
-    },
-    {
-        id: 4,
-        name: "审核不通过",
-    },
+      {
+          id: 0,
+          name: "全部",
+      },
+      {
+          id: 1,
+          name: "在期",
+      },
+      {
+          id: 2,
+          name: "过期",
+      },
+      {
+          id: 3,
+          name: "待审核",
+      },
+      {
+          id: 4,
+          name: "审核不通过",
+      }
     ];
     // 搜索录入相关信息
     let searchObj: searchType = reactive({
-    searchMsg: "",
-    city: "",
-    district: "",
-    management: "",
-    status: 0,
+      searchMsg: "",
+      city: "",
+      district: "",
+      management: "",
+      status: 0,
     });
-    let type: string = "";
     let fullscreenLoading: boolean = false;
-    let canImport: boolean = false;
     let unitDataList = ref([
-    {
-        address: "有迎福路527",
-        applicationDate: "2024-03-21",
-        city: "广州市",
-        creditCode: "12440000455859567F",
-        district: "天河区",
-        principal: "雍某某",
-        principalTel: "13267852536",
-        province: "广东省",
-        regName: "广东金融学院",
-        town: "龙洞街道",
-    },
+        {
+            address: "有迎福路527",
+            applicationDate: "2024-03-21",
+            city: "广州市",
+            creditCode: "12440000455859567F",
+            district: "天河区",
+            principal: "雍某某",
+            principalTel: "13267852536",
+            province: "广东省",
+            regName: "广东金融学院",
+            town: "龙洞街道",
+        },
     ]);
-    let loading: boolean = false;
-    let pagination: pagination = {
-    size: 10,
-    current: 1,
-    total: 0,
-    };
+    let loading= ref<Boolean>(false);
+    let pagination = ref<pagination>({
+      size: 10,
+      current: 1,
+      total: 0,
+    })
     let provinceList = ref<Array<regionType>>([])
     let cityList = ref<Array<regionType>>([])
     let districtList= ref<Array<regionType>>([])
     let townList= ref<Array<regionType>>([])
 
     // 函数区域
+    const getData = async () => {
+      loading.value = true
+      const params = {
+        page: pagination.value.current,
+        size: pagination.value.size
+      }
+      try {
+        const res = await $api.Company.getCompany(params)
+        if (res.result) {
+          unitDataList.value = [
+            ...res.data
+          ]
+          pagination.value.total = res.count
+          loading.value = false
+        }
+      } catch (error) {
+        
+      }
+    }
+    const searchInfo = () => {}
     const showDialog = () => {
-        console.log(company.value);
-        company.value.showDialog();
+        if(!company.value) return
+        company.value?.showDialog()
     };
-    const searchInfo = () => {};
+    const addCompany = async (params: Array<Object>) => {
+      try {
+        const res = await $api.Company.addCompany(params)
+        if (res.result) {
+          $success('添加成功')
+        }
+      } catch (error) {
+        
+      }
+    }
     const uploadFile = (e: any) => {
+        // 获取文件信息
         const files = e.file
+        // js读取文件API实体对象
         const fileReader = new FileReader()
         fileReader.onload = (e: any) => {
             try {
+                // 使用xlsx库解析excel文件
                 const res = XLSX.read(e.target.result, {type: 'binary'})
-                const list = XLSX.utils.sheet_to_json(res.Sheets['Sheet1'], {header: 1})
+                let list = XLSX.utils.sheet_to_json(res.Sheets['Sheet1'], {header: 1})
+                const keys: Array<string> = Object.keys(paramsMap)
+                // 需要对比excel文件的标题是否符合规范, 所有标题都能对应上才为true
+                const bol = keys.every((key: string, index: number) => {
+                  // 使用该配置出来的list第一个数据为标题行
+                  return key === list[0][index]
+                })
+                if (!bol) {
+                  $error('请使用模板文件进行导入！')
+                } else {
+                  const key = Object.values(paramsMap)
+                  // 将标题行数据去除
+                  list.splice(0, 1)
+                  // 遍历获取key: value 对象
+                  const params: Array<Object> = list.map((item: string) => {
+                    const obj: any = {}
+                    key.forEach((k: string ,i: number)=> {
+                      obj[k] = item[i]
+                    })
+                    return obj
+                  })
+                  // 执行添加企业函数
+                  addCompany(params)
+                }
             } catch (error) {
                 
             }
@@ -362,8 +423,15 @@
     const downLoadTemplate = () => {};
     const deleteMoreConsumer = () => {};
     const addIDs = () => {};
-    const handleSizeChange = () => {};
-    const handleCurrentChange = () => {};
+    const handleSizeChange = (val: number) => {
+      pagination.value.current = 1
+      pagination.value.size = val
+      getData()
+    };
+    const handleCurrentChange = (page: number) => {
+      pagination.value.page = page
+      getData()
+    };
     const openNew = (num: number, row: Object) => {
         console.log(num, row);
     };
@@ -449,8 +517,9 @@
     }
     onMounted(() => {
         // getManagerType();
+        getData()
         getRegion('')
-        getMockData();
+        getMockData()
     });
 </script>
 

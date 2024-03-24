@@ -1,6 +1,6 @@
 export const menuList = [
     {
-        name: "首页",
+        name: "数据中心",
         path:'/back_way/dash_board'
     },
     {

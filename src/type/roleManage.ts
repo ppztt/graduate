@@ -1,5 +1,6 @@
 export interface roleType {
+    id?: number
     roleName: string
     desc: string
-    status: number
+    menu: Array<any>
 }
