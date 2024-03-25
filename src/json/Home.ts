@@ -4,6 +4,10 @@ export const menuList = [
         path:'/back_way/dash_board'
     },
     {
+        name: '文章管理',
+        path: '/back_way/content'
+    },
+    {
         name: "企业管理",
         path: '/back_way/company'
     },

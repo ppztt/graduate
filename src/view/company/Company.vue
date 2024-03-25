@@ -239,12 +239,6 @@
                 </el-button>
                 <el-button
                     text
-                    type="primary"
-                    @click="openNew(2, row)">
-                    摘牌
-                </el-button>
-                <el-button
-                    text
                     type="danger"
                     @click="deleteConsumer(row.id)">
                     删除
@@ -346,11 +340,12 @@
     let townList= ref<Array<regionType>>([])
 
     // 函数区域
-    const getData = async () => {
+    const getData = async (assignParams?: any) => {
       loading.value = true
       const params = {
         page: pagination.value.current,
-        size: pagination.value.size
+        size: pagination.value.size,
+        ...assignParams
       }
       try {
         const res = await $api.Company.getCompany(params)
@@ -372,7 +367,8 @@
     };
     const addCompany = async (params: Array<Object>) => {
       try {
-        const res = await $api.Company.addCompany(params)
+        const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
+        const res = await $api.Company.addCompany({account: userInfo.name, ...params})
         if (res.result) {
           $success('添加成功')
         }
@@ -389,7 +385,7 @@
             try {
                 // 使用xlsx库解析excel文件
                 const res = XLSX.read(e.target.result, {type: 'binary'})
-                let list = XLSX.utils.sheet_to_json(res.Sheets['Sheet1'], {header: 1})
+                let list: Array<Array<any>> = XLSX.utils.sheet_to_json(res.Sheets['Sheet1'], {header: 1})
                 const keys: Array<string> = Object.keys(paramsMap)
                 // 需要对比excel文件的标题是否符合规范, 所有标题都能对应上才为true
                 const bol = keys.every((key: string, index: number) => {
@@ -403,7 +399,7 @@
                   // 将标题行数据去除
                   list.splice(0, 1)
                   // 遍历获取key: value 对象
-                  const params: Array<Object> = list.map((item: string) => {
+                  const params: Array<Object> = list.map((item: any) => {
                     const obj: any = {}
                     key.forEach((k: string ,i: number)=> {
                       obj[k] = item[i]
@@ -429,7 +425,7 @@
       getData()
     };
     const handleCurrentChange = (page: number) => {
-      pagination.value.page = page
+      pagination.value.current = page
       getData()
     };
     const openNew = (num: number, row: Object) => {

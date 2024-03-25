@@ -1,8 +1,8 @@
 <template>
   <div class="box">
     <div class="loginbox">
-      <div class="title">用户注册</div>
-      <div class="logo"></div>
+      <div class="title">门户中心</div>
+      <h3>用户注册</h3>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -180,7 +180,7 @@
   flex-direction: column;
   align-items: center;
   width: 800px;
-  height: 400px;
+  height: 500px;
   background: #fff;
   border-radius: 15px;
   .title {
@@ -188,12 +188,6 @@
     top: 30px;
     transform: translateY(-50%);
     font-size: 28px;
-  }
-  .logo {
-    width: 60px;
-    height: 60px;
-    background: url(../assets/vue.svg) no-repeat;
-    background-size: 100%;
   }
   .demo-ruleForm {
     width: 400px;

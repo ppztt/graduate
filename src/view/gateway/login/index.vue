@@ -1,7 +1,8 @@
 <template>
     <div class="box">
       <div class="loginbox">
-        <div class="title">用户登录</div>
+        <div class="title">门户中心</div>
+        <h3>用户登录</h3>
         <div class="logo"></div>
         <el-form
           ref="ruleFormRef"

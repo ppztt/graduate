@@ -45,7 +45,7 @@ export const columns: Array<colType> = [
     },
     {
         id: 'update_time',
-        label: '通过时间'   
+        label: '更新时间'   
     },
     {
         id: 'creditCode',

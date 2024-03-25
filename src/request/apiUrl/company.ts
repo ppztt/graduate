@@ -5,6 +5,9 @@ export default {
     getCompany: (params: Object) => {
         return get(`${reUrl}/admin/company/get_data`, params)
     },
+    getAllCompany: (params: Object) => {
+        return get(`${reUrl}/admin/company/get_all`, params)
+    },
     getRegion: (params: Object) => {
         return get(`${reUrl}/admin/company/region`, params)
     },
