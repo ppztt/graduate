@@ -1,12 +1,14 @@
 
 interface State {
     userInfo: object,
-    isLogin: boolean
+    isLogin: boolean,
+    commonUserInfo: Object
   }
 export default({
   namespaced: true,
   state: {
     userInfo: {},
+    commonUserInfo: {},
     isLogin: false
   },
   mutations: {
@@ -14,6 +16,10 @@ export default({
         state.userInfo = Object.assign({}, data)
         localStorage.setItem('userInfo', JSON.stringify(data))
     },
+    updateCommonUserInfos(state: State, data: object) {
+      state.userInfo = Object.assign({}, data)
+      localStorage.setItem('commonUserInfo', JSON.stringify(data))
+  },
     isLogin(state: State, data: boolean) {
       state.isLogin = data
     }
@@ -21,6 +27,9 @@ export default({
   actions: {
     updateUserInfo({ commit, state, dispatch }, data: any) {
         commit('updateUserInfos', data)
-    }
+    },
+    updateCommonUserInfo({ commit, state, dispatch }, data: any) {
+      commit('updateCommonUserInfos', data)
+  }
   }
 })

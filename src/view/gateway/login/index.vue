@@ -87,9 +87,9 @@
         $api.User.login(params).then((res:  response) => {
           if(res.result) {
             $success('登陆成功')
-            store.dispatch('user/updateUserInfo', res.data)
+            store.dispatch('user/updateCommonUserInfo', res.data)
             store.commit('user/isLogin', true)
-            router.push('/gateway/dash_board')
+            router.push('/gateway/home')
           } else {
             $error(res.message)
           }

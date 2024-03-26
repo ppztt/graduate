@@ -49,7 +49,16 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path:'complain',
                 meta: {title: '投诉管理'},
-                component: ()=> import("@/view/complain/Complain.vue")
+                name: 'complaintMgt',
+                component: ()=> import("@/view/complain/Complain.vue"),
+                children: [
+                    {
+                        path: 'detail',
+                        meta: { title: '投诉详情'},
+                        name: 'complaintDetail',
+                        component: () => import('@/view/complain/components/details.vue')
+                    }
+                ]
             },
             {
                 path:'person',

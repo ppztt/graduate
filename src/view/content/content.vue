@@ -22,9 +22,9 @@
                         <el-button text type="primary" @click="edit(row)">
                             编辑
                         </el-button>
-                        <el-popconfirm title="确认删除该角色？" @confirm="delRole(row.id)">
+                        <el-popconfirm title="确认删除该文章？" @confirm="delRole(row.id)">
                             <template #reference>
-                                <el-button v-if="row.role_level > 7" text type="danger">
+                                <el-button text type="danger">
                                     删除
                                 </el-button>
                             </template>

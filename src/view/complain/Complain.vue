@@ -1,107 +1,132 @@
 <template>
-    <div class="toolbar">
-        <div class="left">
-            <el-date-picker
-                class="w200 mr5"
-                v-model="dateTime"
-                type="daterange"
-                value-format="YYYY-MM-DD"
-                unlink-panels
-                range-separator="To"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :shortcuts="shortcuts"/>
-            <el-input v-model="orderNum" placeholder="请输入单号"  class="w200 mr5"/>
-            <el-input v-model="applyName" placeholder="请输入申请人姓名" class="w200" />
+    <div v-if="route.name === 'complaintMgt'">
+        <div class="toolbar">
+            <div class="left">
+                <el-date-picker
+                    class="w200 mr5"
+                    v-model="dateTime"
+                    type="daterange"
+                    value-format="YYYY-MM-DD"
+                    unlink-panels
+                    range-separator="To"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :shortcuts="shortcuts"/>
+                <el-input v-model="orderNum" placeholder="请输入单号"  class="w200 mr5"/>
+                <el-input v-model="applyName" placeholder="请输入申请人姓名" class="w200" />
+            </div>
+            <div class="right">
+                <el-button
+                    icon="Search"
+                    size="default"
+                    type="primary">
+                    查询
+                </el-button>
+            </div>
         </div>
-        <div class="right">
-            <el-button
-                icon="Search"
-                size="default"
-                type="primary">
-                查询
-            </el-button>
-        </div>
-    </div>
-    <zt-table :loading="loading">
-        <el-table-column
-            v-for="item in columns"
-            :key="item.id"
-            :label="item.label">
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" :align="'left'">
+        <zt-table :data="tableData" :loading="loading">
+            <el-table-column
+                v-for="item in columns"
+                :key="item.id"
+                :label="item.label"
+                :prop="item.id">
+            </el-table-column>
+            <el-table-column label="操作" fixed="right" :align="'left'">
                 <template #default="{ row }">
                     <div class="actions">
-                        <el-button class="action_btn blue_text" icon="el-icon-search">
+                        <el-button text type="primary">
                             编辑
                         </el-button>
-                        <el-button class="action_btn blue_text" icon="el-icon-edit">
+                        <el-button text type="danger" >
                             删除
                         </el-button>
                     </div>
                 </template>
             </el-table-column>
         </zt-table>
+    </div>
+    <router-view v-else></router-view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-let dateTime = ref([])
-let orderNum = ref('')
-let applyName = ref('')
-let loading = ref(false)
-
-const shortcuts = [
-  {
-    text: '最近一周',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-      return [start, end]
-    },
-  },
-  {
-    text: '近一月',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      return [start, end]
-    },
-  },
-  {
-    text: '近三月',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      return [start, end]
-    },
-  },
-]
-const columns = [
+    import { formatDate } from '@/utils';
+    import { ref, onMounted } from 'vue'
+    import { useRoute } from 'vue-router'
+    const route = useRoute()
+    let dateTime = ref([])
+    let orderNum = ref('')
+    let applyName = ref('')
+    let loading = ref<Array<any>>(false)
+    const tableData = ref([])
+    const shortcuts = [
     {
-        id: 'order_num',
-        label: '单号'
+        text: '最近一周',
+        value: () => {
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+        return [start, end]
+        },
     },
     {
-        id: 'apply_name',
-        label: '申请人名称'
+        text: '近一月',
+        value: () => {
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+        return [start, end]
+        },
     },
     {
-        id: 'create_time',
-        label: '申请时间'
+        text: '近三月',
+        value: () => {
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+        return [start, end]
+        },
     },
-    {
-        id: 'title',
-        label: '标题'
-    },
-    {
-        id: 'desc',
-        label: '描述'
-    }
-]
+    ]
+    const columns = [
+        {
+            id: 'order_num',
+            label: '单号'
+        },
+        {
+            id: 'apply_name',
+            label: '申请人名称'
+        },
+        {
+            id: 'create_time',
+            label: '申请时间'
+        },
+        {
+            id: 'title',
+            label: '标题'
+        },
+        {
+            id: 'status',
+            label: '状态'
+        },
+        {
+            id: 'desc',
+            label: '描述'
+        }
+    ]
+    onMounted(() => {
+        let data = JSON.parse(localStorage.getItem('complaint') || '')
+        tableData.value = [
+            {
+                order_num: '2024032592383',
+                apply_name: 'zhansan',
+                create_time: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                title: data.title,
+                desc: data.content,
+                status: '处理中'
+            }
+        ]
+        localStorage.setItem('tableData', JSON.stringify(tableData.value[0]))
+    })
 </script>
 
 <style scoped>
