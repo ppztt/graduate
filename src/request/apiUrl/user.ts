@@ -10,5 +10,8 @@ export default {
     },
     addUser: (params: Object) => {
         return post(`${reUrl}/admin/user/addUser`, params)
+    },
+    getData: (params: object) => {
+        return get(`${reUrl}/admin/user/list`, params)
     }
 }

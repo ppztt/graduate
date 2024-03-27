@@ -71,6 +71,8 @@
     }
     .content-info{
         padding: 0 5px;
+        display: flex;
+        justify-content: center;
         .creator{
             float: right;
         }

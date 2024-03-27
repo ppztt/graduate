@@ -104,17 +104,13 @@
             <el-form-item label="投诉内容" prop="content">
                 <el-input v-model="formData.content" type="textarea" />
             </el-form-item>
-            <el-form-item>
+            <el-form-item label="附件上传" prop="file">
                 <el-upload
-                    v-model:file-list="fileList"
                     class="upload-demo"
                     action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
                     multiple
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :before-remove="beforeRemove"
-                    :limit="3"
-                    :on-exceed="handleExceed">
+                    :limit="1"
+                    :on-change="handlefile">
                     <el-button type="primary">上传附件</el-button>
                     <template #tip>
                     <div class="el-upload__tip">
@@ -132,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-    import {reactive, ref, onMounted, getCurrentInstance, watchEffect} from 'vue'
+    import {reactive, ref, onMounted, getCurrentInstance} from 'vue'
     import { regionType } from "@/type/company";
     import type { FormRules, FormInstance } from 'element-plus'
 
@@ -147,8 +143,9 @@
     let typeList = ref<Array<any>>([])
     let companyList = ref<Array<any>>([])
     let allCompanyList = ref<Array<any>>([])
-    const formData = reactive({
-
+    let formData = reactive<any>({
+        city: '',
+        province: ''
     })
 
     const getType = async () => {
@@ -244,8 +241,24 @@
                 break;
         }
     }
-    const submitForm = () => {
+    const submitForm = (formEl: FormInstance | undefined) => {
+        if (!formEl) return
+        let Form: FormData = new FormData()
+        for (let key in formData) {
+            Form.append(key, formData[key])
+        }
+        $api.gateWay.postComplaint(Form, {
+                "Content-Type": "multipart/form-data"
+            })
         localStorage.setItem('complaint', JSON.stringify(formData))
+    }
+    const resetForm = () => {
+        formData = reactive<any>({})
+    }
+    const handlefile = (file: any) => {
+        URL.createObjectURL(file.raw)
+        formData.file = file.raw
+        console.log(file)
     }
     onMounted(() => {
         getRegion('')

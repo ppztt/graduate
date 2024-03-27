@@ -22,7 +22,7 @@
                         <el-button text type="primary" @click="edit(row)">
                             编辑
                         </el-button>
-                        <el-popconfirm title="确认删除该文章？" @confirm="delRole(row.id)">
+                        <el-popconfirm title="确认删除该文章？" @confirm="delContent(row.id)">
                             <template #reference>
                                 <el-button text type="danger">
                                     删除
@@ -227,9 +227,9 @@
             return menu.path
         })
     }
-    const delRole = async (id: number) => {
+    const delContent = async (id: number) => {
         try {
-            const res = await $api.Role.delRole(id)
+            const res = await $api.Content.delContent(id)
             if (res.result) {
                 $success(res.message)
             } else {
