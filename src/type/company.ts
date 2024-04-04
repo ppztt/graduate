@@ -1,9 +1,12 @@
 export interface searchType {
     searchMsg: string
+    province: string
+    town: string
     city: string
     district: string
     management: string
     status: number
+    [key: string]: any
 }
 export interface pagination {
     size: number;

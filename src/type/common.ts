@@ -7,3 +7,8 @@ export interface response{
     result?: boolean
     data?: Array<any> | object
 }
+export interface paginationType {
+    current: number
+    size: number
+    count: number
+}

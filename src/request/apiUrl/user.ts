@@ -13,5 +13,8 @@ export default {
     },
     getData: (params: object) => {
         return get(`${reUrl}/admin/user/list`, params)
+    },
+    delUser: (id: number) => {
+        return del(`${reUrl}/admin/user/list/${id}`, {})
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <el-table 
             v-loading="loading" 
             :data="data" 
@@ -10,7 +10,7 @@
             <slot></slot>
         </el-table>
         <el-pagination
-            v-if="pagination.total > 0"
+            v-if="pagination.count > 0"
             v-model:current-page="pagination.current"
             v-model:page-size="pagination.size"
             :page-sizes="pageSizes"
@@ -18,7 +18,7 @@
             :disabled="false"
             :background="false"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="pagination.total"
+            :total="pagination.count"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
@@ -43,7 +43,7 @@
             default: {
                 current: 1,
                 size: 10,
-                total: 0
+                count: 0
             }
         },
         pageSizes: {
@@ -75,5 +75,8 @@
 </script>
 
 <style lang="scss" scoped>
-
+.container {
+    background-color: #fff;
+    padding: 20px;
+}
 </style>

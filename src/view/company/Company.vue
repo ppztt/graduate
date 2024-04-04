@@ -172,82 +172,80 @@
         </div>
       </div>
     </div>
-    <el-main class="container">
-      <zt-table
-        :loading="loading"
-        :data="unitDataList"
-        :pagination="pagination"
-        @select="addIDs"
-        @select-all="addIDs"
-        @handleSizeChange="handleSizeChange"
-        @handleCurrentChange="handleCurrentChange">
-        <el-table-column
-          fixed="left"
-          width="60"
-          type="selection"
-          :align="'left'">
-        </el-table-column>
-        <el-table-column
-          v-for="col in tableTitle"
-          :key="col.id"
-          :prop="col.id"
-          :label="col.label"
-          :width="col.width"
-          :fixed="col.fixed">
-          <template #default="{ row }">
-            <span v-if="col.id === 'validity'">
-              <span>{{ row.startTime || '--' }}</span>
-              <span v-if="row.startTime">~</span>
-              <span>{{ row.endTime }}</span>
-            </span>
-            <span v-else-if="col.id === 'address'">
-              <span>{{ row.province || "" }}</span>
-              <span>{{ row.city || "" }}</span>
-              <span>{{ row.district || "" }}</span>
-              <span>{{ row.town || "" }}</span>
-              <span>{{ row.address }}</span>
-            </span>
-            <span v-else-if="col.id === 'status'">
-              {{ statusMap[row[col.id]] || "--" }}
-            </span>
-            <span v-else-if="['create_time', 'update_time'].includes(col.id)">
-              {{ formatDate(row[col.id], 'yyyy-MM-dd hh:mm:ss') || "--" }}
-            </span>
-            <span v-else>{{ row[col.id] || "--" }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" fixed="right" width="350">
-          <template #default="{ row }">
-            <div style="display: flex;">
-                <el-button
-                    text
-                    type="primary"
-                    @click="openNew(1, row)">
-                    查看
-                </el-button>
-                <el-button
-                    text
-                    type="primary"
-                    @click="openNew(0, row)">
-                    编辑
-                </el-button>
-                <el-button
-                    text
-                    type="primary"
-                    @click="openNew(3, row)">
-                    审核
-                </el-button>
-                <el-button
-                    text
-                    type="danger"
-                    @click="deleteConsumer(row.id)">
-                    删除
-                </el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </zt-table>
-    </el-main>
+    <zt-table
+      :loading="loading"
+      :data="unitDataList"
+      :pagination="pagination"
+      @select="addIDs"
+      @select-all="addIDs"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange">
+      <el-table-column
+        fixed="left"
+        width="60"
+        type="selection"
+        :align="'left'">
+      </el-table-column>
+      <el-table-column
+        v-for="col in tableTitle"
+        :key="col.id"
+        :prop="col.id"
+        :label="col.label"
+        :width="col.width"
+        :fixed="col.fixed">
+        <template #default="{ row }">
+          <span v-if="col.id === 'validity'">
+            <span>{{ row.startTime || '--' }}</span>
+            <span v-if="row.startTime">~</span>
+            <span>{{ row.endTime }}</span>
+          </span>
+          <span v-else-if="col.id === 'address'">
+            <span>{{ row.province || "" }}</span>
+            <span>{{ row.city || "" }}</span>
+            <span>{{ row.district || "" }}</span>
+            <span>{{ row.town || "" }}</span>
+            <span>{{ row.address }}</span>
+          </span>
+          <span v-else-if="col.id === 'status'">
+            {{ statusMap[row[col.id]] || "--" }}
+          </span>
+          <span v-else-if="['create_time', 'update_time'].includes(col.id)">
+            {{ formatDate(row[col.id], 'yyyy-MM-dd hh:mm:ss') || "--" }}
+          </span>
+          <span v-else>{{ row[col.id] || "--" }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" width="350">
+        <template #default="{ row }">
+          <div style="display: flex;">
+              <el-button
+                  text
+                  type="primary"
+                  @click="openNew(1, row)">
+                  查看
+              </el-button>
+              <el-button
+                  text
+                  type="primary"
+                  @click="openNew(0, row)">
+                  编辑
+              </el-button>
+              <el-button
+                  text
+                  type="primary"
+                  @click="openNew(3, row)">
+                  审核
+              </el-button>
+              <el-button
+                  text
+                  type="danger"
+                  @click="deleteConsumer(row.id)">
+                  删除
+              </el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </zt-table>
     <!-- 录入弹出框 -->
     <company-dialog ref="company" @getMockData="getMockData"></company-dialog>
   </div>
@@ -259,7 +257,8 @@
     import { columns, statusMap } from './config.js'
     import { onMounted, reactive, ref, getCurrentInstance } from "vue";
     import { useRoute } from "vue-router";
-    import { searchType, pagination, regionType } from "@/type/company";
+    import { searchType, regionType } from "@/type/company";
+    import {paginationType} from '@/type/common'
     import companyDialog from "./components/companyDialog.vue";
     import { formatDate } from '@/utils/index.ts'
 
@@ -269,7 +268,7 @@
     const $error = proxy.$error
 
     const route = useRoute();
-    const company = ref(null);
+    const company = ref<any>(null);
     const paramsMap = {
       '经营者注册名称': 'regName',
       '社会统一信用代码': 'creditCode',
@@ -307,12 +306,14 @@
     ];
     // 搜索录入相关信息
     let searchObj: searchType = reactive({
-      searchMsg: "",
-      city: "",
-      district: "",
-      management: "",
-      status: 0,
-    });
+        searchMsg: "",
+        province: '',
+        city: "",
+        district: "",
+        town: '',
+        management: "",
+        status: 0,
+    })
     let fullscreenLoading: boolean = false;
     let unitDataList = ref([
         {
@@ -329,10 +330,10 @@
         },
     ]);
     let loading= ref<Boolean>(false);
-    let pagination = ref<pagination>({
+    let pagination = ref<paginationType>({
       size: 10,
       current: 1,
-      total: 0,
+      count: 0,
     })
     let provinceList = ref<Array<regionType>>([])
     let cityList = ref<Array<regionType>>([])
@@ -353,7 +354,7 @@
           unitDataList.value = [
             ...res.data
           ]
-          pagination.value.total = res.count
+          pagination.value.count = res.count
           loading.value = false
         }
       } catch (error) {
@@ -363,7 +364,7 @@
     const searchInfo = () => {}
     const showDialog = () => {
         if(!company.value) return
-        company.value?.showDialog()
+        company.value.showDialog()
     };
     const addCompany = async (params: Array<Object>) => {
       try {
@@ -433,10 +434,7 @@
     };
     const deleteConsumer = (num: number) => {
         console.log(num);
-    };
-    const renew = (row: Object) => {
-        console.log(row);
-    };
+    }
     const getMockData = () => {
     //   console.log(JSON.parse(localStorage.getItem("companyData")));
     //   unitDataList.value = [JSON.parse(localStorage.getItem("companyData"))];

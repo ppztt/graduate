@@ -16,6 +16,7 @@
         <el-form-item label="密码：" prop="password">
           <el-input
             v-model="ruleForm.password"
+            @keyup.enter="submitForm(ruleFormRef)"
             type="password"
             autocomplete="off"/>
         </el-form-item>
@@ -89,7 +90,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           store.commit('user/isLogin', true)
           router.push('/back_way/dash_board')
         } else {
-          $error(res.message)
+          $error(res.message || '登陆失败')
         }
       })
     }else {

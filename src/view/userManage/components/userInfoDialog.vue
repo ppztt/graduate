@@ -184,16 +184,18 @@
                 {required: true, message: '请输入密码', trigger: 'blur'},
                 {min: 6, max: 15, message: '长度为6-15位', trigger: 'blur'}
                 ],
-        prePassword: [{validator: validatePass, message: '请输入密码', trigger: 'blur'},
-        {min: 6, max: 15, message: '长度为6-15位', trigger: 'blur'}]
+        prePassword: [
+            {required: true, message: '请确认密码', trigger: 'blur'},
+            {validator: validatePass, trigger: 'blur'},
+            {min: 6, max: 15, message: '长度为6-15位', trigger: 'blur'}]
     })
 
     const closeEnteringModal = (formEl: FormInstance | undefined) => {
         if(!formEl) return
+        console.log(111)
         formEl.resetFields()
         emit('isShowFalse')
-        formData = reactive({
-        })
+        formData = reactive({})
     }
     const provinceChange = (val: string) => {
         const code: number | undefined = Number(provinceList.value.find((item: regionType) => item.name === val)?.code)
@@ -220,9 +222,11 @@
         if(!formEl) return
         const data = {...formData}
         formEl.validate((valid: Boolean) => {
+            if(valid) {
+                isShow.value = false
+            }
             localStorage.setItem('companyData', JSON.stringify(data))
         })
-        isShow.value = false
     }
     const clear = (val: string) => {
         switch (val) {

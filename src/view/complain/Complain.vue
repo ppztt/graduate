@@ -30,6 +30,9 @@
                 :key="item.id"
                 :label="item.label"
                 :prop="item.id">
+                <template #default="{ row }">
+                    <span>{{ item.show ? item.show(row[item.id]) : row[item.id]}}</span>
+                </template>
             </el-table-column>
             <el-table-column label="操作" fixed="right" :align="'left'">
                 <template #default="{ row }">
@@ -37,7 +40,7 @@
                         <el-button text type="primary">
                             编辑
                         </el-button>
-                        <el-button text type="danger" >
+                        <el-button text type="danger" @click='delComplaint(row)' >
                             删除
                         </el-button>
                     </div>
@@ -50,14 +53,22 @@
 
 <script setup lang="ts">
     import { formatDate } from '@/utils';
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, getCurrentInstance } from 'vue'
     import { useRoute } from 'vue-router'
     const route = useRoute()
+    const { proxy }: any = getCurrentInstance()
+    const $api = proxy.$api
+    const $success = proxy.$success
+
+    const statusMap: any = {
+        handle: '处理中',
+        completed: '已完成'
+    }
     let dateTime = ref([])
     let orderNum = ref('')
     let applyName = ref('')
-    let loading = ref<Array<any>>(false)
-    const tableData = ref([])
+    let loading = ref<Boolean>(false)
+    const tableData = ref<any>([])
     const shortcuts = [
     {
         text: '最近一周',
@@ -101,18 +112,43 @@
             label: '申请时间'
         },
         {
-            id: 'title',
+            id: 'name',
             label: '标题'
         },
         {
             id: 'status',
-            label: '状态'
+            label: '状态',
+            show: (val: string) => {
+                return statusMap[val]
+            }
         },
         {
             id: 'desc',
             label: '描述'
         }
     ]
+
+    const getData = async () => {
+        try {
+            const res = await $api.Complaint.getList()
+            if (res.result) {
+                tableData.value = res.data
+            }
+        } catch (error) {
+            
+        }
+    }
+    const delComplaint = async (row: any) => {
+        try {
+            const res = await $api.Complaint.delComplaint({id: row.id})
+            if (res.result) {
+                $success(res.message)
+                getData()
+            }
+        } catch (error) {
+            
+        }
+    }
     onMounted(() => {
         let data = JSON.parse(localStorage.getItem('complaint') || '')
         tableData.value = [
@@ -126,6 +162,7 @@
             }
         ]
         localStorage.setItem('tableData', JSON.stringify(tableData.value[0]))
+        getData()
     })
 </script>
 

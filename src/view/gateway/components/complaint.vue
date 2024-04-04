@@ -101,13 +101,14 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="投诉内容" prop="content">
-                <el-input v-model="formData.content" type="textarea" />
+            <el-form-item label="投诉内容" prop="desc">
+                <el-input v-model="formData.desc" type="textarea" />
             </el-form-item>
             <el-form-item label="附件上传" prop="file">
                 <el-upload
-                    class="upload-demo"
+                    v-model:file-list="fileList"
                     action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+                    class="upload-demo"
                     multiple
                     :limit="1"
                     :on-change="handlefile">
@@ -130,12 +131,25 @@
 <script setup lang="ts">
     import {reactive, ref, onMounted, getCurrentInstance} from 'vue'
     import { regionType } from "@/type/company";
-    import type { FormRules, FormInstance } from 'element-plus'
+    import type { FormRules, FormInstance, UploadUserFile } from 'element-plus'
 
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
+    const $success = proxy.$success
+
+    const fileList = ref<UploadUserFile[]>([])
     const ruleFormRef = ref<FormInstance>()
-    const rules = reactive<FormRules>({})
+    const rules = reactive<FormRules>({
+        title: [{required: true, message: '请输入事件标题', trigger: 'blur'}],
+        province: [{required: true, message: '请输入所属省份', trigger: 'blur'}],
+        city: [{required: true, message: '请输入所属城市', trigger: 'blur'}],
+        district: [{required: true, message: '请输入所属区/县', trigger: 'blur'}],
+        town: [{required: true, message: '请输入所属乡/镇', trigger: 'blur'}],
+        company_id: [{required: true, message: '请选择关联企业', trigger: 'blur'}],
+        desc: [{required: true, message: '请输入投诉内容', trigger: 'blur'}],
+        type: [{required: true, message: '请选择投诉类型', trigger: 'blur'}],
+        file: [{required: true, message: '请选择附件', trigger: 'blur'}]
+    })
     let provinceList = ref<Array<regionType>>([])
     let cityList = ref<Array<regionType>>([])
     let districtList= ref<Array<regionType>>([])
@@ -243,14 +257,28 @@
     }
     const submitForm = (formEl: FormInstance | undefined) => {
         if (!formEl) return
-        let Form: FormData = new FormData()
-        for (let key in formData) {
-            Form.append(key, formData[key])
-        }
-        $api.gateWay.postComplaint(Form, {
-                "Content-Type": "multipart/form-data"
-            })
-        localStorage.setItem('complaint', JSON.stringify(formData))
+        formEl.validate((valid: Boolean) => {
+            if (valid) {
+                const userInfo = JSON.parse(localStorage.getItem('commonUserInfo') || '')
+                const params: any = {
+                    ...formData,
+                    user_id: userInfo.id,
+                    user_name: userInfo.user_name
+                }
+                let Form: FormData = new FormData()
+                for (let key in params) {
+                    Form.append(key, params[key])
+                }
+                $api.gateWay.postComplaint(Form, {
+                        "Content-Type": "multipart/form-data"
+                    }).then((res: any) => {
+                        if (res.result) {
+                            $success('投诉成功')
+                        }
+                    })
+                localStorage.setItem('complaint', JSON.stringify(formData))
+            }
+        })
     }
     const resetForm = () => {
         formData = reactive<any>({})
@@ -258,8 +286,13 @@
     const handlefile = (file: any) => {
         URL.createObjectURL(file.raw)
         formData.file = file.raw
-        console.log(file)
     }
+    // const handleChange: UploadProps['onChange'] = (uploadFile, uploadFiles) => {
+    //     fileList.value = uploadFiles
+    //     console.log(uploadFile, 'uploadFile')
+    //     console.log([...uploadFiles], 'uploadFiles')
+    //     fileList.value = fileList.value.slice(-3)
+    // }
     onMounted(() => {
         getRegion('')
         getType()

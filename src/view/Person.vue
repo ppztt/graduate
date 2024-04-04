@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, getCurrentInstance, ref } from 'vue'
+    import { reactive, getCurrentInstance, ref, onMounted } from 'vue'
     import { personForm, labelType } from '@/type/person';
     import type { FormInstance } from "element-plus";
     const { proxy }: any = getCurrentInstance()
@@ -40,7 +40,9 @@
     const $success = proxy.$success
 
     const formRef = ref()
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
+    const userInfo = ref<any>(
+        JSON.parse(localStorage.getItem('userInfo') || '')
+    )
     const rules = {
         username: [
             {
@@ -175,15 +177,28 @@
         }
     ]
     const form: personForm = reactive({
-        username: userInfo.user_name,
-        phone: userInfo.phone,
-        email: userInfo.email,
-        role: userInfo.role_level,
+        username: userInfo.value.user_name,
+        phone: userInfo.value.phone,
+        email: userInfo.value.email,
+        role: userInfo.value.role_level,
         old_password: '',
         new_password: '',
         pre_password: ''
     })
-
+    const getData = async () => {
+        const params = {
+            id: userInfo.value.id,
+            size: -1
+        }
+        try {
+            const res = await $api.User.getData(params)
+            if (res.result) {
+                userInfo.value = res.data
+            }
+        } catch (error) {
+            
+        }
+    }
     const onSubmit = (formEl: FormInstance | undefined) => {
         const params: any = {
             user_name: form.username,
@@ -201,14 +216,20 @@
         }
         formEl?.validate((valid) => {
             if(valid) {
-                $api.User.updatePersonInfo(params, userInfo.id).then((res: any) => {
+                $api.User.updatePersonInfo(params, userInfo.value.id).then((res: any) => {
                     if (res.result) {
                         $success(res.message)
+                        getData()
+                    } else {
+                        $error(res.message)
                     }
                 })
             }
         })
     }
+    onMounted(() => {
+        getData()
+    })
 </script>
 
 <style lang="scss" scoped>

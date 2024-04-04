@@ -15,16 +15,24 @@
                 </template>
             </el-table-column>
             <el-table-column
+
                     prop="action"
                     label="操作">
                 <template #default="{row}">
-                    <div class="actions" :id="row.id">
+                    <div class="actions">
                         <el-button text type="primary" @click="showDialog('modify', row.id)">
                             编辑
                         </el-button>
-                        <el-button text type="primary" @click="modifyPW(row.id)">
+                        <el-button text type="primary">
                             重置密码
                         </el-button>
+                        <el-popconfirm v-if="row.role_level > 1"  title="确认删除该用户？" @confirm="delUser(row.id)">
+                            <template #reference>
+                                <el-button text type="danger">
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-popconfirm>
                     </div>
                 </template>
             </el-table-column>
@@ -42,12 +50,15 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, getCurrentInstance, onMounted, nextTick } from 'vue'
+    import { ref, getCurrentInstance, onMounted, nextTick } from 'vue'
     import modifyPwDialog from './components/modifyPwDialog.vue'
     import userInfoDialog from './components/userInfoDialog.vue'
     import { formatDate } from '@/utils';
     const { proxy }: any = getCurrentInstance() 
     const $api = proxy.$api
+    const $success = proxy.$success
+    const $error = proxy.$error
+
     const columns = [
             {
                 title: "用户名",
@@ -57,8 +68,8 @@
                 title: '用户等级',
                 key: 'role_level',
                 show: (val: number) => {
-                    if (!Array.isArray(roleList.value)) return
-                    return roleList.value.find(item => item.role_level === val).role_name
+                    if (!Array.isArray(roleList.value) || !roleList.value) return
+                    return roleList.value.find((item: any) => item.role_level === val).role_name
                 }
             },
             {
@@ -80,7 +91,7 @@
     const userId = ref<number>(-1)
     let loading = ref(false)
     let userList = ref([])
-    let roleList = ref([])
+    let roleList = ref<any>([])
     // 修改密码弹出框
     let modifyPw = ref(false)
     let isShow = ref(false)
@@ -95,7 +106,7 @@
                 break;
         }
     }
-    const showDialog = (val: string, id?: number = -1) => {
+    const showDialog = (val: string, id: number = -1) => {
         isShow.value = true
         if (val === 'modify') {
             isEdit.value = true
@@ -114,7 +125,7 @@
             size: 10
         }
         try {
-            const res = await $api.User.getData()
+            const res = await $api.User.getData(params)
             if (res.result) {
                 userList.value = res.data
             }
@@ -130,6 +141,19 @@
             }
         } catch (error) {
             
+        }
+    }
+    const delUser = async (id: number) => {
+        try {
+            const res = await $api.User.delUser(id)
+            if (res.result) {
+                $success(res.message)
+                getData()
+            } else {
+                $error('删除失败')
+            }
+        } catch(error) {
+            console.log(error)
         }
     }
     onMounted(() => {

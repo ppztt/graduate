@@ -4,7 +4,12 @@
         <div class="controll">
             <el-button type="primary" @click="dialogVisible = true">新建文章</el-button>
         </div>
-        <zt-table :loading="loading" :data="tableData">
+        <zt-table
+            :loading="loading"
+            :data="tableData" 
+            :pagination="pagination"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange">
             <el-table-column :align="'center'" label="序号" type="index" width="90" />
             <el-table-column
                 :align="'center'"
@@ -90,6 +95,8 @@
     import {ref, reactive, onMounted, getCurrentInstance} from 'vue'
     import type { FormRules, FormInstance } from 'element-plus'
     import {contentType, complaintType} from '@/type/content'
+    import {paginationType} from '@/type/common'
+
     // import richEditor from '@/components/rich-editor/index.vue'
 
     const { proxy }: any = getCurrentInstance()
@@ -143,6 +150,11 @@
             name: ''
         }
     ])
+    const pagination = ref<paginationType>({
+        current: 1,
+        size: 10,
+        count: 0
+    })
     const companyList = ref<any>([])
     let loading = ref<Boolean>(false)
     let dialogVisible = ref(false)
@@ -154,9 +166,14 @@
     
     const getData = async () => {
         try {
-            const res = await $api.Content.getContentList()
+            const params: any = {
+                page: pagination.value.current,
+                size: pagination.value.size
+            }
+            const res = await $api.Content.getContentList(params)
             if (res.result) {
                 tableData.value = res.data 
+                pagination.value.count = res.count
             }
         } catch (error) {
             
@@ -239,6 +256,15 @@
         } catch(error) {
             console.log(error)
         }
+    }
+    const handleCurrentChange = (page: number) => {
+        pagination.value.current = page
+        getData()
+    }
+    const handleSizeChange = (size: number) => {
+        pagination.value.size = size
+        pagination.value.current = 1
+        getData()
     }
     onMounted(() => {
         getData()
