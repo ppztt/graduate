@@ -24,7 +24,12 @@
                 </el-button>
             </div>
         </div>
-        <zt-table :data="tableData" :loading="loading">
+        <zt-table
+            :data="tableData"
+            :loading="loading"
+            :pagination="pagination"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange">
             <el-table-column
                 v-for="item in columns"
                 :key="item.id"
@@ -37,7 +42,7 @@
             <el-table-column label="操作" fixed="right" :align="'left'">
                 <template #default="{ row }">
                     <div class="actions">
-                        <el-button text type="primary">
+                        <el-button text type="primary" @click="toDetail(row)">
                             编辑
                         </el-button>
                         <el-button text type="danger" @click='delComplaint(row)' >
@@ -54,8 +59,11 @@
 <script setup lang="ts">
     import { formatDate } from '@/utils';
     import { ref, onMounted, getCurrentInstance } from 'vue'
-    import { useRoute } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
+    import { paginationType } from '@/type/common'
+
     const route = useRoute()
+    const router = useRouter()
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const $success = proxy.$success
@@ -69,6 +77,11 @@
     let applyName = ref('')
     let loading = ref<Boolean>(false)
     const tableData = ref<any>([])
+    const pagination = ref<paginationType>({
+        current: 1,
+        size: 10,
+        count: 0
+    })
     const shortcuts = [
     {
         text: '最近一周',
@@ -130,13 +143,27 @@
 
     const getData = async () => {
         try {
-            const res = await $api.Complaint.getList()
+            const params = {
+                page: pagination.value.current,
+                size: pagination.value.size
+            }
+            const res = await $api.Complaint.getList(params)
             if (res.result) {
+                pagination.value.count = res.count
                 tableData.value = res.data
             }
         } catch (error) {
             
         }
+    }
+    const handleSizeChange = (size: number) => {
+        pagination.value.current = 1
+        pagination.value.size = size
+        getData()
+    }
+    const handleCurrentChange = (page: number) => {
+        pagination.value.current = page
+        getData()
     }
     const delComplaint = async (row: any) => {
         try {
@@ -148,6 +175,14 @@
         } catch (error) {
             
         }
+    }
+    const toDetail = (row: any) => {
+        router.push({
+            name: 'complaintDetail',
+            query: {
+                id: row.id
+            }
+        })
     }
     onMounted(() => {
         let data = JSON.parse(localStorage.getItem('complaint') || '')

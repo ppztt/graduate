@@ -166,6 +166,7 @@
     
     const getData = async () => {
         try {
+            loading.value = true
             const params: any = {
                 page: pagination.value.current,
                 size: pagination.value.size
@@ -174,6 +175,7 @@
             if (res.result) {
                 tableData.value = res.data 
                 pagination.value.count = res.count
+                loading.value = false
             }
         } catch (error) {
             

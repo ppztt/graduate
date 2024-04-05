@@ -5,7 +5,12 @@
             <el-button type="primary" @click="dialogVisible = true">新增角色</el-button>
             <el-alert class="w200" title="仅支持删除新增的角色" type="warning" effect="dark" :closable="false" show-icon />
         </div>
-        <zt-table :loading="loading" :data="roleList">
+        <zt-table
+            :loading="loading"
+            :data="roleList"
+            :pagination="pagination"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange">
             <el-table-column :align="'center'" label="序号" type="index" width="90" />
             <el-table-column
                 :align="'center'"
@@ -74,6 +79,7 @@
 <script setup lang="ts">
     import {ref, reactive, onMounted, getCurrentInstance} from 'vue'
     import { roleType } from '@/type/roleManage'
+    import { paginationType } from '@/type/common';
     import type { FormRules, FormInstance } from 'element-plus'
     import { menuList } from '@/json/Home';
 
@@ -83,6 +89,11 @@
     const $success = proxy.$success
     let isEdit = ref<boolean>(false)
     const form = ref<FormInstance>()
+    const pagination = ref<paginationType>({
+        current: 1,
+        size: 10,
+        count: 0
+    })
     const validMenu = (rule: any, value: any, callback: any) => {
         if (!value.length) {
             callback(new Error('请至少选择一个菜单项！'))
@@ -123,13 +134,29 @@
     
     const getData = async () => {
         try {
-            const res = await $api.Role.getRoleList()
+            loading.value = true
+            const params = {
+                size: pagination.value.size,
+                page: pagination.value.current
+            }
+            const res = await $api.Role.getRoleList(params)
             if (res.result) {
                 roleList.value = res.data
+                pagination.value.count = res.count
+                loading.value = false
             }
         } catch (error) {
-            
+            console.log(error)
         }
+    }
+    const handleSizeChange = (size: number) => {
+        pagination.value.current = 1
+        pagination.value.size = size
+        getData()
+    }
+    const handleCurrentChange = (page: number) => {
+        pagination.value.current = page
+        getData()
     }
     const handleSubmit = (formEl: FormInstance | undefined) => {
         if(!formEl) return

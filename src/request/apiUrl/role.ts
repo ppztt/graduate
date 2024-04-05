@@ -1,8 +1,8 @@
 import { get, post, put, del } from '../index.ts'
 const reUrl = '/api'
 export default {
-    getRoleList: () => {
-        return get(`${reUrl}/admin/role/get_list`, {})
+    getRoleList: (params: any) => {
+        return get(`${reUrl}/admin/role/get_list`, params)
     },
     addRole: (params: any) => {
         return post(`${reUrl}/admin/role/add`, params)

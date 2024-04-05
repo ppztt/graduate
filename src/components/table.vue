@@ -1,7 +1,6 @@
 <template>
-    <div class="container">
+    <div class="container"  v-loading="loading">
         <el-table 
-            v-loading="loading" 
             :data="data" 
             :border="true"
             style="width:100%; height: auto;"
@@ -78,5 +77,8 @@
 .container {
     background-color: #fff;
     padding: 20px;
+}
+.el-pagination{
+    margin-top: 20px;
 }
 </style>

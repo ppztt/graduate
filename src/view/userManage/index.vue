@@ -4,7 +4,12 @@
         <el-button  type="primary">导出</el-button>
     </div>
     <div>
-        <zt-table :loading="loading" :data="userList">
+        <zt-table 
+            :loading="loading"
+            :data="userList"
+            :pagination="pagination"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange">
             <el-table-column
                 v-for="item in columns"
                 :key="item.key"
@@ -54,6 +59,8 @@
     import modifyPwDialog from './components/modifyPwDialog.vue'
     import userInfoDialog from './components/userInfoDialog.vue'
     import { formatDate } from '@/utils';
+    import { paginationType } from '@/type/common';
+
     const { proxy }: any = getCurrentInstance() 
     const $api = proxy.$api
     const $success = proxy.$success
@@ -87,6 +94,11 @@
                 }
             }
     ]
+    const pagination = ref<paginationType>({
+        current: 1,
+        size: 10,
+        count: 0
+    })
     const userDialog = ref<any>()
     const userId = ref<number>(-1)
     let loading = ref(false)
@@ -120,18 +132,30 @@
         isShow.value = false
     }
     const getData = async () => {
+        loading.value = true
         const params = {
-            page: 1,
-            size: 10
+            page: pagination.value.current,
+            size: pagination.value.size
         }
         try {
             const res = await $api.User.getData(params)
             if (res.result) {
                 userList.value = res.data
+                pagination.value.count = res.count
+                loading.value = false
             }
         } catch (error) {
             
         }
+    }
+    const handleSizeChange = (size: number) => {
+        pagination.value.current = 1
+        pagination.value.size = size
+        getData()
+    }
+    const handleCurrentChange = (page: number) => {
+        pagination.value.current = page
+        getData()
     }
     const getRoleList = async () => {
         try {
