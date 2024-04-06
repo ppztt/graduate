@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
                         path: 'details',
                         name: 'companyDetails',
                         meta: {title: '详情'},
-                        component: () => import("@/view/company/details.vue")
+                        component: () => import("@/view/company/components/details.vue")
                     }
                 ]
             },

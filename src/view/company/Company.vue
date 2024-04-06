@@ -1,5 +1,5 @@
 <template>
-  <div v-show="route.name == 'company'">
+  <div v-if="route.name == 'company'">
     <div class="header">
       <div class="tools" ref="tools">
         <!-- 工具栏 -->
@@ -128,8 +128,7 @@
           <div class="item">
             <el-dropdown
               @command="exportData"
-              v-loading.fullscreen.lock="fullscreenLoading"
-            >
+              v-loading.fullscreen.lock="fullscreenLoading">
               <el-button icon="Upload" size="default" type="primary">
                 导出
               </el-button>
@@ -249,7 +248,7 @@
     <!-- 录入弹出框 -->
     <company-dialog ref="company" @getMockData="getMockData"></company-dialog>
   </div>
-  <router-view v-show="route.name !== 'company'"></router-view>
+  <router-view v-else></router-view>
 </template>
 
 <script setup lang="ts">
@@ -260,7 +259,8 @@
     import { searchType, regionType } from "@/type/company";
     import {paginationType} from '@/type/common'
     import companyDialog from "./components/companyDialog.vue";
-    import { formatDate } from '@/utils/index.ts'
+    import { formatDate, downLoad } from '@/utils/index.ts'
+    import router from '@/router';
 
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
@@ -416,8 +416,13 @@
         }
         fileReader.readAsBinaryString(files)
     }
-    const exportData = () => {};
-    const downLoadTemplate = () => {};
+    const exportData = () => {
+    };
+    const downLoadTemplate = () => {
+      $api.Company.getModelFile({}, {responseType: 'blob'}).then((res: any) => {
+        downLoad(res, 'model.xlsx')
+      })
+    };
     const deleteMoreConsumer = () => {};
     const addIDs = () => {};
     const handleSizeChange = (val: number) => {
@@ -429,8 +434,13 @@
       pagination.value.current = page
       getData()
     };
-    const openNew = (num: number, row: Object) => {
-        console.log(num, row);
+    const openNew = (num: number, row: any) => {
+        router.push({
+          name: 'companyDetails',
+          query: {
+            id: row.id
+          }
+        })
     };
     const deleteConsumer = (num: number) => {
         console.log(num);

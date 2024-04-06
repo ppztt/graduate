@@ -13,5 +13,8 @@ export default {
     },
     addCompany: (params: Object) => {
         return post(`${reUrl}/admin/company/add`, params)
+    },
+    getModelFile: (params: Object, config: Object) => {
+        return post(`${reUrl}/admin/company/model_file`, params, config)
     }
 }
