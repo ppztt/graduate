@@ -16,5 +16,8 @@ export default {
     },
     delUser: (id: number) => {
         return del(`${reUrl}/admin/user/list/${id}`, {})
+    },
+    resetPassword: (id: number) => {
+        return get(`${reUrl}/admin/user/reset_password/${id}`, {})
     }
 }

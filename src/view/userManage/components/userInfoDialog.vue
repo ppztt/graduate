@@ -313,7 +313,6 @@
         showDialog
     })
     onMounted(() => {
-        console.log('111')
         if (props.userId !== -1) {
             getData()
         }

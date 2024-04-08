@@ -35,6 +35,7 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    fixed="right"
                     prop="action"
                     label="操作">
                 <template #default="{row}">
@@ -42,7 +43,7 @@
                         <el-button text type="primary" @click="showDialog('modify', row.id)">
                             编辑
                         </el-button>
-                        <el-button text type="primary">
+                        <el-button text type="primary" @click="resetPassword(row.id)">
                             重置密码
                         </el-button>
                         <el-popconfirm v-if="row.role_level > 1"  title="确认删除该用户？" @confirm="delUser(row.id)">
@@ -199,6 +200,14 @@
         } catch(error) {
             console.log(error)
         }
+    }
+    
+    const resetPassword = (id: number) => {
+        $api.User.resetPassword(id).then((res: any) => {
+            if (res.result) {
+                $success('重置成功')
+            }
+        })
     }
     onMounted(() => {
         getRoleList()
