@@ -19,7 +19,8 @@
                 <el-button
                     icon="Search"
                     size="default"
-                    type="primary">
+                    type="primary"
+                    @click="searchInfo">
                     查询
                 </el-button>
             </div>
@@ -117,12 +118,15 @@
             label: '单号'
         },
         {
-            id: 'apply_name',
+            id: 'user_name',
             label: '申请人名称'
         },
         {
             id: 'create_time',
-            label: '申请时间'
+            label: '申请时间',
+            show: (val: Date) => {
+                return formatDate(val, 'yyyy-MM-dd')
+            }
         },
         {
             id: 'name',
@@ -141,11 +145,21 @@
         }
     ]
 
-    const getData = async () => {
+    const searchInfo = () => {
+        const params = {
+            start_time: dateTime.value[0],
+            end_time: dateTime.value[1],
+            user_name: applyName.value,
+            order_num: orderNum.value
+        }
+        getData(params)
+    }
+    const getData = async (assignParams?: any) => {
         try {
             const params = {
                 page: pagination.value.current,
-                size: pagination.value.size
+                size: pagination.value.size,
+                ...assignParams
             }
             const res = await $api.Complaint.getList(params)
             if (res.result) {
@@ -153,7 +167,7 @@
                 tableData.value = res.data
             }
         } catch (error) {
-            
+            console.log(error)
         }
     }
     const handleSizeChange = (size: number) => {
@@ -185,23 +199,11 @@
         })
     }
     onMounted(() => {
-        let data = JSON.parse(localStorage.getItem('complaint') || '')
-        tableData.value = [
-            {
-                order_num: '2024032592383',
-                apply_name: 'zhansan',
-                create_time: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                title: data.title,
-                desc: data.content,
-                status: '处理中'
-            }
-        ]
-        localStorage.setItem('tableData', JSON.stringify(tableData.value[0]))
         getData()
     })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .toolbar{
         display: flex;
         justify-content: space-between;
@@ -212,7 +214,7 @@
         padding: 20px;
         margin: 0 auto;
         margin-bottom: 10px;
-        .left{
+        .left {
             display: flex;
             align-items: center;
         }

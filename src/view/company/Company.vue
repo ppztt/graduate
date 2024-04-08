@@ -7,7 +7,7 @@
             <el-input
                 size="default"
                 placeholder="请输入企业名称"
-                v-model="searchObj.searchMsg"
+                v-model="searchObj.regName"
                 :clearable="true">
             </el-input>
         </div>
@@ -284,35 +284,27 @@
     const tableTitle = columns
     const statusList = [
       {
-          id: 0,
-          name: "全部",
+        id: '',
+        name: '全部'
       },
       {
-          id: 1,
-          name: "在期",
+          id: 'normal',
+          name: "正常",
       },
       {
-          id: 2,
+          id: 'expired',
           name: "过期",
-      },
-      {
-          id: 3,
-          name: "待审核",
-      },
-      {
-          id: 4,
-          name: "审核不通过",
       }
     ];
     // 搜索录入相关信息
     let searchObj: searchType = reactive({
-        searchMsg: "",
+        regName: "",
         province: '',
         city: "",
         district: "",
         town: '',
         management: "",
-        status: 0,
+        status: '',
     })
     let fullscreenLoading: boolean = false;
     let unitDataList = ref([
@@ -341,7 +333,7 @@
     let townList= ref<Array<regionType>>([])
 
     // 函数区域
-    const getData = async (assignParams?: any) => {
+    const getData = async (assignParams: any = {}) => {
       loading.value = true
       const params = {
         page: pagination.value.current,
@@ -361,7 +353,12 @@
         
       }
     }
-    const searchInfo = () => {}
+    const searchInfo = () => {
+      const params: any = {
+        ...searchObj
+      }
+      getData(params)
+    }
     const showDialog = () => {
         if(!company.value) return
         company.value.showDialog()

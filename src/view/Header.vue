@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-        <h3>消费者监督管理系统</h3>
+        <h3>消费者维权管理系统</h3>
         <span class="person">
             <!-- <span class="avator"></span> -->
             <span>Hello, <span style="color: #409EFF">{{ userInfo.user_name || '--'}}</span></span>

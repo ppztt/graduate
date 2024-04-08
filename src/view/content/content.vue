@@ -2,7 +2,22 @@
     <div>
         <!-- 操作栏 -->
         <div class="controll">
-            <el-button type="primary" @click="dialogVisible = true">新建文章</el-button>
+            <div class="left-part">
+                <el-button type="primary" @click="dialogVisible = true">新建文章</el-button>
+            </div>
+            <div class="right-part">
+            <el-input
+                v-model="title"
+                :clearable="true"
+                style="width: 240px"
+                placeholder="请输入文章标题"
+                @keyup.enter="getData"
+                @clear="getData">
+                <template #append>
+                    <el-button @click="getData" :icon="Search" />
+                </template>
+            </el-input>
+        </div>
         </div>
         <zt-table
             :loading="loading"
@@ -96,6 +111,7 @@
     import type { FormRules, FormInstance } from 'element-plus'
     import {contentType, complaintType} from '@/type/content'
     import {paginationType} from '@/type/common'
+    import { Search } from '@element-plus/icons-vue'
 
     // import richEditor from '@/components/rich-editor/index.vue'
 
@@ -105,6 +121,7 @@
     const $success = proxy.$success
 
 
+    const title = ref<string>('')
     const tableData = ref([])
     let isEdit = ref<boolean>(false)
     const form = ref<FormInstance>()
@@ -170,6 +187,9 @@
             const params: any = {
                 page: pagination.value.current,
                 size: pagination.value.size
+            }
+            if (title.value) {
+                params.title = title.value
             }
             const res = await $api.Content.getContentList(params)
             if (res.result) {

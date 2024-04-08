@@ -138,9 +138,12 @@
     }
 
     // 工具实例
-    const emit = defineEmits(['isShowFalse'])
+    const emit = defineEmits(['isShowFalse', 'getData'])
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
+    const $success = proxy.$success
+    const $error = proxy.$error
+
     const props = defineProps({
         roleList: {
             type: Array,
@@ -192,7 +195,6 @@
 
     const closeEnteringModal = (formEl: FormInstance | undefined) => {
         if(!formEl) return
-        console.log(111)
         formEl.resetFields()
         emit('isShowFalse')
         formData = reactive({})
@@ -223,7 +225,16 @@
         const data = {...formData}
         formEl.validate((valid: Boolean) => {
             if(valid) {
-                isShow.value = false
+                $api.User.addUser(data).then((res: any) => {
+                    if (res.result) {
+                        $success('创建成功')
+                        emit('getData')
+                        isShow.value = false
+                    } else {
+                        $error(res.message)
+                    }
+                })
+                
             }
             localStorage.setItem('companyData', JSON.stringify(data))
         })
@@ -287,10 +298,8 @@
             size: 10
         }
         try {
-            const res = await $api.User.getData()
-            console.log(res, 'u')
-            const userInfo = res.data.find((item: Number )=> item.id === props.userId)
-            console.log(userInfo)
+            const res = await $api.User.getData(params)
+            const userInfo = res.data.find((item: any )=> item.id === props.userId)
             if (res.result) {
                 formData = reactive({
                     ...userInfo

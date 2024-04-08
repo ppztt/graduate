@@ -1,7 +1,22 @@
 <template>
     <div class="toolbar">
-        <el-button  type="primary" @click="showDialog('add')">新增后台用户</el-button>
-        <el-button  type="primary">导出</el-button>
+        <div class="left-part">
+            <el-button  type="primary" @click="showDialog('add')">新增后台用户</el-button>
+            <el-button  type="primary">导出</el-button>
+        </div>
+        <div class="right-part">
+            <el-input
+                v-model="user_name"
+                :clearable="true"
+                style="width: 240px"
+                placeholder="请输入用户名"
+                @keyup.enter="getData"
+                @clear="getData">
+                <template #append>
+                    <el-button @click="getData" :icon="Search" />
+                </template>
+            </el-input>
+        </div>
     </div>
     <div>
         <zt-table 
@@ -20,7 +35,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-
                     prop="action"
                     label="操作">
                 <template #default="{row}">
@@ -48,14 +62,16 @@
         ref="userDialog"
         :user-id="userId" 
         :is-edit="isEdit" 
-        :role-list="roleList.filter((item: any) => item.role_name !== '超级管理员')"
-        @isShowFalse="isShowFalse">
+        :role-list="roleList.filter(item => item.role_name !== '超级管理员')"
+        @isShowFalse="isShowFalse"
+        @getData="getData">
     </user-info-dialog>
     <modify-pw-dialog :is-show="modifyPw" @closeDialog="closeDialog"></modify-pw-dialog>
 </template>
 
 <script setup lang="ts">
-    import { ref, getCurrentInstance, onMounted, nextTick } from 'vue'
+    import { ref, getCurrentInstance, onMounted, nextTick, reactive } from 'vue'
+    import { Search } from '@element-plus/icons-vue'
     import modifyPwDialog from './components/modifyPwDialog.vue'
     import userInfoDialog from './components/userInfoDialog.vue'
     import { formatDate } from '@/utils';
@@ -99,6 +115,7 @@
         size: 10,
         count: 0
     })
+    const user_name = ref<string>('')
     const userDialog = ref<any>()
     const userId = ref<number>(-1)
     let loading = ref(false)
@@ -133,9 +150,12 @@
     }
     const getData = async () => {
         loading.value = true
-        const params = {
+        const params: any = {
             page: pagination.value.current,
             size: pagination.value.size
+        }
+        if (user_name.value) {
+            params.user_name = user_name.value
         }
         try {
             const res = await $api.User.getData(params)
@@ -190,6 +210,7 @@
     .toolbar{
         display: flex;
         box-sizing: border-box;
+        justify-content: space-between;
         align-items: center;
         height: 60px;
         background: #fff;

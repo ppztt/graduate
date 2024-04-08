@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="loginbox">
-      <div class="title">监督投诉管理系统</div>
+      <div class="title">维权管理系统</div>
       <div class="logo"></div>
       <el-form
         ref="ruleFormRef"
