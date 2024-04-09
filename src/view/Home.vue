@@ -43,12 +43,16 @@
 
 <script setup lang="ts">
     import { useRoute } from 'vue-router'
-    import { watch, ref } from 'vue'
+    import { watch, ref, onMounted, getCurrentInstance } from 'vue'
     import Header from "@/view/Header.vue";
     import { Menu as IconMenu } from "@element-plus/icons-vue";
-    import { menuList } from "@/json/Home";
+    // import { menuList } from "@/json/Home";
+
+    const { proxy }: any = getCurrentInstance()
+    const $api = proxy.$api
+
     const route = useRoute()
-    
+    const menuList = ref<any>([])
     let breadList = ref<any>([])
 
     const handleOpen = (key: string, keyPath: string[]) => {
@@ -60,6 +64,14 @@
     watch(route, () => {
       breadList.value = route.matched
     })
+    onMounted(() => {
+      const role_level: number = JSON.parse(localStorage.getItem('userInfo') || '')?.role_level
+      $api.Role.getRoleList({role_level, size: -1}).then((res: any) => {
+        if (res.result) {
+          menuList.value = res.data[0].menu
+        }
+      })
+    }) 
 </script>
 
 <style lang="scss" scoped>

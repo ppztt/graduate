@@ -30,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import Pie from "@/components/Pie.vue";
-import Line from "@/components/Line.vue";
+  import Pie from "@/components/Pie.vue";
+  import Line from "@/components/Line.vue";
 </script>
 
 <style scoped lang="scss">
