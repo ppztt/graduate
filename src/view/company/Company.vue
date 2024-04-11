@@ -220,13 +220,13 @@
               <el-button
                   text
                   type="primary"
-                  @click="openNew(1, row)">
+                  @click="openNew(0, row)">
                   查看
               </el-button>
               <el-button
                   text
                   type="primary"
-                  @click="openNew(0, row)">
+                  @click="openNew(1, row)">
                   编辑
               </el-button>
               <el-button
@@ -246,7 +246,7 @@
       </el-table-column>
     </zt-table>
     <!-- 录入弹出框 -->
-    <company-dialog ref="company" @getMockData="getMockData"></company-dialog>
+    <company-dialog ref="company" @getData="getData"></company-dialog>
   </div>
   <router-view v-else></router-view>
 </template>
@@ -435,7 +435,8 @@
         router.push({
           name: 'companyDetails',
           query: {
-            id: row.id
+            id: row.id,
+            isEdit: num
           }
         })
     };
@@ -445,7 +446,7 @@
     const getMockData = () => {
     //   console.log(JSON.parse(localStorage.getItem("companyData")));
     //   unitDataList.value = [JSON.parse(localStorage.getItem("companyData"))];
-    };
+    }
     const provinceChange = (val: string) => {
         const code: number | undefined = Number(provinceList.value.find((item: regionType) => item.name === val)?.code)
         getRegion('province', {

@@ -1,6 +1,6 @@
 <template>
     <div class="desc">
-        <el-descriptions title="企业详情">
+        <el-descriptions v-if="!isEdit" title="企业详情">
             <el-descriptions-item v-for="item in columns" :key="item.id" :label="item.label + ':'">
                 <span v-if="item.id.indexOf('time') > -1">
                     {{ formatDate(baseData[item.id], 'yyyy-MM-dd hh:mm:ss') || '--' }}
@@ -9,6 +9,9 @@
                 <span v-else>{{ baseData[item.id] || '--' }}</span>
             </el-descriptions-item>
         </el-descriptions>
+        <div class="edit_form">
+            <company-form :is-edit="isEdit" :title="'企业编辑'" :base-data="baseData"></company-form>
+        </div>
     </div>
 </template>
 
@@ -16,14 +19,17 @@
     import { formatDate } from '@/utils';
     import { ref, getCurrentInstance, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
+    import companyForm from '@/components/companyForm/index.vue'
 
-    const { proxy }: any = getCurrentInstance() 
+    const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const route = useRoute()
+    const isEdit = !!(Number(route.query.isEdit))
     const id = route.query.id
     const statusMap: any = {
         normal: '正常'
     }
+    const form = ref<any>({})
     const baseData = ref<any>({})
     const columns: any = [
         {
@@ -76,13 +82,10 @@
 
     const getData = async () => {
         try {
-            const params = {
-                id
-            }
+            const params = {id}
             const res = await $api.Company.getCompany(params)
             if (res.result) {
                 baseData.value = res.data[0]
-                console.log(res)
             }
         } catch (error) {
             console.log(error)
