@@ -37,23 +37,22 @@
             <el-table-column
                     fixed="right"
                     prop="action"
-                    label="操作">
+                    label="操作"
+                    width="300">
                 <template #default="{row}">
-                    <div class="actions">
-                        <el-button text type="primary" @click="showDialog('modify', row.id)">
-                            编辑
-                        </el-button>
-                        <el-button text type="primary" @click="resetPassword(row.id)">
-                            重置密码
-                        </el-button>
-                        <el-popconfirm v-if="row.role_level > 1"  title="确认删除该用户？" @confirm="delUser(row.id)">
-                            <template #reference>
-                                <el-button text type="danger">
-                                    删除
-                                </el-button>
-                            </template>
-                        </el-popconfirm>
-                    </div>
+                    <el-button text type="primary" @click="showDialog('modify', row.id)">
+                        编辑
+                    </el-button>
+                    <el-button text type="primary" @click="resetPassword(row.id)">
+                        重置密码
+                    </el-button>
+                    <el-popconfirm v-if="row.role_level > 1"  title="确认删除该用户？" @confirm="delUser(row.id)">
+                        <template #reference>
+                            <el-button text type="danger">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </zt-table>
