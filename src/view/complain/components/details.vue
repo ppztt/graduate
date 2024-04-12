@@ -4,6 +4,7 @@
             <el-descriptions-item v-for="item in columns" :key="item.id" :label="item.label + ':'">
                 <span v-if="item.id === 'file'" class="blue_txt">文件1</span>
                 <span v-else-if="item.id === 'status'">{{ statusMap[baseData[item.id]] }}</span>
+                <span v-else-if="item.id === 'create_time'">{{ formatDate(baseData[item.id], 'yyyy-MM-dd') }}</span>
                 <span v-else>{{ baseData[item.id] }}</span>
             </el-descriptions-item>
         </el-descriptions>
@@ -17,26 +18,38 @@
           label-width="120px"
           class="demo-ruleForm">
           <el-form-item label="处理结果：" prop="result">
-            <el-input v-model="ruleForm.result" type="textarea" />
+            <el-input :disabled="props.isGateWay" v-model="ruleForm.result" type="textarea" />
           </el-form-item>
         </el-form>
     </div>
-    <div class="common_footer">
+    <div class="common_footer" v-if="!props.isGateWay">
         <el-button type="primary" class="loginButton" @click="submitForm(ruleFormRef)">提交</el-button>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref, getCurrentInstance, onMounted, reactive } from 'vue'
+    import { ref, getCurrentInstance, onMounted, reactive, defineProps } from 'vue'
     import { useRoute } from 'vue-router';
     import type { FormRules, FormInstance } from 'element-plus'
+    import { formatDate } from '@/utils/index'
 
     const route = useRoute()
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const $success = proxy.$success
-
-    const id = route.query.id
+    const $forceUpdate = proxy.$forceUpdate
+    const defaultId = route.query.id
+    const props = defineProps({
+        id: {
+            type: [Number, String],
+            default: 0
+        },
+        isGateWay: {
+            type: Boolean,
+            default: false
+        }
+    })
+    const id = props.id === 0 ? defaultId : props.id
     const ruleFormRef = ref<FormInstance>()
     const ruleForm = reactive<any>({
         result: ''
@@ -44,9 +57,7 @@
     const rules = ref<FormRules>({
         result: [{required: true, message: '请输入处理结果', trigger: 'blur'}]
     })
-    const baseData = ref<any>(
-        JSON.parse(localStorage.getItem('tableData') || '')
-    )
+    const baseData = ref<any>({})
     const statusMap: any = {
         handle: '处理中',
         completed: '已完成'
@@ -91,6 +102,7 @@
             const res = await $api.Complaint.getList(params)
             if (res.result) {
                 baseData.value = res.data[0]
+                $forceUpdate()
             }
         } catch (error) {
             console.log(error)

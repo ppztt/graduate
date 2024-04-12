@@ -126,24 +126,15 @@
             </el-upload>
           </div>
           <div class="item">
-            <el-dropdown
-              @command="exportData"
-              v-loading.fullscreen.lock="fullscreenLoading">
-              <el-button icon="Upload" size="default" type="primary">
+            <el-dropdown @command="exportData">
+              <el-button icon="Upload" type="primary">
                 导出
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item :command="''">导出全部</el-dropdown-item>
-                  <el-dropdown-item :command="1" divided
-                    >导出在期</el-dropdown-item
-                  >
-                  <el-dropdown-item :command="0" divided
-                    >导出摘牌</el-dropdown-item
-                  >
-                  <el-dropdown-item :command="2" divided
-                    >导出过期</el-dropdown-item
-                  >
+                  <el-dropdown-item :command="1" divided>导出正常</el-dropdown-item>
+                  <el-dropdown-item :command="2" divided>导出过期</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -151,21 +142,9 @@
           <div class="item">
             <el-button
               icon="Folder"
-              size="default"
               type="primary"
-              @click="downLoadTemplate"
-            >
+              @click="downLoadTemplate">
               模板下载
-            </el-button>
-          </div>
-          <div class="item">
-            <el-button
-              icon="Delete"
-              size="default"
-              type="danger"
-              @click="deleteMoreConsumer"
-            >
-              删除
             </el-button>
           </div>
         </div>

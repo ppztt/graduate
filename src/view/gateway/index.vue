@@ -10,20 +10,23 @@
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item>退出登录</el-dropdown-item>
-                        <el-dropdown-item>个人中心</el-dropdown-item>
+                        <el-dropdown-item class="clickCursor" @click="logOut()">退出登录</el-dropdown-item>
+                        <el-dropdown-item class="clickCursor">个人中心</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
         </div>
     </div>
     <div class="main">
-        <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+        <el-tabs v-model="activeName" class="demo-tabs">
             <el-tab-pane label="文章" name="first">
                 <content-box></content-box>
             </el-tab-pane>
             <el-tab-pane label="投诉" name="second">
                 <complaint></complaint>
+            </el-tab-pane>
+            <el-tab-pane label="投诉结果" name="third">
+                <complaintResult></complaintResult>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -32,15 +35,20 @@
 
 <script setup lang="ts">
     import { ref } from 'vue'
-    import type { TabsPaneContext } from 'element-plus'
+    import { useRouter } from 'vue-router'
     import contentBox from './components/content.vue'
     import complaint from './components/complaint.vue'
+    import complaintResult from './components/complaintResult.vue'
 
+    const router = useRouter()
     const activeName = ref('first')
-
     const userInfo = JSON.parse(localStorage.getItem('commonUserInfo') || '')
-    const handleClick = (tab: TabsPaneContext, event: Event) => {
-        console.log(tab, event)
+    const logOut = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('commonUserInfo')
+        router.push({
+            path: '/gateway/login'
+        })
     }
 </script>
 

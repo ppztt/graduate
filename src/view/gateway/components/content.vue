@@ -14,6 +14,7 @@
     
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
+    const emit = defineEmits(['closeLoading'])
 
     const contentData = ref<Array<any>>([])
     const getData = async () => {
@@ -25,6 +26,7 @@
             const res = await $api.Content.getContentList(params)
             if (res.result) {
                 contentData.value = res.data
+                
             }
         } catch (error) {
             
