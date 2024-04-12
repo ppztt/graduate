@@ -9,10 +9,7 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, defineExpose, onMounted, defineEmits, getCurrentInstance } from 'vue'
-    import { formType, userType, districtType, regionType } from '../../../type/company'
-    import { formatDate } from '@/utils/index'
-    import type { FormInstance } from 'element-plus'
+    import { ref, defineExpose, defineEmits, getCurrentInstance } from 'vue'
     import companyForm from '@/components/companyForm/index.vue'
 
 
@@ -23,10 +20,6 @@
     const $error = proxy.$error
     const emit = defineEmits(['getData'])
     let isShow = ref(false)
-
-    let formData: formType = reactive({
-        applicationDate: formatDate(new Date(), 'yyyy-MM-dd')
-    })
 
     const closeEnteringModal = () => {
         emit('getData')

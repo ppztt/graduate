@@ -2,7 +2,7 @@
     <el-form 
         ref="form" 
         label-width="150px" 
-        :model="formData" 
+        :model="base.formData" 
         :rules="formRules"
         :label-position="'right'">
         <div class="form-part">{{props.title}}</div>
@@ -35,14 +35,14 @@
             </el-input>
         </el-form-item>
         <el-form-item label="门店名称" prop="storeName">
-            <el-input size="default" v-model="formData.storeName" placeholder="请输入门店名称"></el-input>
+            <el-input size="default" v-model="base.formData.storeName" placeholder="请输入门店名称"></el-input>
         </el-form-item>
         <el-form-item label="所属省份" prop="province">
             <el-select 
                 v-model="base.formData.province"
                 placeholder="省份"
                 :clearable="true"
-                @change="provinceChange(formData.province)"
+                @change="provinceChange(base.formData.province)"
                 @clear="clear('province')">
                 <el-option
                     v-for="item in provinceList"
@@ -56,7 +56,7 @@
             <el-select
                 v-model="base.formData.city"
                 placeholder="市"
-                @change="cityChange(formData.city)"
+                @change="cityChange(base.formData.city)"
                 @clear="clear('city')">
                 <el-option
                     v-for="item in cityList"
@@ -70,7 +70,7 @@
             <el-select
                 placeholder="区/县"
                 v-model="base.formData.district"
-                @change="districtChange(formData.district)"
+                @change="districtChange(base.formData.district)"
                 @clear="clear('district')">
                 <el-option
                     v-for="item in districtList"
@@ -105,10 +105,10 @@
                 placeholder="请输入负责人姓名">
             </el-input>
         </el-form-item>
-        <el-form-item label="负责人电话" prop="principalTel">
+        <el-form-item label="负责人电话" prop="charge_person_tel">
             <el-input
                 type="tel"
-                v-model="base.formData.principalTel"
+                v-model="base.formData.charge_person_tel"
                 placeholder="请输入负责人电话">
             </el-input>
         </el-form-item>
@@ -130,8 +130,8 @@
 </template>
 
 <script lang="ts" setup>
-    import { reactive, ref, defineProps, defineExpose, onMounted, getCurrentInstance, defineEmits, watch } from 'vue'
-    import { formType, userType, districtType, regionType } from '@//type/company'
+    import { reactive, ref, defineProps, onMounted, getCurrentInstance, defineEmits, watch } from 'vue'
+    import { formType, regionType } from '@//type/company'
     import { formatDate } from '@/utils/index'
     import type { FormRules, FormInstance } from 'element-plus'
 
@@ -140,7 +140,9 @@
         city: number | string
         district: number | string
     }
-
+    interface baseType {
+        formData: formType
+    }
 
     // 工具实例
     const props = defineProps({
@@ -162,12 +164,11 @@
     const $api = proxy.$api
 
     let isShow = ref(false)
-    const base = reactive({
-        formData: {}
+    const base = reactive<baseType>({
+        formData: {
+            create_time: formatDate(new Date(), 'yyyy-MM-dd')
+        }
     })
-    let formData = base.formData
-    let userInfo: userType = {}
-    let activeManageType: Array<string> = []
     let provinceList = ref<Array<regionType>>([])
     let cityList = ref<Array<regionType>>([])
     let districtList= ref<Array<regionType>>([])
@@ -185,16 +186,8 @@
         town: [{required: true, message: '请输入所属乡/镇', trigger: 'blur'}],
         address: [{required: true, message: '请输入详细地址', trigger: 'blur'}],
         charge_person_name: [{required: true, message: '请输入负责人姓名', trigger: 'blur'}],
-        principalTel: [{required: true, message: '请输入负责人联系电话', trigger: 'blur'}]
+        charge_person_tel: [{required: true, message: '请输入负责人联系电话', trigger: 'blur'}]
     })
-
-    const closeEnteringModal = (formEl: FormInstance | undefined) => {
-        if(!formEl) return
-        formEl.resetFields()
-        formData = reactive({
-            create_time: formatDate(new Date(), 'yyyy-MM-dd')
-        })
-    }
     const provinceChange = (val: string) => {
         const code: number | undefined = Number(provinceList.value.find((item: regionType) => item.name === val)?.code)
         getRegion('province', {
@@ -220,7 +213,9 @@
         if(!formEl) return
         const data = {...base.formData}
         formEl.validate((valid: Boolean) => {
-            emit('confirm', [data])
+            if(valid) {
+                emit('confirm', [data])
+            }
         })
         isShow.value = false
     }
@@ -273,10 +268,6 @@
             default:
                 break;
         }
-    }
-    const resetFields = () => {
-        if(!form.value) return
-        form.value.resetFields()
     }
     watch(
         () => props.baseData, 

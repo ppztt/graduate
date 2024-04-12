@@ -279,7 +279,7 @@
       '详细地址': 'address',
       '负责人姓名': 'charge_person_name',
       '负责人身份证号': 'charge_person_code',
-      '负责人联系方式': 'principalTel'
+      '负责人联系方式': 'charge_person_tel'
     }
     const tableTitle = columns
     const statusList = [
@@ -307,20 +307,7 @@
         status: '',
     })
     let fullscreenLoading: boolean = false;
-    let unitDataList = ref([
-        {
-            address: "有迎福路527",
-            applicationDate: "2024-03-21",
-            city: "广州市",
-            creditCode: "12440000455859567F",
-            district: "天河区",
-            principal: "雍某某",
-            principalTel: "13267852536",
-            province: "广东省",
-            regName: "广东金融学院",
-            town: "龙洞街道",
-        },
-    ]);
+    let unitDataList = ref<any>([]);
     let loading= ref<Boolean>(false);
     let pagination = ref<paginationType>({
       size: 10,
@@ -369,9 +356,10 @@
         const res = await $api.Company.addCompany({account: userInfo.name, ...params})
         if (res.result) {
           $success('添加成功')
+          getData()
         }
       } catch (error) {
-        
+        console.log(error)
       }
     }
     const uploadFile = (e: any) => {

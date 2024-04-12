@@ -1,11 +1,11 @@
 export interface searchType {
-    searchMsg: string
+    regName: string
     province: string
     town: string
     city: string
     district: string
     management: string
-    status: number
+    status: any
     [key: string]: any
 }
 export interface pagination {
