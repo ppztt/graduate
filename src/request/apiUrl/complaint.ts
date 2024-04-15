@@ -1,4 +1,4 @@
-import {get, del} from '../index'
+import {get, del, post} from '../index'
 const reUrl = '/api'
 
 export default {
@@ -7,5 +7,8 @@ export default {
     },
     delComplaint: (params: any) => {
         return del(`${reUrl}/admin/complaint/list/${params.id}`, {})
+    },
+    editComplaint: (params: any) => {
+        return post(`${reUrl}/admin/complaint/edit_complaint`, params)
     }
 }

@@ -16,6 +16,7 @@
           </el-form-item>
           <el-form-item label="密码：" prop="password">
             <el-input
+              @keyup.enter="submitForm(ruleFormRef)"
               v-model="ruleForm.password"
               type="password"
               autocomplete="off"/>

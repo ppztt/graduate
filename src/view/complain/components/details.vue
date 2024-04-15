@@ -18,22 +18,28 @@
           label-width="120px"
           class="demo-ruleForm">
           <el-form-item label="处理结果：" prop="result">
-            <el-input :disabled="props.isGateWay" v-model="ruleForm.result" type="textarea" />
+            <el-input v-if="!isLocal" v-model="ruleForm.result" type="textarea" />
+            <span v-else>{{ baseData.result }}</span>
           </el-form-item>
         </el-form>
     </div>
-    <div class="common_footer" v-if="!props.isGateWay">
+    <div class="common_footer" v-if="!isLocal">
         <el-button type="primary" class="loginButton" @click="submitForm(ruleFormRef)">提交</el-button>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref, getCurrentInstance, onMounted, reactive, defineProps } from 'vue'
-    import { useRoute } from 'vue-router';
+    import { ref, getCurrentInstance, onMounted, reactive, defineProps, computed } from 'vue'
+    import { useRoute, useRouter } from 'vue-router';
     import type { FormRules, FormInstance } from 'element-plus'
     import { formatDate } from '@/utils/index'
 
     const route = useRoute()
+    const router = useRouter()
+    const isLocal = computed(() => {
+        return props.isGateWay || baseData.value.status === 'completed'
+    })
+
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const $success = proxy.$success
@@ -120,6 +126,9 @@
                 $api.Complaint.editComplaint(params).then((res: any) => {
                     if (res.result) {
                         $success('编辑成功')
+                        router.push({
+                            name: 'complaintMgt'
+                        })
                     }
                 })
             }
