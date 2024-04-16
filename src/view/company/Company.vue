@@ -288,7 +288,6 @@
         management: "",
         status: '',
     })
-    let fullscreenLoading: boolean = false;
     let unitDataList = ref<any>([]);
     let loading= ref<Boolean>(false);
     let pagination = ref<paginationType>({
@@ -319,7 +318,7 @@
           loading.value = false
         }
       } catch (error) {
-        
+        console.log(error)
       }
     }
     const searchInfo = () => {

@@ -8,10 +8,8 @@
         <el-aside width="200px">
           <el-menu
             ref="menu"
-            default-active="/back_way/dash_board"
+            :default-active="activeMenu"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
             router>
             <el-menu-item
               v-for="item in menuList"
@@ -54,14 +52,8 @@
 
     const menu = ref<any>()
     const menuList = ref<any>([])
+    const activeMenu = ref<string>('')
     let breadList = ref<any>([])
-
-    const handleOpen = (key: string, keyPath: string[]) => {
-      console.log(key, keyPath)
-    }
-    const handleClose = (key: string, keyPath: string[]) => {
-      console.log(key, keyPath)
-    }
     watch(route, () => {
       breadList.value = route.matched
     }, {
@@ -74,6 +66,7 @@
           menuList.value = res.data[0].menu
         }
       })
+      activeMenu.value = route.path
     }) 
 </script>
 
