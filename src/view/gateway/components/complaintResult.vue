@@ -1,5 +1,6 @@
 <template>
     <div>
+        <el-button type="primary" @click="getData">刷新</el-button>
         <zt-table
             :data="tableData"
             :loading="loading"
