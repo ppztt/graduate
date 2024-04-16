@@ -1,5 +1,5 @@
 <template>
-    <div class="content-box" v-for="item in contentData" :key="item.id">
+    <div class="content-box" v-for="item in contentData" :key="item.id" @click="getContentDetail(item.id)">
         <h1 class="title">{{ item.title }}</h1>
         <p class="content">{{ item.content }}</p>
         <div class="content-info">
@@ -7,16 +7,34 @@
             <span class="creator">发布人：{{ item.account }}</span>
         </div>
     </div>
+    <el-dialog
+        v-model="isShow"
+        :title="contentDetail.title"
+        width="700">
+        <p class="detail-content">{{ contentDetail.content }}</p>
+        <div class="detail-info">
+            <span class="create_time">{{ contentDetail.create_time }}</span>
+            <span class="creator">发布人：{{ contentDetail.account }}</span>
+        </div>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="isShow = false">关闭</el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup lang="ts">
     import {ref, getCurrentInstance, onMounted} from 'vue'
-    
+    import { contentType } from '@/type/content'
+
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const emit = defineEmits(['closeLoading'])
 
-    const contentData = ref<Array<any>>([])
+    const contentData = ref<Array<contentType>>([])
+    const isShow = ref<Boolean>(false)
+    const contentDetail = ref<any>({})
     const getData = async () => {
         const params = {
             page: 1,
@@ -31,6 +49,10 @@
         } catch (error) {
             
         }
+    }
+    const getContentDetail = async (id: number) => {
+        contentDetail.value = contentData.value.find(item => item.id === id)
+        isShow.value = true
     }
     onMounted(() => {
         getData()
@@ -79,5 +101,17 @@
             float: right;
         }
     }
+}
+.detail-info{
+    margin-top: 20px;
+    padding: 0 5px;
+    display: flex;
+    justify-content: center;
+    .creator{
+        float: right;
+    }
+}
+.detail-content{
+    color: #000;
 }
 </style>

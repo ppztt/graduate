@@ -7,7 +7,8 @@
       <el-container>
         <el-aside width="200px">
           <el-menu
-            default-active="/home/dashboard"
+            ref="menu"
+            default-active="/back_way/dash_board"
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
@@ -44,25 +45,27 @@
 <script setup lang="ts">
     import { useRoute } from 'vue-router'
     import { watch, ref, onMounted, getCurrentInstance } from 'vue'
-    import Header from "@/view/Header.vue";
-    import { Menu as IconMenu } from "@element-plus/icons-vue";
-    // import { menuList } from "@/json/Home";
+    import Header from "@/view/Header.vue"
+    import { Menu as IconMenu } from "@element-plus/icons-vue"
 
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
-
     const route = useRoute()
+
+    const menu = ref<any>()
     const menuList = ref<any>([])
     let breadList = ref<any>([])
 
     const handleOpen = (key: string, keyPath: string[]) => {
-      console.log(key, keyPath);
-    };
+      console.log(key, keyPath)
+    }
     const handleClose = (key: string, keyPath: string[]) => {
-      console.log(key, keyPath);
-    };
+      console.log(key, keyPath)
+    }
     watch(route, () => {
       breadList.value = route.matched
+    }, {
+      immediate: true
     })
     onMounted(() => {
       const role_level: number = JSON.parse(localStorage.getItem('userInfo') || '')?.role_level

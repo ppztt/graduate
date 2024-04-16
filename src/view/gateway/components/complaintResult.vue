@@ -26,7 +26,7 @@
     </div>
     <el-dialog
         v-model="isShow"
-        title="Tips"
+        title="投诉结果"
         width="700">
         <complaintDetail :id="currentRow.id" :isGateWay="true"></complaintDetail>
         <template #footer>
