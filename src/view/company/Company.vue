@@ -214,12 +214,15 @@
                   @click="openNew(3, row)">
                   审核
               </el-button>
-              <el-button
-                  text
-                  type="danger"
-                  @click="deleteConsumer(row.id)">
-                  删除
-              </el-button>
+              <el-popconfirm
+                cancel-button-text="取消"
+                confirm-button-text="确认"
+                title="是否确定删除?"
+                @confirm="deleteConsumer(row.id)">
+                <template #reference>
+                  <el-button text type="danger">删除</el-button>
+                </template>
+              </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -386,8 +389,7 @@
       $api.Company.getModelFile({}, {responseType: 'blob'}).then((res: any) => {
         downLoad(res, 'model.xlsx')
       })
-    };
-    const deleteMoreConsumer = () => {};
+    }
     const addIDs = () => {};
     const handleSizeChange = (val: number) => {
       pagination.value.current = 1
@@ -407,12 +409,18 @@
           }
         })
     };
-    const deleteConsumer = (num: number) => {
-        console.log(num);
-    }
-    const getMockData = () => {
-    //   console.log(JSON.parse(localStorage.getItem("companyData")));
-    //   unitDataList.value = [JSON.parse(localStorage.getItem("companyData"))];
+    const deleteConsumer = async (id: number) => {
+        try {
+          const res = await $api.Company.delCompany(id)
+          if (res.result) {
+            $success(res.message)
+            getData()
+          } else {
+            $error(res.message)
+          }
+        } catch (error) {
+          console.log(error)
+        }
     }
     const provinceChange = (val: string) => {
         const code: number | undefined = Number(provinceList.value.find((item: regionType) => item.name === val)?.code)
@@ -488,7 +496,6 @@
         // getManagerType();
         getData()
         getRegion('')
-        getMockData()
     });
 </script>
 

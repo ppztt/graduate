@@ -10,7 +10,7 @@
             </el-descriptions-item>
         </el-descriptions>
         <div class="edit_form">
-            <company-form :is-edit="isEdit" :title="'企业编辑'" :base-data="baseData"></company-form>
+            <company-form :is-edit="isEdit" :title="'企业编辑'" :base-data="baseData" @confirm="handleSubmit"></company-form>
         </div>
     </div>
 </template>
@@ -18,18 +18,21 @@
 <script lang="ts" setup>
     import { formatDate } from '@/utils';
     import { ref, getCurrentInstance, onMounted } from 'vue'
-    import { useRoute } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
     import companyForm from '@/components/companyForm/index.vue'
 
     const { proxy }: any = getCurrentInstance()
     const $api = proxy.$api
     const route = useRoute()
+    const router = useRouter()
+    const $success = proxy.$success
+    const $error = proxy.$error
+
     const isEdit = !!(Number(route.query.isEdit))
     const id = route.query.id
     const statusMap: any = {
         normal: '正常'
     }
-    const form = ref<any>({})
     const baseData = ref<any>({})
     const columns: any = [
         {
@@ -85,10 +88,29 @@
             const params = {id}
             const res = await $api.Company.getCompany(params)
             if (res.result) {
-                baseData.value = res.data[0]
+                baseData.value = res.data.map((item: any) => {
+                    Object.keys(item).forEach((key: any) => {
+                        item[key] = item[key] || ''
+                    })
+                    return item
+                })[0]
             }
         } catch (error) {
             console.log(error)
+        }
+    }
+    const handleSubmit = async (params: any) => {
+        try {
+            const res = await $api.Company.editCompany(id, params)
+            if (res.result) {
+                $success('修改成功')
+                router.go(-1)
+            } else {
+                $error('修改失败')
+            }
+        } catch (error) {
+            console.log(error)
+            $error('系统错误')
         }
     }
     onMounted(() => {

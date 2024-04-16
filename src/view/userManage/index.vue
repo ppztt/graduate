@@ -62,7 +62,7 @@
         ref="userDialog"
         :user-id="userId" 
         :is-edit="isEdit" 
-        :role-list="roleList.filter(item => item.role_name !== '超级管理员')"
+        :role-list="roleList.filter((item: any) => item.role_name !== '超级管理员')"
         @isShowFalse="isShowFalse"
         @getData="getData">
     </user-info-dialog>
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, getCurrentInstance, onMounted, nextTick, reactive } from 'vue'
+    import { ref, getCurrentInstance, onMounted, nextTick } from 'vue'
     import { Search } from '@element-plus/icons-vue'
     import modifyPwDialog from './components/modifyPwDialog.vue'
     import userInfoDialog from './components/userInfoDialog.vue'

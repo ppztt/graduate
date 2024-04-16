@@ -16,5 +16,11 @@ export default {
     },
     getModelFile: (params: Object, config: Object) => {
         return post(`${reUrl}/admin/company/model_file`, params, config)
+    },
+    delCompany: (id: number) => {
+        return del(`${reUrl}/admin/company/del_company/${id}`, {})
+    },
+    editCompany: (id: number, params: any) => {
+        return put(`${reUrl}/admin/company/update_company/${id}`, params)
     }
 }

@@ -24,7 +24,7 @@
                     placeholder="所属角色"
                     @clear="clear('town')">
                     <el-option
-                        v-for="(item) in props.roleList"
+                        v-for="item in props.roleList"
                         :value="item.role_level"
                         :key="item.id"
                         :label="item.role_name">
@@ -127,8 +127,7 @@
 
 <script setup lang="ts">
     import { reactive, ref, defineProps, defineExpose, onMounted, getCurrentInstance, defineEmits } from 'vue'
-    import { formType, userType, districtType, regionType } from '../../../type/company'
-    import { formatDate } from '@/utils/index'
+    import { formType, regionType } from '../../../type/company'
     import type { FormRules, FormInstance } from 'element-plus'
 
     interface regionParams {
@@ -146,7 +145,7 @@
 
     const props = defineProps({
         roleList: {
-            type: Array,
+            type: Array<any>,
             default: []
         },
         isEdit: {
