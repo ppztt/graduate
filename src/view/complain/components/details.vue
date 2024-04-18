@@ -74,7 +74,7 @@
             label: '单号'
         },
         {
-            id: 'apply_name',
+            id: 'user_name',
             label: '申请人名称'
         },
         {

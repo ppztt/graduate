@@ -154,8 +154,6 @@
       :loading="loading"
       :data="unitDataList"
       :pagination="pagination"
-      @select="addIDs"
-      @select-all="addIDs"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange">
       <el-table-column
@@ -383,22 +381,21 @@
         fileReader.readAsBinaryString(files)
     }
     const exportData = () => {
-    };
+    }
     const downLoadTemplate = () => {
       $api.Company.getModelFile({}, {responseType: 'blob'}).then((res: any) => {
         downLoad(res, 'model.xlsx')
       })
     }
-    const addIDs = () => {};
     const handleSizeChange = (val: number) => {
       pagination.value.current = 1
       pagination.value.size = val
       getData()
-    };
+    }
     const handleCurrentChange = (page: number) => {
       pagination.value.current = page
       getData()
-    };
+    }
     const openNew = (num: number, row: any) => {
         router.push({
           name: 'companyDetails',
