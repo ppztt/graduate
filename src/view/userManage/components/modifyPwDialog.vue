@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, defineProps, defineEmits } from 'vue'
+    import { reactive, ref } from 'vue'
     import { passwordForm } from '@/type/userManage.ts'
     import type { FormInstance, FormRules } from 'element-plus'
     const emit = defineEmits(['closeDialog'])

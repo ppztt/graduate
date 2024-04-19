@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, getCurrentInstance, onMounted, reactive, defineProps, computed } from 'vue'
+    import { ref, getCurrentInstance, onMounted, reactive, computed } from 'vue'
     import { useRoute, useRouter } from 'vue-router';
     import type { FormRules, FormInstance } from 'element-plus'
     import { formatDate } from '@/utils/index'

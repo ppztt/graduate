@@ -130,7 +130,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { reactive, ref, defineProps, onMounted, getCurrentInstance, defineEmits, watch } from 'vue'
+    import { reactive, ref, onMounted, getCurrentInstance, watch } from 'vue'
     import { formType, regionType } from '@//type/company'
     import { formatDate } from '@/utils/index'
     import type { FormRules, FormInstance } from 'element-plus'

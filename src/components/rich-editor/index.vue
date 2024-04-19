@@ -14,7 +14,7 @@
     import 'quill/dist/quill.core.css'
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
-    import { defineProps, onMounted, computed, defineEmits, reactive } from 'vue'
+    import { onMounted, computed, reactive } from 'vue'
     import editorOption from './editorOption.js'
     const emit = defineEmits(['input'])
     const props = defineProps({

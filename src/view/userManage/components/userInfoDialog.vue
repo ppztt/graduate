@@ -126,7 +126,7 @@
 </template>
 
 <script setup lang="ts">
-    import { reactive, ref, defineProps, defineExpose, onMounted, getCurrentInstance, defineEmits } from 'vue'
+    import { reactive, ref, onMounted, getCurrentInstance} from 'vue'
     import { formType, regionType } from '../../../type/company'
     import type { FormRules, FormInstance } from 'element-plus'
 
@@ -161,7 +161,7 @@
     let isShow = ref(false)
 
     let formData: formType = reactive({})
-    const validatePass = (rule: any, value: any, callback: any) => {
+    const validatePass = (_rule: any, value: any, callback: any) => {
         if (value !== formData.password) {
             callback(new Error('两次密码输入不一致'))
         } else {
