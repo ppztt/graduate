@@ -25,10 +25,10 @@ export default({
     }
   },
   actions: {
-    updateUserInfo({ commit, state, dispatch }, data: any) {
+    updateUserInfo({ commit }: any, data: any) {
         commit('updateUserInfos', data)
     },
-    updateCommonUserInfo({ commit, state, dispatch }, data: any) {
+    updateCommonUserInfo({ commit }: any, data: any) {
       commit('updateCommonUserInfos', data)
   }
   }

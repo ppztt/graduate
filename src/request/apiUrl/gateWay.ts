@@ -1,4 +1,4 @@
-import { get, post, put} from '../index'
+import { post } from '../index'
 const reUrl = '/api'
 
 export default{

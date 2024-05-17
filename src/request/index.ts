@@ -69,10 +69,11 @@ export function put(url: any, params: any) {
     })
 }
 
-export function get(url: any, params: any) {
+export function get(url: any, params: any, config?: any) {
     return new Promise((resolve, reject) => {
         axios.get(url, {
-            params
+            params,
+            ...config
         }).then(res => {
             resolve(res)
         }).catch(err => {
@@ -81,7 +82,7 @@ export function get(url: any, params: any) {
     })
 }
 
-export function del(url: any, params: any, config?: any) {
+export function del(url: any, params: any) {
     return new Promise((resolve, reject) => {
         axios.delete(url, {
             params: params,
