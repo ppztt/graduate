@@ -1,47 +1,53 @@
 import React from 'react'
 import type { FormProps } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { loginForm } from '@/type/loginType';
 import './index.scss'
 
-export default function Login() {
-      const onFinish: FormProps<loginForm>['onFinish'] = (values) => {
+const Login: React.FC = () => {
+    const [loginInfo] = Form.useForm<loginForm>();
+    const onFinish: FormProps<loginForm>['onFinish'] = (values) => {
         console.log('Success:', values)
-      }
-      
-      const onFinishFailed: FormProps<loginForm>['onFinishFailed'] = (errorInfo) => {
+    }
+    
+    const onFinishFailed: FormProps<loginForm>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo)
-      }
+    }
     return (
         <div className='login-layout'>
             <div className='login-box'>
                 <Form
+                    form={loginInfo}
                     name="login_form"
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 16 }}
+                    wrapperCol={{ span: 24 }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}>
                     <Form.Item<loginForm>
-                        label="用户名"
                         name="username"
                         rules={[{ required: true, message: '请输入用户名!' }]}>
-                        <Input />
+                        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
                     </Form.Item>
 
                     <Form.Item<loginForm>
-                        label="密码"
                         name="password"
                         rules={[{ required: true, message: '请输入密码!' }]}>
-                        <Input.Password />
+                        <Input
+                            prefix={<LockOutlined className="site-form-item-icon" />}
+                            type="password"
+                            placeholder="Password" />
                     </Form.Item>
 
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button type="primary" htmlType="submit">
+                    <Form.Item wrapperCol={{ span: 24 }}>
+                        <Button type="primary" htmlType="submit" className='login-form-button'>
                             登录
                         </Button>
+                        <div>立即注册</div>
                     </Form.Item>
                 </Form>
             </div>
         </div>
     )
 }
+
+export default Login

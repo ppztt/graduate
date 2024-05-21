@@ -1,27 +1,8 @@
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
-import Login from "../pages/login"
-const routes = createBrowserRouter([
-    {
-        path: '/',
-        // 重定向组件Navigate
-        element: <Navigate to={'/login'} replace />
-    },
-    {
-        path: '/login',
-        element: <Login />
-    },
-    {
-        path: '/home',
-        element: <div>hello, home</div>
-    }
-])
-
-const Router = () => {
-    return (
-        <RouterProvider router={routes} />
-    )
-}
+import { useRoutes } from "react-router-dom"
+import routes from "./routes"
+// useRoutes需要按下面将处理后的组件返回，不能当作值直接塞在Router里面使用
+const Routers = () => useRoutes(routes)
 
 export {
-    Router
+    Routers
 }
