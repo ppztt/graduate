@@ -1,23 +1,48 @@
-import React from "react";
-import { Layout } from 'antd'
-import { Outlet } from "react-router-dom";
+import React from "react"
+import { Layout, Dropdown, Space } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
+import { Outlet } from "react-router-dom"
 import './index.scss'
-import LocalMenu from "./components/menus";
-const { Header, Footer, Sider, Content } = Layout;
+import LocalMenu from "./components/menus"
+import type { MenuProps } from 'antd'
+const { Header, Sider, Content } = Layout
 const Home: React.FC = () => {
+    const items: MenuProps['items'] = [
+        {
+            label: <a onClick={(e) => e.preventDefault()}>1st menu item</a>,
+            key: '1',
+        }
+    ]
     return (
         <Layout>
-            <Header className="layout-bg">Header</Header>
-        <Layout>
-            <Sider width="25%" className="layout-bg">
-                <LocalMenu />
-            </Sider>
-            <Content>
-                {/* 需要引入Outlet组件，作用跟router-view一样，表明组件在这里显示 */}
-                <Outlet></Outlet>
-            </Content>
-        </Layout>
-            <Footer>Footer</Footer>
+            <Header>
+                <div className="header-box">
+                    <span className="title">维权管理系统</span>
+                    <span className="userName">
+                        <span className="avatar"></span>
+                        用户  &nbsp;&nbsp;
+                        <Dropdown menu={{ items }} trigger={['click']}>
+                            <a onClick={(e) => e.preventDefault()}>
+                                <Space>
+                                    <DownOutlined />
+                                </Space>
+                            </a>
+                        </Dropdown>
+                    </span>
+                </div>
+            </Header>
+            <Layout>
+                <Sider width="15%" className="layout-bg">
+                    <LocalMenu />
+                </Sider>
+                <Content>
+                    {/* 需要引入Outlet组件，作用跟router-view一样，表明组件在这里显示 */}
+                    <div className="routerView">
+                        <Outlet></Outlet>
+                    </div>
+                </Content>
+            </Layout>
+                {/* <Footer>Footer</Footer> */}
         </Layout>
     )
 }

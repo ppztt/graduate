@@ -1,89 +1,61 @@
 import React from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { PieChartTwoTone, MailOutlined, ContainerTwoTone, GoldTwoTone, PartitionOutlined, UserOutlined, TeamOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import './menus.scss'
 
 type MenuItem = Required<MenuProps>['items'][number];
-
 const items: MenuItem[] = [
   {
-    key: 'sub1',
-    label: 'Navigation One',
-    icon: <MailOutlined />,
-    children: [
-      {
-        key: 'g1',
-        label: 'Item 1',
-        type: 'group',
-        children: [
-          { key: '1', label: 'Option 1' },
-          { key: '2', label: 'Option 2' },
-        ],
-      },
-      {
-        key: 'g2',
-        label: 'Item 2',
-        type: 'group',
-        children: [
-          { key: '3', label: 'Option 3' },
-          { key: '4', label: 'Option 4' },
-        ],
-      },
-    ],
+    key: '/back_way/dash_board',
+    label: '数据中心',
+    icon: <PieChartTwoTone />
   },
   {
-    key: 'sub2',
-    label: 'Navigation Two',
-    icon: <AppstoreOutlined />,
-    children: [
-      { key: '5', label: 'Option 5' },
-      { key: '6', label: 'Option 6' },
-      {
-        key: 'sub3',
-        label: 'Submenu',
-        children: [
-          { key: '7', label: 'Option 7' },
-          { key: '8', label: 'Option 8' },
-        ],
-      },
-    ],
+    key: '/back_way/content',
+    label: '文章管理',
+    icon: <ContainerTwoTone />
   },
   {
-    type: 'divider',
+    key: '/back_way/company',
+    label: '企业管理',
+    icon: <GoldTwoTone />
   },
   {
-    key: 'sub4',
-    label: 'Navigation Three',
-    icon: <SettingOutlined />,
-    children: [
-      { key: '9', label: 'Option 9' },
-      { key: '10', label: 'Option 10' },
-      { key: '11', label: 'Option 11' },
-      { key: '12', label: 'Option 12' },
-    ],
+    key: '/back_way/complain',
+    label: '投诉管理',
+    icon: <MailOutlined />
   },
   {
-    key: 'grp',
-    label: 'Group',
-    type: 'group',
-    children: [
-      { key: '13', label: 'Option 13' },
-      { key: '14', label: 'Option 14' },
-    ],
+    key: '/back_way/user_manage',
+    label: '用户管理',
+    icon: <TeamOutlined />
   },
+  {
+    key: '/back_way/role_manage',
+    label: '角色管理',
+    icon: <PartitionOutlined />
+  },
+  {
+    key: '/back_way/person',
+    label: '个人中心',
+    icon: <UserOutlined />
+  }
 ];
 
 const LocalMenu: React.FC = () => {
+  const navigate = useNavigate()
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
+    navigate(e.key)
   };
 
   return (
     <Menu
+      className='menu'
       onClick={onClick}
       style={{ width: '100%', border: 'none' }}
-      defaultSelectedKeys={['1']}
-      defaultOpenKeys={['sub1']}
+      defaultSelectedKeys={['/back_way/dash_board']}
       mode="inline"
       items={items}
     />

@@ -12,8 +12,7 @@ const Login: React.FC = () => {
 
     const [loginInfo] = Form.useForm<loginForm>();
     const onFinish: FormProps<loginForm>['onFinish'] = (values) => {
-        console.log('Success:', values)
-        navigate('/home/about')
+        navigate('/back_way/about')
     }
     
     const onFinishFailed: FormProps<loginForm>['onFinishFailed'] = (errorInfo) => {
