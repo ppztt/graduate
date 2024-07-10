@@ -1,18 +1,18 @@
 import React from 'react'
-import type { FormProps } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { loginForm } from '@/type/loginType';
+import type { FormProps } from 'antd'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { Button, Form, Input } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { loginForm } from '@/type/loginType'
 import './index.scss'
 
 
 const Login: React.FC = () => {
     const navigate = useNavigate()
 
-    const [loginInfo] = Form.useForm<loginForm>();
+    const [loginInfo] = Form.useForm<loginForm>()
     const onFinish: FormProps<loginForm>['onFinish'] = (values) => {
-        navigate('/back_way/about')
+        navigate('/back_way/dash_board')
     }
     
     const onFinishFailed: FormProps<loginForm>['onFinishFailed'] = (errorInfo) => {

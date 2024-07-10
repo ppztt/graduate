@@ -1,9 +1,21 @@
 import React, { useState } from "react"
-import { Button } from "antd"
+import { useNavigate } from "react-router-dom"
+import { Button, Form, Input } from "antd"
+import type { FormProps } from 'antd'
+import { personForm } from "@/type/personType"
 import './index.scss'
 const Person: React.FC = () => {
-    const [isEdit, setIsEdit] = useState(false)
+    const navigate = useNavigate()
 
+    const [isEdit, setIsEdit] = useState(false)
+    const [loginInfo] = Form.useForm<personForm>()
+    const onFinish: FormProps<personForm>['onFinish'] = (values) => {
+        navigate('/back_way/dash_board')
+    }
+    
+    const onFinishFailed: FormProps<personForm>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo)
+    }
     const changeEdit: Function = (): void => {
         if (isEdit) {
             saveInfo()
@@ -37,7 +49,38 @@ const Person: React.FC = () => {
     }
     const EditInfo: React.FC = () => {
         return (
-            <div>编辑信息</div>
+            <Form
+                form={loginInfo}
+                name="login_form"
+                wrapperCol={{ span: 24 }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}>
+                <Form.Item<personForm>
+                    name="username"
+                    rules={[{ required: true, message: '请输入用户名!' }]}>
+                    <Input placeholder="Username" />
+                </Form.Item>
+                <Form.Item<personForm>
+                    name="sex"
+                    rules={[{ required: true, message: '请输入性别!' }]}>
+                    <Input placeholder="Username" />
+                </Form.Item>
+
+                <Form.Item<personForm>
+                    name="password"
+                    rules={[{ required: true, message: '请输入密码!' }]}>
+                    <Input
+                        type="password"
+                        placeholder="Password" />
+                </Form.Item>
+                <Form.Item<personForm>
+                    name="prePassword"
+                    rules={[{ required: true, message: '请输入密码!' }]}>
+                    <Input
+                        type="password"
+                        placeholder="Password" />
+                </Form.Item>
+            </Form>
         )
     }
     return (
