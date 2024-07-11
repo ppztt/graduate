@@ -3,6 +3,7 @@ import Login from "../pages/login"
 import Home from "../pages/home"
 import Person from '../pages/person/index'
 import UserManage from "../pages/userManage"
+import RoleManage from "@/pages/roleManage"
 const routes = [
     {
         path: '/',
@@ -52,7 +53,7 @@ const routes = [
                 title: '用户管理'
             },
             {
-                element: '角色管理',
+                element: <RoleManage/>,
                 path: 'role_manage',
                 title: '角色管理'
             },

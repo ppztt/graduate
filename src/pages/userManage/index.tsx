@@ -1,61 +1,40 @@
 import React, { useEffect, useState } from "react"
-import { Space, Table, Tag, Button, Select, Input } from "antd"
+import { Space, Table, Button, Select, Input } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
+import { userTableType } from "@/type/tableType"
 import './index.scss'
 
 const UserManage: React.FC = () => {
-    interface DataType {
-        key: string;
-        name: string;
-        age: number;
-        address: string;
-        tags: string[];
-    }
-    const [tableData, setTableData] = useState<Array<DataType>>([])
-    const columns: TableProps<DataType>['columns'] = [
+    const [tableData, setTableData] = useState<Array<userTableType>>([])
+    const columns: TableProps<userTableType>['columns'] = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text) => <Button>{text}</Button>,
+            title: "用户名",
+            key: "user_name",
+            dataIndex: 'user_name'
         },
         {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
+            title: '用户等级',
+            key: 'role_level',
+            dataIndex: 'role_level'
         },
         {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: "创建时间",
+            key: "create_time",
+            dataIndex: "create_time"
         },
         {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            render: (_, { tags }) => (
-            <>
-                {tags.map((tag) => {
-                let color = tag.length > 5 ? 'geekblue' : 'green';
-                if (tag === 'loser') {
-                    color = 'volcano';
-                }
-                return (
-                    <Tag color={color} key={tag}>
-                    {tag.toUpperCase()}
-                    </Tag>
-                );
-                })}
-            </>
-            ),
+            title: "更新时间",
+            dataIndex: "update_time",
+            key: "update_time"
         },
         {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
             <Space size="middle">
-                <Button>Invite {record.name}</Button>
+                {/* record：表格上的数据 */}
+                <Button>Invite {record.user_name}</Button>
                 <Button>Delete</Button>
             </Space>
             ),
@@ -66,24 +45,30 @@ const UserManage: React.FC = () => {
         setTableData([
             {
                 key: '1',
-                name: 'John Brown',
+                user_name: 'John Brown',
                 age: 32,
                 address: 'New York No. 1 Lake Park',
                 tags: ['nice', 'developer'],
+                create_time: '2021-11-01',
+                update_time: '2021-11-01'
             },
             {
                 key: '2',
-                name: 'Jim Green',
+                user_name: 'Jim Green',
                 age: 42,
                 address: 'London No. 1 Lake Park',
                 tags: ['loser'],
+                create_time: '2021-11-01',
+                update_time: '2021-11-01'
             },
             {
                 key: '3',
-                name: 'Joe Black',
+                user_name: 'Joe Black',
                 age: 32,
                 address: 'Sydney No. 1 Lake Park',
                 tags: ['cool', 'teacher'],
+                create_time: '2021-11-01',
+                update_time: '2021-11-01'
             }
         ])
     }
