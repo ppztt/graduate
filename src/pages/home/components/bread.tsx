@@ -1,6 +1,6 @@
 import React from "react"
 import { Breadcrumb } from 'antd'
-import { Link, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import routes from "@/router/routes"
 
 const LocalBreadcrumb: React.FC = () => {
