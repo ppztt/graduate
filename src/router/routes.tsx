@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom"
 import Login from "../pages/login"
 import Home from "../pages/home"
 import Person from '../pages/person/index'
+import UserManage from "../pages/userManage"
 const routes = [
     {
         path: '/',
@@ -15,6 +16,7 @@ const routes = [
     {
         path: '/back_way',
         element: <Home />,
+        title: '后台管理',
         children: [
             {
                 path: 'about',
@@ -26,31 +28,38 @@ const routes = [
             },
             {
                 element: "数据中心",
-                path:'dash_board'
+                path:'dash_board',
+                title: '数据中心'
             },
             {
                 element: '文章管理',
-                path: 'content'
+                path: 'content',
+                title: '文章管理'
             },
             {
                 element: "企业管理",
-                path: 'company'
+                path: 'company',
+                title: '企业管理'
             },
             {
                 element: "投诉管理",
-                path: 'complain'
+                path: 'complain',
+                title: '投诉管理'
             },
             {
-                element: "用户管理",
-                path: 'user_manage'
+                element: <UserManage/>,
+                path: 'user_manage',
+                title: '用户管理'
             },
             {
                 element: '角色管理',
-                path: 'role_manage'
+                path: 'role_manage',
+                title: '角色管理'
             },
             {   
                 path: 'person',
-                element: <Person/>
+                element: <Person/>,
+                title: '个人中心'
             }
         ]
     }

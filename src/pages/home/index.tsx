@@ -1,11 +1,13 @@
 import React from "react"
-import { Layout, Dropdown, Space } from 'antd'
+import { Layout, Dropdown, Space} from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { Outlet } from "react-router-dom"
 import './index.scss'
 import LocalMenu from "./components/menus"
 import type { MenuProps } from 'antd'
+import LocalBreadcrumb from "./components/bread"
 const { Header, Sider, Content } = Layout
+
 const Home: React.FC = () => {
     const items: MenuProps['items'] = [
         {
@@ -14,7 +16,7 @@ const Home: React.FC = () => {
         }
     ]
     return (
-        <Layout>
+        <Layout id="home">
             <Header>
                 <div className="header-box">
                     <span className="title">维权管理系统</span>
@@ -36,6 +38,9 @@ const Home: React.FC = () => {
                     <LocalMenu />
                 </Sider>
                 <Content>
+                    <div className="bread">
+                        <LocalBreadcrumb />
+                    </div>
                     {/* 需要引入Outlet组件，作用跟router-view一样，表明组件在这里显示 */}
                     <div className="routerView">
                         <Outlet></Outlet>

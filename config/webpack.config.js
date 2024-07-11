@@ -320,6 +320,7 @@ module.exports = function (webpackEnv) {
           '@': paths.appSrc
         }),
         ...(modules.webpackAliases || {}),
+        '@': path.resolve(__dirname, '../src')
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).

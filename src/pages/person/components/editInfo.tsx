@@ -47,7 +47,7 @@ const EditInfo: React.FC = () => {
                             { value: 1, label: '男' },
                             { value: 2, label: '女' }
                         ]}
-                        />
+                    />
                 </Form.Item>
                 <Form.Item<personForm>
                     label="密码"
