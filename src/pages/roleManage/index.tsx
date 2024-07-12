@@ -19,11 +19,11 @@ const RoleManage: React.FC = () => {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
-            <Space size="middle">
-                {/* record：表格上的数据 */}
-                <Button>Invite</Button>
-                <Button>Delete</Button>
-            </Space>
+                <Space size="middle">
+                    {/* record：表格上的数据 */}
+                    <Button>Invite</Button>
+                    <Button>Delete</Button>
+                </Space>
             ),
         }
     ]
@@ -49,6 +49,7 @@ const RoleManage: React.FC = () => {
     })
     return (
         <div id="role-manage">
+            <Button type="primary" style={{ marginBottom: '20px'}}>新增角色</Button>
             <Table columns={columns} dataSource={tableData} />
         </div>
     )
