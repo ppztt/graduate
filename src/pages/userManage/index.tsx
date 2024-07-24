@@ -3,6 +3,7 @@ import { Space, Table, Button, Select, Input } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
 import { userTableType } from "@/type/tableType"
+import $request from '@/api/api'
 import './index.scss'
 
 const UserManage: React.FC = () => {
@@ -12,11 +13,10 @@ const UserManage: React.FC = () => {
         current: 1,
         pageSizeOptions: [10, 20, 50],
         showSizeChanger: true,
-        defaultPageSize: 10,
         onChange: (page: number) => {
             changePage(page)
         },
-        onShowSizeChange: (page: any, pageSize: number) => {
+        onShowSizeChange: (current: any, pageSize: number) => {
             changePageSize(pageSize)
         }
     })
@@ -58,153 +58,175 @@ const UserManage: React.FC = () => {
             ...paginationProp,
             current: page
         })
+        getTableData()
     }
     const changePageSize = (pageSize: number) => {
         setPaginationProp({
             ...paginationProp,
             current: 1
         })
+        getTableData({size: pageSize})
+
     }
-    const getTableData = () => {
-        setTableData([
-            {
-                key: '1',
-                user_name: 'John Brown',
-                age: 32,
-                address: 'New York No. 1 Lake Park',
-                tags: ['nice', 'developer'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '2',
-                user_name: 'Jim Green',
-                age: 42,
-                address: 'London No. 1 Lake Park',
-                tags: ['loser'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '3',
-                user_name: 'Joe Black',
-                age: 32,
-                address: 'Sydney No. 1 Lake Park',
-                tags: ['cool', 'teacher'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '1gfdg',
-                user_name: 'John Brown',
-                age: 32,
-                address: 'New York No. 1 Lake Park',
-                tags: ['nice', 'developer'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '2fvbf',
-                user_name: 'Jim Green',
-                age: 42,
-                address: 'London No. 1 Lake Park',
-                tags: ['loser'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: 'fgh3',
-                user_name: 'Joe Black',
-                age: 32,
-                address: 'Sydney No. 1 Lake Park',
-                tags: ['cool', 'teacher'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '1fg',
-                user_name: 'John Brown',
-                age: 32,
-                address: 'New York No. 1 Lake Park',
-                tags: ['nice', 'developer'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '2ghj',
-                user_name: 'Jim Green',
-                age: 42,
-                address: 'London No. 1 Lake Park',
-                tags: ['loser'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: 'ghj3',
-                user_name: 'Joe Black',
-                age: 32,
-                address: 'Sydney No. 1 Lake Park',
-                tags: ['cool', 'teacher'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '1uj',
-                user_name: 'John Brown',
-                age: 32,
-                address: 'New York No. 1 Lake Park',
-                tags: ['nice', 'developer'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '2ttt',
-                user_name: 'Jim Green',
-                age: 42,
-                address: 'London No. 1 Lake Park',
-                tags: ['loser'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: 'yrt3',
-                user_name: 'Joe Black',
-                age: 32,
-                address: 'Sydney No. 1 Lake Park',
-                tags: ['cool', 'teacher'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '1rt',
-                user_name: 'John Brown',
-                age: 32,
-                address: 'New York No. 1 Lake Park',
-                tags: ['nice', 'developer'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: 'gh2',
-                user_name: 'Jim Green',
-                age: 42,
-                address: 'London No. 1 Lake Park',
-                tags: ['loser'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
-            },
-            {
-                key: '3uj',
-                user_name: 'Joe Black',
-                age: 32,
-                address: 'Sydney No. 1 Lake Park',
-                tags: ['cool', 'teacher'],
-                create_time: '2021-11-01',
-                update_time: '2021-11-01'
+    const getTableData = async (exact: Object = {}) => {
+        try {
+            const params = {
+                page: paginationProp.current,
+                size: 10,
+                ...exact
             }
-        ])
+            const res = await $request.User.getUserList(params)
+            if (res.result) {
+                setTableData([...res.data])
+            }
+            setTableData([
+                {
+                    key: '1',
+                    user_name: 'John Brown',
+                    age: 32,
+                    address: 'New York No. 1 Lake Park',
+                    tags: ['nice', 'developer'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '2',
+                    user_name: 'Jim Green',
+                    age: 42,
+                    address: 'London No. 1 Lake Park',
+                    tags: ['loser'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '3',
+                    user_name: 'Joe Black',
+                    age: 32,
+                    address: 'Sydney No. 1 Lake Park',
+                    tags: ['cool', 'teacher'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '1gfdg',
+                    user_name: 'John Brown',
+                    age: 32,
+                    address: 'New York No. 1 Lake Park',
+                    tags: ['nice', 'developer'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '2fvbf',
+                    user_name: 'Jim Green',
+                    age: 42,
+                    address: 'London No. 1 Lake Park',
+                    tags: ['loser'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: 'fgh3',
+                    user_name: 'Joe Black',
+                    age: 32,
+                    address: 'Sydney No. 1 Lake Park',
+                    tags: ['cool', 'teacher'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '1fg',
+                    user_name: 'John Brown',
+                    age: 32,
+                    address: 'New York No. 1 Lake Park',
+                    tags: ['nice', 'developer'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '2ghj',
+                    user_name: 'Jim Green',
+                    age: 42,
+                    address: 'London No. 1 Lake Park',
+                    tags: ['loser'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: 'ghj3',
+                    user_name: 'Joe Black',
+                    age: 32,
+                    address: 'Sydney No. 1 Lake Park',
+                    tags: ['cool', 'teacher'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '1uj',
+                    user_name: 'John Brown',
+                    age: 32,
+                    address: 'New York No. 1 Lake Park',
+                    tags: ['nice', 'developer'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '2ttt',
+                    user_name: 'Jim Green',
+                    age: 42,
+                    address: 'London No. 1 Lake Park',
+                    tags: ['loser'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: 'yrt3',
+                    user_name: 'Joe Black',
+                    age: 32,
+                    address: 'Sydney No. 1 Lake Park',
+                    tags: ['cool', 'teacher'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '1rt',
+                    user_name: 'John Brown',
+                    age: 32,
+                    address: 'New York No. 1 Lake Park',
+                    tags: ['nice', 'developer'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: 'gh2',
+                    user_name: 'Jim Green',
+                    age: 42,
+                    address: 'London No. 1 Lake Park',
+                    tags: ['loser'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                },
+                {
+                    key: '3uj',
+                    user_name: 'Joe Black',
+                    age: 32,
+                    address: 'Sydney No. 1 Lake Park',
+                    tags: ['cool', 'teacher'],
+                    create_time: '2021-11-01',
+                    update_time: '2021-11-01'
+                }
+            ])
+        } catch (error) {
+            console.log(error)
+        }
     }
-    const getRoleList = () => {}
+    const getRoleList = async () => {
+        try {
+            const res = await $request.Role.getRoleList({ size: -1})
+        } catch (error) {
+            
+        }
+    }
     useEffect(() => {
         getTableData()
         getRoleList()

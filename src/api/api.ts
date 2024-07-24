@@ -1,6 +1,9 @@
 import User from './apiUrl/user'
-
+import Role from './apiUrl/role'
+import Organization from './apiUrl/organization'
 const api = {
-    User
+    User,
+    Role,
+    Organization
 }
 export default api

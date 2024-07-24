@@ -38,7 +38,7 @@ axios.interceptors.response.use(
         return Promise.reject(msg)
     }
 )
-
+export const reUrl = '/api'
 // 发送请求 (接口路径，参数，请求配置)
 export const post: Function = (url: string, params: any, config?: any) => {
     return new Promise((resolve, reject) => {
