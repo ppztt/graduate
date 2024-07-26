@@ -230,7 +230,7 @@ const UserManage: React.FC = () => {
     useEffect(() => {
         getTableData()
         getRoleList()
-    }, [])
+    })
     return (
         <div id="user-manage">
             <div className="search-area">
