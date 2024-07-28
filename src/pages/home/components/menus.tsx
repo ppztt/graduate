@@ -18,8 +18,8 @@ const items: MenuItem[] = [
     icon: <ContainerTwoTone />
   },
   {
-    key: '/back_way/company',
-    label: '企业管理',
+    key: '/back_way/merchant',
+    label: '商家管理',
     icon: <GoldTwoTone />
   },
   {
