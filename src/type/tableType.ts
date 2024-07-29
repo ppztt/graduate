@@ -6,7 +6,8 @@ export interface userTableType {
     [key: string]: any
 }
 
-export interface roleTableType {
+export interface roleType {
+    id?: number | string
     role_name: string
     desc: string
 }

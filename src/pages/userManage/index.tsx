@@ -7,6 +7,9 @@ import $request from '@/api/api'
 import './index.scss'
 
 const UserManage: React.FC = () => {
+    const [searchValue, setSearchValue] = useState('')
+    const [selectValue, setSelectValue] = useState('')
+    const [roleList, setRoleList] = useState([])
     const [tableData, setTableData] = useState<Array<userTableType>>([])
     // 不能写死pageSize
     const [paginationProp, setPaginationProp] = useState({
@@ -68,6 +71,13 @@ const UserManage: React.FC = () => {
         getTableData({size: pageSize})
 
     }
+    const selectChange = (value: string) => {
+        setSelectValue(value)
+    }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value: inputValue } = e.target
+        setSearchValue(inputValue)
+      }
     const getTableData = async (exact: Object = {}) => {
         try {
             const params = {
@@ -223,8 +233,17 @@ const UserManage: React.FC = () => {
     const getRoleList = async () => {
         try {
             const res = await $request.Role.getRoleList({ size: -1})
+            if (res.result) {
+                setRoleList(res.data.map((item: any) => {
+                    return {
+                        ...item,
+                        value: item.id,
+                        label: item.role_name
+                    }
+                }))
+            }
         } catch (error) {
-            
+            console.log(error)
         }
     }
     useEffect(() => {
@@ -237,13 +256,21 @@ const UserManage: React.FC = () => {
                 <Select
                     defaultValue="男"
                     style={{ width: 120 }}
-                    options={[
-                        { value: 1, label: '男' },
-                        { value: 2, label: '女' }
-                    ]}
+                    placeholder="请选择角色类型"
+                    onChange={selectChange}
+                    options={roleList}
                 />
-                <Input style={{ width: 300 + 'px', marginLeft: 10 + 'px', marginRight: 10 + 'px'}} placeholder="请输入用户名进行搜索"></Input>
-                <Button type="primary" icon={<SearchOutlined />}>搜索</Button>
+                <Input
+                    onChange={handleChange}
+                    style={{ width: 300 + 'px', marginLeft: 10 + 'px', marginRight: 10 + 'px'}}
+                    placeholder="请输入用户名进行搜索">
+                </Input>
+                <Button
+                    type="primary"
+                    icon={<SearchOutlined />}
+                    onClick={() => { getTableData({searchValue, role: selectValue}) }}>
+                    搜索
+                </Button>
             </div>
             {/* position属性不能直接在变量里配置 */}
             <Table columns={columns} dataSource={tableData} pagination={{...paginationProp, position: ['bottomLeft']}} />
