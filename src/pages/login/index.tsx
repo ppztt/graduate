@@ -1,18 +1,41 @@
 import React from 'react'
 import type { FormProps } from 'antd'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { loginForm } from '@/type/loginType'
+import $request from '@/api/api'
 import './index.scss'
 
 
 const Login: React.FC = () => {
     const navigate = useNavigate()
-
+    const [messageApi, contextHolder] = message.useMessage();
     const [loginInfo] = Form.useForm<loginForm>()
-    const onFinish: FormProps<loginForm>['onFinish'] = (values) => {
-        navigate('/back_way/dash_board')
+    const onFinish: FormProps<loginForm>['onFinish'] = async ({ username, password }) => {
+        try {
+            const params: any = {
+                user_name: username,
+                password
+            }
+            const res = await $request.User.userLogin(params)
+            if (res.result) {
+                messageApi.open({
+                    type: 'success',
+                    content: '登录成功！'
+                })
+                setTimeout(() => {
+                    navigate('/back_way/dash_board')
+                }, 500)
+            } else {
+                messageApi.open({
+                    type: 'error',
+                    content: res.message
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
     
     const onFinishFailed: FormProps<loginForm>['onFinishFailed'] = (errorInfo) => {
