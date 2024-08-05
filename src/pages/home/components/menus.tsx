@@ -42,7 +42,7 @@ const items: MenuItem[] = [
     label: '个人中心',
     icon: <UserOutlined />
   }
-];
+]
 
 const LocalMenu: React.FC = () => {
   const navigate = useNavigate()

@@ -10,4 +10,5 @@ export interface roleType {
     id?: number | string
     role_name: string
     desc: string
+    menu_list: Array<number>
 }

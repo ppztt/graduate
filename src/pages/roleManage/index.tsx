@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react"
-import { Space, Table, Button, Popconfirm, message, Modal, Form, Input } from "antd"
+import { Space, Table, Button, Popconfirm, message, Modal, Form, Input, Select } from "antd"
 import type { TableProps } from "antd"
 import { roleType } from "@/type/tableType"
 import $request from '@/api/api'
+import menuList from './constance'
+
 const RoleManage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
     const [isEdit, setIsEdit] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [tableData, setTableData] = useState<Array<roleType>>([])
     const [roleForm] = Form.useForm<roleType>()
-    const [currentInfo, setCurrentInfo] = useState<roleType>({role_name: '', desc: ''}) 
+    const [currentInfo, setCurrentInfo] = useState<roleType>({role_name: '', desc: '', menu_list: []}) 
     const columns: TableProps<roleType>['columns'] = [
         {
             key: 'role_name',
@@ -51,17 +53,20 @@ const RoleManage: React.FC = () => {
                 {
                     id: 1,
                     role_name: 'John Brown',
-                    desc: ''
+                    desc: '',
+                    menu_list: []
                 },
                 {
                     id: 2,
                     role_name: 'Jim Green',
-                    desc: ''
+                    desc: '',
+                    menu_list: []
                 },
                 {
                     id: 3,
                     role_name: 'Joe Black',
-                    desc: ''
+                    desc: '',
+                    menu_list: []
                 }
             ])
         } catch (error) {
@@ -82,6 +87,7 @@ const RoleManage: React.FC = () => {
         try {
             setIsLoading(true)
             const params = roleForm.getFieldsValue()
+            console.log(params)
             let method = 'addRole'
             if (isEdit) {
                 method = 'editRole'
@@ -111,6 +117,9 @@ const RoleManage: React.FC = () => {
             
         }
     }
+    const closeModal = () => {
+        roleForm.resetFields()
+    }
     useEffect(() => {
         getTableData()
     })
@@ -124,6 +133,7 @@ const RoleManage: React.FC = () => {
                 onOk={handleConfirm}
                 okText="确定"
                 cancelText="取消"
+                afterClose={closeModal}
                 onCancel={handleCancel}
                 confirmLoading={isLoading}>
                 <Form
@@ -140,7 +150,20 @@ const RoleManage: React.FC = () => {
                     >
                         <Input placeholder="角色名称" />
                     </Form.Item>
-
+                    <Form.Item<roleType>
+                        label="菜单权限"
+                        name="menu_list"
+                        rules={[{ required: true, message: '请选择菜单权限!' }]}
+                    >
+                        <Select
+                            mode="multiple"
+                            allowClear
+                            style={{ width: '100%' }}
+                            placeholder="请选择菜单"
+                            options={menuList}
+                        />
+                    </Form.Item>
+                    
                     <Form.Item<roleType>
                         label="描述"
                         name="desc"
