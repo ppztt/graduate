@@ -100,7 +100,13 @@ module.exports = function (proxy, allowedHost) {
       index: paths.publicUrlOrPath,
     },
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
-    proxy,
+    proxy: {
+      '/api': {
+          target: 'http://127.0.0.1:3000',
+          changeOrigin: true,
+          pathRewrite: { '^/api': '' },
+        }
+    },
     onBeforeSetupMiddleware(devServer) {
       // Keep `evalSourceMapMiddleware`
       // middlewares before `redirectServedPath` otherwise will not have any effect
@@ -123,5 +129,19 @@ module.exports = function (proxy, allowedHost) {
       // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
       devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
     },
+    setupMiddlewares: (middlewares, devServer) => {
+      
+      // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
+      devServer.app.use(redirectServedPath(paths.publicUrlOrPath));
+
+      // This service worker file is effectively a 'no-op' that will reset any
+      // previous service worker registered for the same host:port combination.
+      // We do this in development to avoid hitting the production cache if
+      // it used the same host and port.
+      // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
+      devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
+      // 这里可以添加自定义的中间件
+      return middlewares; // 返回中间件数组
+    }
   };
 };
