@@ -1,6 +1,6 @@
 export interface userTableType {
     user_name: string
-    address: string
+    organization: string
     create_time: string
     update_time: string
     [key: string]: any
@@ -9,6 +9,7 @@ export interface userTableType {
 export interface roleType {
     id?: number | string
     role_name: string
+    role_level: number
     desc: string
     menu_list: Array<number>
 }

@@ -1,4 +1,4 @@
-import { roleType } from '@/type/tableType'
+import { roleType } from '@/type/userType'
 import { reUrl, get, del, post, put } from '../index'
 
 const Role = {

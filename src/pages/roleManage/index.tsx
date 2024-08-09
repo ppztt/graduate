@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Space, Table, Button, Popconfirm, message, Modal, Form, Input, Select } from "antd"
 import type { TableProps } from "antd"
-import { roleType } from "@/type/tableType"
+import { roleType } from "@/type/userType"
 import $request from '@/api/api'
 import menuList from './constance'
 
@@ -11,7 +11,7 @@ const RoleManage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [tableData, setTableData] = useState<Array<roleType>>([])
     const [roleForm] = Form.useForm<roleType>()
-    const [currentInfo, setCurrentInfo] = useState<roleType>({role_name: '', desc: '', menu_list: []}) 
+    const [currentInfo, setCurrentInfo] = useState<roleType>({role_name: '', desc: '', menu_list: [], role_level: 0}) 
     const columns: TableProps<roleType>['columns'] = [
         {
             key: 'role_name',
@@ -49,26 +49,6 @@ const RoleManage: React.FC = () => {
             if (res.result) {
                 setTableData(res.data)
             }
-            setTableData([
-                {
-                    id: 1,
-                    role_name: 'John Brown',
-                    desc: '',
-                    menu_list: []
-                },
-                {
-                    id: 2,
-                    role_name: 'Jim Green',
-                    desc: '',
-                    menu_list: []
-                },
-                {
-                    id: 3,
-                    role_name: 'Joe Black',
-                    desc: '',
-                    menu_list: []
-                }
-            ])
         } catch (error) {
             
         }

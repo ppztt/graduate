@@ -10,7 +10,6 @@ import './index.scss'
 
 const Login: React.FC = () => {
     const navigate = useNavigate()
-    const [messageApi, contextHolder] = message.useMessage();
     const [loginInfo] = Form.useForm<loginForm>()
     const onFinish: FormProps<loginForm>['onFinish'] = async ({ username, password }) => {
         try {
@@ -20,18 +19,12 @@ const Login: React.FC = () => {
             }
             const res = await $request.User.userLogin(params)
             if (res.result) {
-                messageApi.open({
-                    type: 'success',
-                    content: '登录成功！'
-                })
+                message.success('登录成功！')
                 setTimeout(() => {
                     navigate('/back_way/dash_board')
                 }, 500)
             } else {
-                messageApi.open({
-                    type: 'error',
-                    content: res.message
-                })
+                message.error(res.message)
             }
         } catch (error) {
             console.log(error)

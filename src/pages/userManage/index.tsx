@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react"
 import { Space, Table, Button, Select, Input } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
-import { userTableType } from "@/type/tableType"
+import { roleType, userTableType } from "@/type/userType"
 import $request from '@/api/api'
 import './index.scss'
+import UserDialog from "./userDialog"
 
 const UserManage: React.FC = () => {
     const [searchValue, setSearchValue] = useState('')
     const [selectValue, setSelectValue] = useState('')
-    const [roleList, setRoleList] = useState([])
+    const [roleList, setRoleList] = useState<Array<roleType>>([])
     const [tableData, setTableData] = useState<Array<userTableType>>([])
     // 不能写死pageSize
     const [paginationProp, setPaginationProp] = useState({
@@ -32,7 +33,12 @@ const UserManage: React.FC = () => {
         {
             title: '用户等级',
             key: 'role_level',
-            dataIndex: 'role_level'
+            dataIndex: 'role_level',
+            render: (_, record) => (
+                <Space size="middle">
+                    {roleList.find((item: roleType) => item.role_level === record.role_level)?.role_name}
+                </Space>
+            ),
         },
         {
             title: "创建时间",
@@ -48,14 +54,16 @@ const UserManage: React.FC = () => {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
-            <Space size="middle">
-                {/* record：表格上的数据 */}
-                <Button>Invite {record.user_name}</Button>
-                <Button>Delete</Button>
-            </Space>
+                <Space size="middle">
+                    {/* record：表格上的数据 */}
+                    <Button type="link">编辑</Button>
+                    <Button danger type="text">删除</Button>
+                </Space>
             ),
         }
     ]
+    const [isShow, setIsShow] = useState<Boolean>(false)
+
     const changePage = (page: number) => {
         setPaginationProp({
             ...paginationProp,
@@ -68,7 +76,7 @@ const UserManage: React.FC = () => {
             ...paginationProp,
             current: 1
         })
-        getTableData({size: pageSize})
+        getTableData({ size: pageSize })
 
     }
     const selectChange = (value: string) => {
@@ -77,7 +85,10 @@ const UserManage: React.FC = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value: inputValue } = e.target
         setSearchValue(inputValue)
-      }
+    }
+    const handleShow = (val: Boolean) => {
+        setIsShow(val)
+    }
     const getTableData = async (exact: Object = {}) => {
         try {
             const params = {
@@ -89,155 +100,18 @@ const UserManage: React.FC = () => {
             if (res.result) {
                 setTableData([...res.data])
             }
-            setTableData([
-                {
-                    key: '1',
-                    user_name: 'John Brown',
-                    age: 32,
-                    address: 'New York No. 1 Lake Park',
-                    tags: ['nice', 'developer'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '2',
-                    user_name: 'Jim Green',
-                    age: 42,
-                    address: 'London No. 1 Lake Park',
-                    tags: ['loser'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '3',
-                    user_name: 'Joe Black',
-                    age: 32,
-                    address: 'Sydney No. 1 Lake Park',
-                    tags: ['cool', 'teacher'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '1gfdg',
-                    user_name: 'John Brown',
-                    age: 32,
-                    address: 'New York No. 1 Lake Park',
-                    tags: ['nice', 'developer'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '2fvbf',
-                    user_name: 'Jim Green',
-                    age: 42,
-                    address: 'London No. 1 Lake Park',
-                    tags: ['loser'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: 'fgh3',
-                    user_name: 'Joe Black',
-                    age: 32,
-                    address: 'Sydney No. 1 Lake Park',
-                    tags: ['cool', 'teacher'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '1fg',
-                    user_name: 'John Brown',
-                    age: 32,
-                    address: 'New York No. 1 Lake Park',
-                    tags: ['nice', 'developer'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '2ghj',
-                    user_name: 'Jim Green',
-                    age: 42,
-                    address: 'London No. 1 Lake Park',
-                    tags: ['loser'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: 'ghj3',
-                    user_name: 'Joe Black',
-                    age: 32,
-                    address: 'Sydney No. 1 Lake Park',
-                    tags: ['cool', 'teacher'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '1uj',
-                    user_name: 'John Brown',
-                    age: 32,
-                    address: 'New York No. 1 Lake Park',
-                    tags: ['nice', 'developer'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '2ttt',
-                    user_name: 'Jim Green',
-                    age: 42,
-                    address: 'London No. 1 Lake Park',
-                    tags: ['loser'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: 'yrt3',
-                    user_name: 'Joe Black',
-                    age: 32,
-                    address: 'Sydney No. 1 Lake Park',
-                    tags: ['cool', 'teacher'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '1rt',
-                    user_name: 'John Brown',
-                    age: 32,
-                    address: 'New York No. 1 Lake Park',
-                    tags: ['nice', 'developer'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: 'gh2',
-                    user_name: 'Jim Green',
-                    age: 42,
-                    address: 'London No. 1 Lake Park',
-                    tags: ['loser'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                },
-                {
-                    key: '3uj',
-                    user_name: 'Joe Black',
-                    age: 32,
-                    address: 'Sydney No. 1 Lake Park',
-                    tags: ['cool', 'teacher'],
-                    create_time: '2021-11-01',
-                    update_time: '2021-11-01'
-                }
-            ])
         } catch (error) {
             console.log(error)
         }
     }
     const getRoleList = async () => {
         try {
-            const res = await $request.Role.getRoleList({ size: -1})
+            const res = await $request.Role.getRoleList({ size: -1 })
             if (res.result) {
-                setRoleList(res.data.map((item: any) => {
+                setRoleList(res.data.map((item: roleType) => {
                     return {
                         ...item,
-                        value: item.id,
+                        value: item.role_level,
                         label: item.role_name
                     }
                 }))
@@ -249,31 +123,39 @@ const UserManage: React.FC = () => {
     useEffect(() => {
         getTableData()
         getRoleList()
-    })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return (
         <div id="user-manage">
             <div className="search-area">
-                <Select
-                    defaultValue="男"
-                    style={{ width: 120 }}
-                    placeholder="请选择角色类型"
-                    onChange={selectChange}
-                    options={roleList}
-                />
-                <Input
-                    onChange={handleChange}
-                    style={{ width: 300 + 'px', marginLeft: 10 + 'px', marginRight: 10 + 'px'}}
-                    placeholder="请输入用户名进行搜索">
-                </Input>
-                <Button
-                    type="primary"
-                    icon={<SearchOutlined />}
-                    onClick={() => { getTableData({searchValue, role: selectValue}) }}>
-                    搜索
-                </Button>
+                <div className="left-part">
+                    <Button type="primary">新增用户</Button>
+                </div>
+                <div className="right-part">
+                    <Select
+                        allowClear
+                        style={{ width: 200 }}
+                        placeholder="请选择角色类型"
+                        onChange={selectChange}
+                        options={roleList}
+                    />
+                    <Input
+                        onChange={handleChange}
+                        style={{ width: 300 + 'px', marginLeft: 10 + 'px', marginRight: 10 + 'px' }}
+                        placeholder="请输入用户名进行搜索"
+                        onKeyDown={(event) => { event.keyCode === 13 && getTableData({ user_name: searchValue, role_level: selectValue }) }}>
+                    </Input>
+                    <Button
+                        type="primary"
+                        icon={<SearchOutlined />}
+                        onClick={() => { getTableData({ user_name: searchValue, role_level: selectValue }) }}>
+                        搜索
+                    </Button>
+                </div>
             </div>
             {/* position属性不能直接在变量里配置 */}
-            <Table columns={columns} dataSource={tableData} pagination={{...paginationProp, position: ['bottomLeft']}} />
+            <Table columns={columns} dataSource={tableData} pagination={{ ...paginationProp, position: ['bottomLeft'] }} />
+            <UserDialog isShow={isShow} handleShow={handleShow}></UserDialog>
         </div>
     )
 }
