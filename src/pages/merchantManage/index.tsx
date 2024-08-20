@@ -12,7 +12,7 @@ const Merchant: React.FC = () => {
 	const [searchValue, setSearchValue] = useState<string>('')
 	const [isEdit, setIsEdit] = useState<boolean>(false)
 	const [isShow, setIsShow] = useState<boolean>(false)
-	const [currentInfo, setCurrentInfo] = useState<object>({})
+	const [currentInfo, setCurrentInfo] = useState<object | merchantTableType>({})
 	const columns: TableProps<merchantTableType>['columns'] = [
 		{
 			key: 'merchant_name',
@@ -64,14 +64,14 @@ const Merchant: React.FC = () => {
 			),
 		}
 	]
-	const getTableData = async (exact?: Object) => {
+	const getTableData = async (exact?: undefined | Object) => {
 		try {
 			const params = {
 				page: 1,
 				size: 10,
 				...exact
 			}
-			const res = await $request
+			const res = await $request.Merchant.getMerchantList(params)
 			if (res.result) {
 				setTableData(res.data)
 			}
@@ -122,7 +122,11 @@ const Merchant: React.FC = () => {
 				info={currentInfo}
 				isEdit={isEdit}
 				isShow={isShow}
-				changeShow={(val: boolean) => { setIsShow(val); setIsEdit(val) }}
+				changeShow={
+					(val: boolean) => {
+						setIsShow(val)
+						setIsEdit(val) 
+					}}
 			/>
 		</div>
 	)

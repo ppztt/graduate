@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Space, Table, Button, Popconfirm, message, Modal, Form, Input, Select } from "antd"
+import { Space, Table, Button, Popconfirm, message, Modal, Form, Input, Select, Spin } from "antd"
 import type { TableProps } from "antd"
 import { roleType } from "@/type/userType"
 import $request from '@/api/api'
@@ -44,10 +44,12 @@ const RoleManage: React.FC = () => {
     ]
 
     const getTableData = async (exact?: object) => {
+        setIsLoading(true)
         try {
             const res = await $request.Role.getRoleList({...exact})
             if (res.result) {
                 setTableData(res.data)
+                setIsLoading(false)
             }
         } catch (error) {
             
@@ -102,11 +104,13 @@ const RoleManage: React.FC = () => {
     }
     useEffect(() => {
         getTableData()
-    })
+    }, [])
     return (
         <div id="role-manage">
             <Button type="primary" style={{ marginBottom: '20px'}} onClick={() => {setIsModalOpen(true)}}>新增角色</Button>
-            <Table columns={columns} dataSource={tableData} />
+            <Spin spinning={isLoading}>
+                <Table columns={columns} dataSource={tableData} />
+            </Spin>
             <Modal
                 title={isEdit ? '编辑角色' : '新增角色' }
                 open={isModalOpen}

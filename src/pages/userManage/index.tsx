@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Space, Table, Button, Select, Input } from "antd"
+import { Space, Table, Button, Select, Input, Spin } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
 import { roleType, userTableType } from "@/type/userType"
@@ -10,6 +10,7 @@ import UserDialog from "./userDialog"
 const UserManage: React.FC = () => {
     const [searchValue, setSearchValue] = useState('')
     const [selectValue, setSelectValue] = useState('')
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<Array<roleType>>([])
     const [tableData, setTableData] = useState<Array<userTableType>>([])
     // 不能写死pageSize
@@ -32,13 +33,8 @@ const UserManage: React.FC = () => {
         },
         {
             title: '用户等级',
-            key: 'role_level',
-            dataIndex: 'role_level',
-            render: (_, record) => (
-                <Space size="middle">
-                    {roleList.find((item: roleType) => item.role_level === record.role_level)?.role_name}
-                </Space>
-            ),
+            key: 'role_level_name',
+            dataIndex: 'role_level_name'
         },
         {
             title: "创建时间",
@@ -90,6 +86,7 @@ const UserManage: React.FC = () => {
         setIsShow(val)
     }
     const getTableData = async (exact: Object = {}) => {
+        setIsLoading(true)
         try {
             const params = {
                 page: paginationProp.current,
@@ -98,7 +95,11 @@ const UserManage: React.FC = () => {
             }
             const res = await $request.User.getUserList(params)
             if (res.result) {
+                res.data.forEach((item: any) => {
+                    item.role_level_name = roleList.find((role: roleType) => role.role_level === item.role_level)?.role_name
+                })
                 setTableData([...res.data])
+                setIsLoading(false)
             }
         } catch (error) {
             console.log(error)
@@ -121,8 +122,8 @@ const UserManage: React.FC = () => {
         }
     }
     useEffect(() => {
-        getTableData()
         getRoleList()
+        getTableData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return (
@@ -154,7 +155,9 @@ const UserManage: React.FC = () => {
                 </div>
             </div>
             {/* position属性不能直接在变量里配置 */}
-            <Table columns={columns} dataSource={tableData} pagination={{ ...paginationProp, position: ['bottomLeft'] }} />
+            <Spin spinning={isLoading}>
+                <Table columns={columns} dataSource={tableData} pagination={{ ...paginationProp, position: ['bottomLeft'] }} />
+            </Spin>
             <UserDialog isShow={isShow} handleShow={handleShow}></UserDialog>
         </div>
     )
