@@ -69,6 +69,7 @@ const RoleManage: React.FC = () => {
         try {
             setIsLoading(true)
             const params = roleForm.getFieldsValue()
+            params.menu_list = JSON.stringify(params.menu_list)
             console.log(params)
             let method = 'addRole'
             if (isEdit) {
@@ -79,6 +80,8 @@ const RoleManage: React.FC = () => {
             if (res.result) {
                 message.success(`${isEdit ? '编辑' : '新增' }成功`)
             }
+            setIsLoading(false)
+            setIsModalOpen(false)
         } catch (error) {
             console.log(error)
         }
@@ -94,9 +97,11 @@ const RoleManage: React.FC = () => {
             if (res.result) {
                 roleForm.setFieldsValue({role_name: res.data.role_name, desc: res.data.desc})
                 setCurrentInfo(res.data)
+                setIsLoading(false)
+                setIsModalOpen(false)
             }
         } catch (error) {
-            
+            console.log(error)
         }
     }
     const closeModal = () => {
@@ -146,6 +151,13 @@ const RoleManage: React.FC = () => {
                             placeholder="请选择菜单"
                             options={menuList}
                         />
+                    </Form.Item>
+                    <Form.Item<roleType>
+                        label="角色等级"
+                        name="role_level"
+                        rules={[{ required: true, message: '请输入角色等级!' }]}
+                    >
+                        <Input placeholder="角色等级" />
                     </Form.Item>
                     
                     <Form.Item<roleType>
