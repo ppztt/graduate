@@ -29,7 +29,7 @@ const RoleManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    <Button onClick={editInfo}>编辑</Button>
+                    <Button onClick={() => { editInfo(record.id) }}>编辑</Button>
                     <Popconfirm
                         title="删除角色"
                         description="确定删除该角色？"
@@ -89,16 +89,14 @@ const RoleManage: React.FC = () => {
     const handleCancel = async () => {
         setIsModalOpen(false)
     }
-    const editInfo = async () => {
+    const editInfo = async (id: Number | string | undefined) => {
         try {
             setIsEdit(true)
             setIsModalOpen(true)
-            const res = await $request.Role.getRoleList()
+            const res = await $request.Role.getRoleList({ id, size: -1 })
             if (res.result) {
-                roleForm.setFieldsValue({role_name: res.data.role_name, desc: res.data.desc})
-                setCurrentInfo(res.data)
-                setIsLoading(false)
-                setIsModalOpen(false)
+                roleForm.setFieldsValue({...res.data[0], menu_list: JSON.parse(res.data[0].menu_list)})
+                setCurrentInfo({...res.data[0], menu_list: JSON.parse(res.data[0].menu_list)})
             }
         } catch (error) {
             console.log(error)
