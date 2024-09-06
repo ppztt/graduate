@@ -1,10 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Modal, Form, Input, Select } from "antd"
 import { userType } from "@/type/userType"
-
+import $request from '@/api/api'
 const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [organizationList, setOrganizationList] = useState([])
+    const [merchantList, setMerchantList] = useState([])
     const userForm = Form.useForm()
     const handleConfirm = () => {
         handleShow(false)
@@ -12,7 +12,26 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
     const handleCancel = () => {
         handleShow(false)
     }
+    const getMerchantList = async () => {
+        try {
+            const res = await $request.Merchant.getMerchantList({size: -1})
+            if (res.result) {
+                setMerchantList(res.data.map((item: any) => {
+                    return {
+                        value: item.id,
+                        label: item.merchant_name,
+                        ...item
+                    }
+                }))
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const closeModal = () => { }
+    useEffect(() => {
+        getMerchantList()
+    }, [])
     return (
         <Modal
             title={isEdit ? '编辑用户' : '新增用户'}
@@ -41,23 +60,22 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                     name="organization"
                     rules={[{ required: true, message: '请选择用户所属组织!' }]}>
                     <Select
-                        mode="multiple"
                         allowClear
                         style={{ width: '100%' }}
                         placeholder="请选择隶属组织"
-                        options={organizationList}
+                        options={merchantList}
                     />
                 </Form.Item>
 
                 <Form.Item<userType>
                     label="所属角色"
-                    name="organization"
+                    name="role"
                     rules={[{ required: true, message: '请选择用户所属组织!' }]}>
                     <Select
                         allowClear
                         style={{ width: '100%' }}
                         placeholder="请选择所属角色"
-                        options={organizationList}
+                        options={merchantList}
                     />
                 </Form.Item>
 
