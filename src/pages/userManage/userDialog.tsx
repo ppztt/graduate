@@ -5,6 +5,7 @@ import $request from '@/api/api'
 const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [merchantList, setMerchantList] = useState([])
+    const [roleList, setRoleList] = useState([])
     const userForm = Form.useForm()
     const handleConfirm = () => {
         handleShow(false)
@@ -28,9 +29,26 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
             console.log(error)
         }
     }
+    const getRoleList = async () => {
+        try {
+            const res = await $request.Role.getRoleList({ size: -1})
+            if (res.result) {
+                setRoleList(res.data.map((item: any) => {
+                    return {
+                        value: item.id,
+                        label: item.role_name,
+                        ...item
+                    }
+                }))
+            }
+        } catch (error) {
+            
+        }
+    }
     const closeModal = () => { }
     useEffect(() => {
         getMerchantList()
+        getRoleList()
     }, [])
     return (
         <Modal
@@ -70,12 +88,12 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                 <Form.Item<userType>
                     label="所属角色"
                     name="role"
-                    rules={[{ required: true, message: '请选择用户所属组织!' }]}>
+                    rules={[{ required: true, message: '请选择用户所属角色!' }]}>
                     <Select
                         allowClear
                         style={{ width: '100%' }}
                         placeholder="请选择所属角色"
-                        options={merchantList}
+                        options={roleList}
                     />
                 </Form.Item>
 
