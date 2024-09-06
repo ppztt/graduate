@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Select } from "antd"
 import React, { useEffect, useState } from "react"
 import { merchantTableType } from "@/type/merchantType"
-
+import $request from '@/api/api'
 const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo }) => {
     const layout = {
         labelCol: { span: 4 },
@@ -9,30 +9,44 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
     }
     const [merchantForm] = Form.useForm<merchantTableType>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const floorList = [
+        {
+            value: 1,
+            label: 1
+        },
+        {
+            value: 2,
+            label: 2
+        },
+        {
+            value: 3,
+            label: 3
+        }
+    ]
     const info = {
         id: -1,
         merchant_name: '',
-        merchant_desc: '',
+        desc: '',
         address: '',
         floor: ''
     }
-    const handleConfirm = async () => {
-        try {
-            setIsLoading(true)
-            merchantForm.validateFields().then((value) => {
-                const params = value
-                if (isEdit) {
-                    params.id = currentInfo.id
-                    params.create_time = currentInfo.create_time
-                }
+    const handleConfirm = () => {
+        setIsLoading(true)
+        merchantForm.validateFields().then(async (value) => {
+            const params = value
+            const res = isEdit ? await $request.Merchant.editMerchant(currentInfo.id, params) : await $request.Merchant.addMerchant([params])
+            if (res.result) {
                 changeShow(false)
                 setIsLoading(false)
-            })
-        } catch (error) {
-            console.log(error)
-        }
+            }
+        }).catch((err) => {
+            setIsLoading(false)
+            console.log(err)
+        })
     }
     const closeModal = () => {
+        merchantForm.resetFields()
+        setIsLoading(false)
         changeShow(false)
     }
     const handleCancel = () => {
@@ -43,7 +57,7 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
             merchantForm.setFieldsValue(currentInfo)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [isEdit])
     return (
         <Modal
             title={isEdit ? '编辑用户' : '新增用户'}
@@ -60,22 +74,24 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
                 name="control-hooks"
                 style={{ maxWidth: 600 }}
                 initialValues={info}>
-                <Form.Item name="merchant_name" label="商户名称" rules={[{ required: true, message: '请输入商户描述'  }]}>
-                    <Input />
+                <Form.Item name="merchant_name" label="商户名称" rules={[{ required: true, message: '请输入商户名称'  }]}>
+                    <Input placeholder="请输入商户名称" />
                 </Form.Item>
-                <Form.Item name="merchant_desc" label="商户描述" rules={[{ required: true, message: '请输入商户描述' }]}>
-                    <Input.TextArea />
+                <Form.Item name="desc" label="商户描述" rules={[{ required: true, message: '请输入商户描述' }]}>
+                    <Input.TextArea placeholder="请输入商户描述" />
                 </Form.Item>
                 <Form.Item name="address" label="地址" rules={[{ required: true }]}>
                     <Select
                         placeholder="请选择地点"
-                        allowClear>
+                        allowClear
+                        options={floorList}>
                     </Select>
                 </Form.Item>
                 <Form.Item name="floor" label="楼层" rules={[{ required: true }]}>
                     <Select
                         placeholder="请选择楼层"
-                        allowClear>
+                        allowClear
+                        options={floorList}>
                     </Select>
                 </Form.Item>
             </Form>

@@ -1,3 +1,5 @@
+import { message } from 'antd'
+import { NoticeType } from 'antd/es/message/interface'
 export function formatDate(date: string, format: string) {
     let time: any
     if (!date) return ''
@@ -20,4 +22,12 @@ export function formatDate(date: string, format: string) {
         if (new RegExp('(' + k + ')').test(format)) format = format.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
     }
     return format
+}
+
+export function $message(type: NoticeType, content: string) {
+    const [messageApi] = message.useMessage()
+    messageApi.open({
+        type,
+        content
+    })
 }

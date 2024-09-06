@@ -4,7 +4,7 @@ export const searchTypeList = [
         label: '商户名称'
     },
     {
-        value: 'merchant_desc',
+        value: 'desc',
         label: '商户描述'
     },
     {

@@ -1,8 +1,8 @@
-export interface userTableType {
+export interface userType {
     user_name: string
     organization: string
-    create_time: string
-    update_time: string
+    create_time?: string
+    update_time?: string
     [key: string]: any
 }
 

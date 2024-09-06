@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { Table, Space, Button, Popconfirm, Select, Input } from 'antd'
+import React, { useState, useEffect, useCallback } from 'react'
+import { Table, Space, Button, Popconfirm, Select, Input, Spin } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { merchantTableType } from '@/type/merchantType'
 import { searchTypeList } from './constance'
 import $request from '@/api/api'
+import { $message } from '@/utils/index'
 import MerchantModal from './merchantModal'
 import type { TableProps } from 'antd'
 const Merchant: React.FC = () => {
@@ -11,8 +12,18 @@ const Merchant: React.FC = () => {
 	const [selectValue, setSelectValue] = useState<string>('')
 	const [searchValue, setSearchValue] = useState<string>('')
 	const [isEdit, setIsEdit] = useState<boolean>(false)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isShow, setIsShow] = useState<boolean>(false)
 	const [currentInfo, setCurrentInfo] = useState<object | merchantTableType>({})
+	const [paginationProp, setPaginationProp] = useState({
+        current: 1,
+        pageSizeOptions: [10, 20, 50],
+		defaultPageSize: 10,
+        showSizeChanger: true,
+        onChange: (page: number, pageSize: number) => {
+            changePage(page, pageSize)
+        }
+    })
 	const columns: TableProps<merchantTableType>['columns'] = [
 		{
 			key: 'merchant_name',
@@ -20,8 +31,8 @@ const Merchant: React.FC = () => {
 			title: '商户名称'
 		},
 		{
-			key: 'merchant_desc',
-			dataIndex: 'merchant_desc',
+			key: 'desc',
+			dataIndex: 'desc',
 			title: '商户描述'
 		},
 		{
@@ -31,7 +42,7 @@ const Merchant: React.FC = () => {
 			render: (_, record) => (
 				<Space size="middle">
 					{/* record：表格上的数据 */}
-					{`${record.address}${record.floor}楼`}
+					{`${record.address}${record.floor ? record.floor + '楼' : ''}`}
 				</Space>
 			)
 		},
@@ -55,7 +66,7 @@ const Merchant: React.FC = () => {
 					<Popconfirm
 						title="删除商户"
 						description="确定删除该商户？"
-						onConfirm={() => { }}
+						onConfirm={() => {delMerchant(record.id)}}
 						okText="确定"
 						cancelText="取消">
 						<Button danger>删除</Button>
@@ -64,16 +75,29 @@ const Merchant: React.FC = () => {
 			),
 		}
 	]
-	const getTableData = async (exact?: undefined | Object) => {
+
+
+	const changePage = (page: number, pageSize: number) => {
+		const current = pageSize === paginationProp.defaultPageSize ? page : 1
+        setPaginationProp({
+            ...paginationProp,
+			current,
+			defaultPageSize: pageSize
+        })
+        getTableData({ page: current, size: pageSize})
+    }
+	const getTableData = async (exact: Object = {}) => {
 		try {
+			setIsLoading(true)
 			const params = {
-				page: 1,
-				size: 10,
+				page: paginationProp.current,
+				size: paginationProp.defaultPageSize,
 				...exact
 			}
 			const res = await $request.Merchant.getMerchantList(params)
 			if (res.result) {
 				setTableData(res.data)
+				setIsLoading(false)
 			}
 		} catch (error) {
 			console.log(error)
@@ -86,8 +110,19 @@ const Merchant: React.FC = () => {
 		const { value: inputValue } = e.target
 		setSearchValue(inputValue)
 	}
+	const delMerchant = async (id: Number | undefined) => {
+		try {
+			const res = await $request.Merchant.delMerchant(id)
+			if (res.result) {
+				$message('success', '删除成功')
+				getTableData({ page: 1, size: 10})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
 	useEffect(() => {
-		// getTableData()
+		getTableData()
 	}, [])
 	return (
 		<div id='merchant-manage'>
@@ -117,13 +152,16 @@ const Merchant: React.FC = () => {
 					</Button>
 				</div>
 			</div>
-			<Table columns={columns} dataSource={tableData} />
+			<Spin spinning={isLoading}>
+				<Table columns={columns} dataSource={tableData} pagination={{ ...paginationProp, position: ['bottomLeft'] }} />
+			</Spin>
 			<MerchantModal
-				info={currentInfo}
+				currentInfo={currentInfo}
 				isEdit={isEdit}
 				isShow={isShow}
 				changeShow={
 					(val: boolean) => {
+						getTableData()
 						setIsShow(val)
 						setIsEdit(val) 
 					}}

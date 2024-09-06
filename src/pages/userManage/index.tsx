@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Space, Table, Button, Select, Input, Spin } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
-import { roleType, userTableType } from "@/type/userType"
+import { roleType, userType } from "@/type/userType"
 import $request from '@/api/api'
 import './index.scss'
 import UserDialog from "./userDialog"
@@ -12,20 +12,22 @@ const UserManage: React.FC = () => {
     const [selectValue, setSelectValue] = useState('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<Array<roleType>>([])
-    const [tableData, setTableData] = useState<Array<userTableType>>([])
+    const [tableData, setTableData] = useState<Array<userType>>([])
+    const [userInfo, setUserInfo] = useState<userType>({
+        user_name: '',
+        organization: ''
+    })
     // 不能写死pageSize
     const [paginationProp, setPaginationProp] = useState({
         current: 1,
         pageSizeOptions: [10, 20, 50],
+		defaultPageSize: 10,
         showSizeChanger: true,
-        onChange: (page: number) => {
-            changePage(page)
-        },
-        onShowSizeChange: (current: any, pageSize: number) => {
-            changePageSize(pageSize)
+        onChange: (page: number, pageSize: number) => {
+            changePage(page, pageSize)
         }
     })
-    const columns: TableProps<userTableType>['columns'] = [
+    const columns: TableProps<userType>['columns'] = [
         {
             title: "用户名",
             key: "user_name",
@@ -52,28 +54,23 @@ const UserManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    <Button type="link">编辑</Button>
+                    <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo(record)}}>编辑</Button>
                     <Button danger type="text">删除</Button>
                 </Space>
             ),
         }
     ]
     const [isShow, setIsShow] = useState<Boolean>(false)
+    const [isEdit, setIsEdit] = useState<Boolean>(false)
 
-    const changePage = (page: number) => {
+    const changePage = (page: number, pageSize: number) => {
+		const current = pageSize === paginationProp.defaultPageSize ? page : 1
         setPaginationProp({
             ...paginationProp,
-            current: page
+			current,
+			defaultPageSize: pageSize
         })
-        getTableData()
-    }
-    const changePageSize = (pageSize: number) => {
-        setPaginationProp({
-            ...paginationProp,
-            current: 1
-        })
-        getTableData({ size: pageSize })
-
+        getTableData({ page: current, size: pageSize})
     }
     const selectChange = (value: string) => {
         setSelectValue(value)
@@ -90,7 +87,7 @@ const UserManage: React.FC = () => {
         try {
             const params = {
                 page: paginationProp.current,
-                size: 10,
+                size: paginationProp.defaultPageSize,
                 ...exact
             }
             const res = await $request.User.getUserList(params)
@@ -130,7 +127,7 @@ const UserManage: React.FC = () => {
         <div id="user-manage">
             <div className="search-area">
                 <div className="left-part">
-                    <Button type="primary">新增用户</Button>
+                    <Button type="primary" onClick={() => { setIsShow(true) }}>新增用户</Button>
                 </div>
                 <div className="right-part">
                     <Select
@@ -158,7 +155,7 @@ const UserManage: React.FC = () => {
             <Spin spinning={isLoading}>
                 <Table columns={columns} dataSource={tableData} pagination={{ ...paginationProp, position: ['bottomLeft'] }} />
             </Spin>
-            <UserDialog isShow={isShow} handleShow={handleShow}></UserDialog>
+            <UserDialog isShow={isShow} isEdit={isEdit} userInfo={userInfo} handleShow={handleShow}></UserDialog>
         </div>
     )
 }

@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 import { Modal, Form, Input, Select } from "antd"
-import { roleType } from "@/type/userType"
+import { userType } from "@/type/userType"
 
 const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [organizationList, setOrganizationList] = useState([])
     const userForm = Form.useForm()
     const handleConfirm = () => {
         handleShow(false)
@@ -28,14 +29,39 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 600 }}
                 initialValues={{ role_name: '', desc: '' }}>
-                <Form.Item<roleType>
+                <Form.Item<userType>
                     label="用户名"
-                    name="role_name"
-                    rules={[{ required: true, message: '请输入角色名称!' }]}>
-                    <Input placeholder="角色名称" />
+                    name="user_name"
+                    rules={[{ required: true, message: '请输入用户名称!' }]}>
+                    <Input placeholder="用户名称" />
                 </Form.Item>
 
-                <Form.Item<roleType>
+                <Form.Item<userType>
+                    label="隶属组织"
+                    name="organization"
+                    rules={[{ required: true, message: '请选择用户所属组织!' }]}>
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '100%' }}
+                        placeholder="请选择隶属组织"
+                        options={organizationList}
+                    />
+                </Form.Item>
+
+                <Form.Item<userType>
+                    label="所属角色"
+                    name="organization"
+                    rules={[{ required: true, message: '请选择用户所属组织!' }]}>
+                    <Select
+                        allowClear
+                        style={{ width: '100%' }}
+                        placeholder="请选择所属角色"
+                        options={organizationList}
+                    />
+                </Form.Item>
+
+                <Form.Item<userType>
                     label="描述"
                     name="desc"
                     rules={[{ required: true, message: '请输入角色描述!' }]}>
