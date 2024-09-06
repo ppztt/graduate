@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, Space, Button, Popconfirm, Select, Input, Spin } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { merchantTableType } from '@/type/merchantType'
@@ -31,8 +31,8 @@ const Merchant: React.FC = () => {
 			title: '商户名称'
 		},
 		{
-			key: 'desc',
-			dataIndex: 'desc',
+			key: 'merchant_desc',
+			dataIndex: 'merchant_desc',
 			title: '商户描述'
 		},
 		{

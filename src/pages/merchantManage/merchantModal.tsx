@@ -26,7 +26,7 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
     const info = {
         id: -1,
         merchant_name: '',
-        desc: '',
+        merchant_desc: '',
         address: '',
         floor: ''
     }
@@ -77,7 +77,7 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
                 <Form.Item name="merchant_name" label="商户名称" rules={[{ required: true, message: '请输入商户名称'  }]}>
                     <Input placeholder="请输入商户名称" />
                 </Form.Item>
-                <Form.Item name="desc" label="商户描述" rules={[{ required: true, message: '请输入商户描述' }]}>
+                <Form.Item name="merchant_desc" label="商户描述" rules={[{ required: true, message: '请输入商户描述' }]}>
                     <Input.TextArea placeholder="请输入商户描述" />
                 </Form.Item>
                 <Form.Item name="address" label="地址" rules={[{ required: true }]}>
