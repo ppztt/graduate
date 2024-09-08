@@ -34,7 +34,12 @@ const UserManage: React.FC = () => {
             dataIndex: 'user_name'
         },
         {
-            title: '用户等级',
+            title: '隶属商户',
+            key: 'merchant_name',
+            dataIndex: 'merchant_name'
+        },
+        {
+            title: '用户角色',
             key: 'role_level_name',
             dataIndex: 'role_level_name'
         },
@@ -93,7 +98,9 @@ const UserManage: React.FC = () => {
             const res = await $request.User.getUserList(params)
             if (res.result) {
                 res.data.forEach((item: any) => {
-                    item.role_level_name = roleList.find((role: roleType) => role.role_level === item.role_level)?.role_name
+                    item.role_level_name = roleList.find((role: roleType) => {
+                        return role.role_level === item.role_level
+                    })?.role_name
                 })
                 setTableData([...res.data])
                 setIsLoading(false)

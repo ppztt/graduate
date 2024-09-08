@@ -75,7 +75,7 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
 
                 <Form.Item<userType>
                     label="隶属组织"
-                    name="organization"
+                    name="merchant_id"
                     rules={[{ required: true, message: '请选择用户所属组织!' }]}>
                     <Select
                         allowClear
@@ -87,7 +87,7 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
 
                 <Form.Item<userType>
                     label="所属角色"
-                    name="role"
+                    name="role_id"
                     rules={[{ required: true, message: '请选择用户所属角色!' }]}>
                     <Select
                         allowClear
