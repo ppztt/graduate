@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react"
-import { Modal, Form, Input, Select } from "antd"
-import { userType } from "@/type/userType"
+import { Modal, Form, Input, Select, message } from "antd"
+import { roleType, userType } from "@/type/userType"
 import $request from '@/api/api'
 const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [merchantList, setMerchantList] = useState([])
-    const [roleList, setRoleList] = useState([])
-    const userForm = Form.useForm()
-    const handleConfirm = () => {
+    const [merchantList, setMerchantList] = useState<Array<userType>>([])
+    const [roleList, setRoleList] = useState<Array<roleType>>([])
+    const [userForm] = Form.useForm()
+    const handleConfirm = async () => {
+        setIsLoading(true)
+        try {
+            const params = await userForm.validateFields()
+            params.role_name = roleList.find((role: roleType) => role.role_level === params.role_level)?.role_name
+            params.merchant_name = merchantList.find((merchant: any) => merchant.id === params.merchant_id)?.merchant_name
+            const res = await $request.User.addUser(params)
+            if (res.result) {
+                message.success('新增用户成功')
+            }
+        } catch (error) {
+            console.log(error)
+        }
         handleShow(false)
     }
     const handleCancel = () => {
@@ -45,7 +57,10 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
             
         }
     }
-    const closeModal = () => { }
+    const closeModal = () => {
+        setIsLoading(false)
+        userForm.resetFields()
+    }
     useEffect(() => {
         getMerchantList()
         getRoleList()
@@ -61,7 +76,7 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
             onCancel={handleCancel}
             confirmLoading={isLoading}>
             <Form
-                // form={userForm}
+                form={userForm}
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 600 }}
@@ -71,6 +86,18 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                     name="user_name"
                     rules={[{ required: true, message: '请输入用户名称!' }]}>
                     <Input placeholder="用户名称" />
+                </Form.Item>
+                <Form.Item<userType>
+                    label="邮箱"
+                    name="email"
+                    rules={[{ required: true, message: '请输入邮箱!' }]}>
+                    <Input placeholder="邮箱" />
+                </Form.Item>
+                <Form.Item<userType>
+                    label="电话号码"
+                    name="phone"
+                    rules={[{ required: true, message: '请输入电话号码!' }]}>
+                    <Input placeholder="电话号码" />
                 </Form.Item>
 
                 <Form.Item<userType>
@@ -87,7 +114,7 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
 
                 <Form.Item<userType>
                     label="所属角色"
-                    name="role_id"
+                    name="role_level"
                     rules={[{ required: true, message: '请选择用户所属角色!' }]}>
                     <Select
                         allowClear

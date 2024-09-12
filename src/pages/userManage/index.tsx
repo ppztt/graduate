@@ -12,6 +12,7 @@ const UserManage: React.FC = () => {
     const [selectValue, setSelectValue] = useState('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<Array<roleType>>([])
+    const [merchantList, setMerchantList] = useState<Array<any>>([])
     const [tableData, setTableData] = useState<Array<userType>>([])
     const [userInfo, setUserInfo] = useState<userType>({
         user_name: '',
@@ -40,8 +41,8 @@ const UserManage: React.FC = () => {
         },
         {
             title: '用户角色',
-            key: 'role_level_name',
-            dataIndex: 'role_level_name'
+            key: 'role_name',
+            dataIndex: 'role_name'
         },
         {
             title: "创建时间",
@@ -54,13 +55,13 @@ const UserManage: React.FC = () => {
             key: "update_time"
         },
         {
-            title: 'Action',
+            title: '操作',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
                     <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo(record)}}>编辑</Button>
-                    <Button danger type="text">删除</Button>
+                    <Button danger type="text" onClick={() => {delUser(record.id)}}>删除</Button>
                 </Space>
             ),
         }
@@ -97,11 +98,6 @@ const UserManage: React.FC = () => {
             }
             const res = await $request.User.getUserList(params)
             if (res.result) {
-                res.data.forEach((item: any) => {
-                    item.role_level_name = roleList.find((role: roleType) => {
-                        return role.role_level === item.role_level
-                    })?.role_name
-                })
                 setTableData([...res.data])
                 setIsLoading(false)
             }
@@ -125,8 +121,35 @@ const UserManage: React.FC = () => {
             console.log(error)
         }
     }
+    const getMerchantList = async () => {
+        try {
+			const params = {
+				size: -1
+			}
+			const res = await $request.Merchant.getMerchantList(params)
+			if (res.result) {
+                setMerchantList(res.data.map((item: any) => {
+                    return {
+                        ...item,
+                        value: item.id,
+                        label: item.merchant_name
+                    }
+                }))
+			}
+		} catch (error) {
+			console.log(error)
+		}
+    }
+    const delUser = async (id: Number) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
     useEffect(() => {
         getRoleList()
+        getMerchantList()
         getTableData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

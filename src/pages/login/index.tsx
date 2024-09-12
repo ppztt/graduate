@@ -20,6 +20,7 @@ const Login: React.FC = () => {
             const res = await $request.User.userLogin(params)
             if (res.result) {
                 message.success('登录成功！')
+                sessionStorage.setItem('userInfo', JSON.stringify(res.data))
                 setTimeout(() => {
                     navigate('/back_way/dash_board')
                 }, 500)

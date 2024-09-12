@@ -1,8 +1,9 @@
 export type personForm = {
-    username: string
+    user_name: string
     password: string
     newPassword: string
     prePassword: string
     avator: any,
-    sex: string
+    sex: string,
+    [key: string]: any
 }

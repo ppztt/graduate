@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Space, Button, Popconfirm, Select, Input, Spin } from 'antd'
+import { Table, Space, Button, Popconfirm, Select, Input, Spin, message } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { merchantTableType } from '@/type/merchantType'
 import { searchTypeList } from './constance'
 import $request from '@/api/api'
-import { $message } from '@/utils/index'
 import MerchantModal from './merchantModal'
 import type { TableProps } from 'antd'
 const Merchant: React.FC = () => {
@@ -114,7 +113,7 @@ const Merchant: React.FC = () => {
 		try {
 			const res = await $request.Merchant.delMerchant(id)
 			if (res.result) {
-				$message('success', '删除成功')
+				message.success('删除成功')
 				getTableData({ page: 1, size: 10})
 			}
 		} catch (error) {

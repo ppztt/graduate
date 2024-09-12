@@ -24,10 +24,7 @@ export function formatDate(date: string, format: string) {
     return format
 }
 
-export function $message(type: NoticeType, content: string) {
+export const $message = (type: NoticeType, content: string) => {
     const [messageApi] = message.useMessage()
-    messageApi.open({
-        type,
-        content
-    })
+    return messageApi[type](content)
 }
