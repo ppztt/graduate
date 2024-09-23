@@ -122,6 +122,7 @@ const Merchant: React.FC = () => {
 	}
 	useEffect(() => {
 		getTableData()
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	return (
 		<div id='merchant-manage'>

@@ -65,6 +65,12 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
         getMerchantList()
         getRoleList()
     }, [])
+    useEffect(() => {
+        if (isEdit) {
+            userForm.setFieldsValue(userInfo)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userInfo])
     return (
         <Modal
             title={isEdit ? '编辑用户' : '新增用户'}
@@ -124,12 +130,12 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                     />
                 </Form.Item>
 
-                <Form.Item<userType>
+                {/* <Form.Item<userType>
                     label="描述"
                     name="desc"
                     rules={[{ required: true, message: '请输入角色描述!' }]}>
                     <Input placeholder="角色描述" />
-                </Form.Item>
+                </Form.Item> */}
             </Form>
         </Modal>
     )

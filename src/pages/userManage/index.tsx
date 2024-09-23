@@ -45,6 +45,11 @@ const UserManage: React.FC = () => {
             dataIndex: 'role_name'
         },
         {
+            title: '描述',
+            key: 'desc',
+            dataIndex: 'desc'
+        },
+        {
             title: "创建时间",
             key: "create_time",
             dataIndex: "create_time"
@@ -60,7 +65,7 @@ const UserManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo(record)}}>编辑</Button>
+                    <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo(record) }}>编辑</Button>
                     <Button danger type="text" onClick={() => {delUser(record.id)}}>删除</Button>
                 </Space>
             ),
@@ -87,6 +92,7 @@ const UserManage: React.FC = () => {
     }
     const handleShow = (val: Boolean) => {
         setIsShow(val)
+        setIsEdit(false)
     }
     const getTableData = async (exact: Object = {}) => {
         setIsLoading(true)
