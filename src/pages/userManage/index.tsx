@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Space, Table, Button, Select, Input, Spin } from "antd"
+import { Space, Table, Button, Select, Input, Spin, message } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
 import { roleType, userType } from "@/type/userType"
@@ -148,9 +148,12 @@ const UserManage: React.FC = () => {
     }
     const delUser = async (id: Number) => {
         try {
-            
+            const res = await $request.User.delUser(id)
+            if (res.result) {
+                message.success('删除成功')
+            }
         } catch (error) {
-            
+            console.log(error)
         }
     }
     useEffect(() => {
