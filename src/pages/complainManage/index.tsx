@@ -27,7 +27,7 @@ const ComplainManage: React.FC = () => {
         dataIndex: 'user_name'
       },
       {
-        title: '隶属商户',
+        title: '投诉商户',
         key: 'merchant_name',
         dataIndex: 'merchant_name'
       },
