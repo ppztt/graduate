@@ -1,0 +1,62 @@
+#DataCenter {
+    height: calc(100%);
+    .info-area{
+        display: flex;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0px 0px 16px 0px rgba(17, 17, 26, 0.1) ;
+        .info-box{
+            width: 25%;
+            min-width: 140px;
+            border-radius: 15px;
+            margin-right: 25px;
+            padding: 20px;
+            font-weight: 700;
+            span {
+                margin-top: 15px;
+                display: inline-block;
+                font-size: 26px;
+              }
+        }
+        .total {
+            background: #edf2fe;
+            color: #25489b;
+        }
+        .complain {
+            background: #fbedd4;
+            color: #be5900;
+        }
+        .complained {
+            background: #d5f9fa;
+            color: #138261;
+        }
+        .complaining {
+            background: #ffebe9;
+            margin-right: 0;
+            color: #c2453c;
+        }
+    }
+    .chart {
+        display: flex;
+        width: 100%;
+        height: calc(100% - 200px);
+        .pie{
+            width: 40%;
+            height: 100%;
+            border-radius: 15px;
+            padding: 20px;
+            padding-right: 0px;
+            box-shadow: 0px 0px 16px 0px rgba(17, 17, 26, 0.1);
+            margin-right: 20px;
+        }
+        .line{
+            width: 60%;
+            height: 100%;
+            border-radius: 15px;
+            padding: 20px;
+            padding-right: 0px;
+            box-shadow: 0px 0px 16px 0px rgba(17, 17, 26, 0.1);
+        }
+    }
+}

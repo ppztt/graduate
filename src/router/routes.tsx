@@ -7,6 +7,7 @@ import RoleManage from "@/pages/roleManage"
 import MerchantManage from '@/pages/merchantManage'
 import ContentManage from '@/pages/contentManage'
 import ComplainManage from '@/pages/complainManage'
+import DataCenter from "@/pages/dataCenter"
 const routes = [
     {
         path: '/',
@@ -23,7 +24,7 @@ const routes = [
         title: '后台管理',
         children: [
             {
-                element: "数据中心",
+                element: <DataCenter />,
                 path:'dash_board',
                 title: '数据中心'
             },
