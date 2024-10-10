@@ -7,3 +7,8 @@ export interface merchantTableType {
     create_time?: string
     update_time?: string
 }
+export interface areaType {
+    id?: number,
+    desc: string,
+    area_name: string
+}

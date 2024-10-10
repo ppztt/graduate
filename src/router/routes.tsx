@@ -8,6 +8,7 @@ import MerchantManage from '@/pages/merchantManage'
 import ContentManage from '@/pages/contentManage'
 import ComplainManage from '@/pages/complainManage'
 import DataCenter from "@/pages/dataCenter"
+import ClassificationManage from "@/pages/classificationManage"
 const routes = [
     {
         path: '/',
@@ -44,7 +45,7 @@ const routes = [
                 title: '投诉管理'
             },
             {
-                element: '分类管理',
+                element: <ClassificationManage />,
                 path: 'display',
                 title: '分类管理'
             },

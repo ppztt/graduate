@@ -24,7 +24,7 @@ const RoleManage: React.FC = () => {
             title: '描述'
         },
         {
-            title: 'Action',
+            title: '操作',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
