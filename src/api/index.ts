@@ -55,9 +55,9 @@ export const post: Function = (url: string, params: any, config?: any) => {
     })
 }
 
-export const put: Function = (url: string, params: any) => {
+export const put: Function = (url: string, params: any, config: any) => {
     return new Promise((resolve, reject) => {
-        axios.put(url, params).then(
+        axios.put(url, params, config).then(
             (res: any) => {
                 resolve(res)
             }, (err: any) => {

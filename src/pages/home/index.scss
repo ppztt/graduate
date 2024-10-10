@@ -20,6 +20,7 @@
             border-radius: 10px;
             padding: 20px;
             background-color: #fff;
+            overflow: auto;
         }
         .layout-bg{
             background-color: #fff;
@@ -35,13 +36,15 @@
         .userName {
             display: flex;
             align-items: center;
+            color: #fff;
             .avatar {
                 display: inline-block;
                 margin-right: 10px;
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
-                background-color: aquamarine;
+                background-repeat: no-repeat;
+                background-size: cover;
             }
         }
     }

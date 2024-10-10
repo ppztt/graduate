@@ -10,6 +10,7 @@ const Person: React.FC = () => {
     const [useInfo, setUserInfo] = useState(JSON.parse(sessionStorage.getItem('userInfo') || ''))
     const changeEdit: Function = (): void => {
         setIsEdit(!isEdit)
+        getInfo()
     }
     const userId = JSON.parse(sessionStorage.getItem('userInfo') || '').id
     const getInfo = async () => {

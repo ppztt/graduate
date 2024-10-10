@@ -13,8 +13,8 @@ const User = {
     delUser: (id: number) => {
         return del(`${reUrl}/back_way/user/del_user/${id}`)
     },
-    editUser: (id: number, params: Object) => {
-        return put(`${reUrl}/back_way/user/edit_user/${id}`, params)
+    editUser: (id: number, params: Object, config: object) => {
+        return post(`${reUrl}/back_way/user/edit_user/${id}`, params, config)
     }
 }
 export default User

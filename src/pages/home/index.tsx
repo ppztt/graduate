@@ -1,6 +1,6 @@
-import React from "react"
-import { Layout, Dropdown, Space} from 'antd'
-import { DownOutlined } from '@ant-design/icons'
+import React, { useState } from "react"
+import { Layout, Dropdown, Space, Button} from 'antd'
+import { DownOutlined, RedoOutlined } from '@ant-design/icons'
 import { Outlet } from "react-router-dom"
 import './index.scss'
 import LocalMenu from "./components/menus"
@@ -11,18 +11,23 @@ const { Header, Sider, Content } = Layout
 const Home: React.FC = () => {
     const items: MenuProps['items'] = [
         {
-            label: <a onClick={(e) => e.preventDefault()}>1st menu item</a>,
+            label: <a onClick={(e) => e.preventDefault()}>退出登陆</a>,
             key: '1',
         }
     ]
+    const [userInfo, setUserInfo] = useState<any>(JSON.parse(sessionStorage.getItem('userInfo') || ''))
+    const fn = () => {
+        setUserInfo(JSON.parse(sessionStorage.getItem('userInfo') || ''))
+    }
     return (
         <Layout id="home">
             <Header>
                 <div className="header-box">
                     <span className="title">维权管理系统</span>
                     <span className="userName">
-                        <span className="avatar"></span>
-                        用户  &nbsp;&nbsp;
+                        <Button title="刷新信息" type="primary" shape="circle" icon={<RedoOutlined />} onClick={fn} />&nbsp;&nbsp;
+                        <span className="avatar" style={{backgroundImage: `url(http://localhost:3000${userInfo.avatar})`}}></span>
+                        {userInfo.user_name}  &nbsp;&nbsp;
                         <Dropdown menu={{ items }} trigger={['click']}>
                             <a onClick={(e) => e.preventDefault()}>
                                 <Space>

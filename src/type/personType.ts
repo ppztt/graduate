@@ -3,7 +3,7 @@ export type personForm = {
     password: string
     newPassword: string
     prePassword: string
-    avator: any,
+    avatar: any,
     sex: string,
     [key: string]: any
 }

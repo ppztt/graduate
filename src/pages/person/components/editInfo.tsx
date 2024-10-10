@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from "react"
-import { Button, Form, Input, Select, Alert, message } from "antd"
-import type { FormProps } from 'antd'
+import { Button, Form, Input, Select, Alert, message, Upload } from "antd"
+import { PlusOutlined } from '@ant-design/icons'
+import type { FormProps, GetProp, UploadProps } from 'antd'
 import { personForm } from "@/type/personType"
 import $request from '@/api/api'
-
-const EditInfo: React.FC<any> = ({ userInfo}) => {
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
+const EditInfo: React.FC<any> = ({ userInfo }) => {
     const [isNew, setIsNew] = useState(false)
     const [form] = Form.useForm<personForm>()
+    const [imageUrl, setImageUrl] = useState<string>()
     const saveInfo: FormProps<personForm>['onFinish'] = async (values) => {
         try {
-            const params = {
-                ...values
-            }
-            const res = await $request.User.editUser(userInfo.id, params)
-            if (res.result) {
+            const { file } = values.avatar
+            const formData: FormData = new FormData()
+            Object.keys(values).forEach((key: string) => {
+                formData.append(key, values[key])
+            })
+            file && formData.append('file', file.originFileObj)
+            formData.delete('avatar')
+            console.log(values)
+            const res = await $request.User.editUser(userInfo.id, formData, {headers: {
+                "Content-Type": "multipart/form-data"
+            }})
+            if (res?.result) {
                 message.success('修改成功')
+                sessionStorage.setItem('userInfo', JSON.stringify(res.data))
+                res.data.avatar && setImageUrl(`http://localhost:3000${res.data.avatar}`)
             }
         } catch (error) {
             console.log(error)
         }
-    }
-    const onFinishFailed: FormProps<personForm>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo)
-    }
-    const handleChange = (value: string) => {
-        console.log(form)
     }
     const newPassword = Form.useWatch('newPassword', form)
     const checkPassword = (_: any, value: string, callBack: any) => {
@@ -37,22 +42,78 @@ const EditInfo: React.FC<any> = ({ userInfo}) => {
         }
         callBack(new Error('两次密码不一致'))
     }
+    // 文件上传处理
+    const beforeUpload = (file: FileType) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+        if (!isJpgOrPng) {
+            message.error('仅能够上传png/jpeg文件');
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        if (!isLt2M) {
+            message.error('图标大小不能超过2MB!');
+        }
+        return isJpgOrPng && isLt2M;
+    }
+    const handleChange: UploadProps['onChange'] = (info) => {
+        if (info.file.status === 'uploading') {
+            // setLoading(true)
+            return
+        }
+        if (info.file.status === 'done') {
+            console.log('done')
+        }
+    }
+    const fileUpload = (options: any) => {
+        const { file } = options
+        const blob = new Blob([file], { type: 'text/plain' })
+        const reader = new FileReader()
+        reader.addEventListener('load', () => {
+            setImageUrl(URL.createObjectURL(blob))
+        })
+        reader.readAsDataURL(file)
+    }
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none', width: "100%", height: '100%' }} type="button">
+          {imageUrl ?
+            <div
+                className="avatar-box"
+                style={{ backgroundImage: `url(${imageUrl})` }} /> : <PlusOutlined />}
+        </button>
+      )
     useEffect(() => {
         setIsNew(!!newPassword)
-    },[newPassword])
+    }, [newPassword])
+    useEffect(() => {
+        setImageUrl(userInfo.avatar ? `http://localhost:3000${userInfo.avatar}`: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return (
         <div id="edit-info">
             <Alert style={{ width: 400 + 'px' }} message="请输入密码进行修改信息！" type="info" />
-            <br/>
+            <br />
             <Form
                 form={form}
                 name="person_form"
                 labelAlign="left"
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 20 }}
-                initialValues={{...userInfo}}
-                onFinish={saveInfo}
-                onFinishFailed={onFinishFailed}>
+                initialValues={{ ...userInfo }}
+                onFinish={saveInfo}>
+                <Form.Item<personForm>
+                    label="头像"
+                    name="avatar">
+                    <Upload
+                        name="avatar"
+                        listType="picture-circle"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        maxCount={1}
+                        customRequest={fileUpload}
+                        beforeUpload={beforeUpload}
+                        onChange={handleChange}>
+                        {uploadButton}
+                    </Upload>
+                </Form.Item>
                 <Form.Item<personForm>
                     label="用户名"
                     name="user_name"
@@ -66,7 +127,6 @@ const EditInfo: React.FC<any> = ({ userInfo}) => {
                     <Select
                         defaultValue="男"
                         style={{ width: 120 }}
-                        onChange={handleChange}
                         options={[
                             { value: 1, label: '男' },
                             { value: 2, label: '女' }
