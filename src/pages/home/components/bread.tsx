@@ -6,10 +6,10 @@ import routes from "@/router/routes"
 const LocalBreadcrumb: React.FC = () => {
     const location = useLocation()
     const arr = location?.pathname?.split('/').filter(item => item)
-    let obj: any = routes
+    let obj: any = routes || []
     const breads = arr.map((item, index) => {
         const route = obj.find((r: any) => {
-            return r.path.includes(item)
+            return r?.path?.includes(item)
         })
         obj = route?.children
         return <Breadcrumb.Item key={route?.title}>

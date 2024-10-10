@@ -12,10 +12,10 @@ const routes = [
     {
         path: '/',
         // 重定向组件Navigate
-        element: <Navigate to={'/login'} replace />
+        element: <Navigate to={'/back/login'} replace />
     },
     {
-        path: '/login',
+        path: '/back/login',
         element: <Login />
     },
     {

@@ -63,7 +63,6 @@ const Login: React.FC = () => {
                         <Button type="primary" htmlType="submit" className='login-form-button'>
                             登录
                         </Button>
-                        <div>立即注册</div>
                     </Form.Item>
                 </Form>
             </div>
