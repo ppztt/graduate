@@ -67,6 +67,7 @@ const UserManage: React.FC = () => {
                     {/* record：表格上的数据 */}
                     <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo(record) }}>编辑</Button>
                     <Button danger type="text" onClick={() => {delUser(record.id)}}>删除</Button>
+                    <Button danger type="text" onClick={() => {resetPassword(record.id)}}>重置密码</Button>
                 </Space>
             ),
         }
@@ -93,6 +94,7 @@ const UserManage: React.FC = () => {
     const handleShow = (val: Boolean) => {
         setIsShow(val)
         setIsEdit(false)
+        getTableData()
     }
     const getTableData = async (exact: Object = {}) => {
         setIsLoading(true)
@@ -151,6 +153,16 @@ const UserManage: React.FC = () => {
             const res = await $request.User.delUser(id)
             if (res.result) {
                 message.success('删除成功')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const resetPassword = async (id: Number) => {
+        try {
+            const res = await $request.User.resetPassword(id)
+            if (res.result) {
+                message.success('重置成功')
             }
         } catch (error) {
             console.log(error)

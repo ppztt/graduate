@@ -15,6 +15,12 @@ const User = {
     },
     editUser: (id: number, params: Object, config: object) => {
         return post(`${reUrl}/back_way/user/edit_user/${id}`, params, config)
+    },
+    updateSelf: (id: number, params: Object, config: object) => {
+        return post(`${reUrl}/back_way/user/update_self/${id}`, params, config)
+    },
+    resetPassword: (id: number, params: Object, config: object) => {
+        return post(`${reUrl}/back_way/user/reset_password/${id}`, params, config)
     }
 }
 export default User

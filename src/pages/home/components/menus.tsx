@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChartTwoTone, MailOutlined, ContainerTwoTone, GoldTwoTone, PartitionOutlined, UserOutlined, TeamOutlined } from '@ant-design/icons';
+import { PieChartTwoTone, MailOutlined, ContainerTwoTone, GoldTwoTone, PartitionOutlined, UserOutlined, TeamOutlined, InsertRowBelowOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,11 @@ const items: MenuItem[] = [
     key: '/back_way/complain',
     label: '投诉管理',
     icon: <MailOutlined />
+  },
+  {
+    key: '/back_way/display',
+    label: '分类管理',
+    icon: <InsertRowBelowOutlined />
   },
   {
     key: '/back_way/user_manage',

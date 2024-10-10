@@ -17,7 +17,7 @@ const Home: React.FC = () => {
     }
     const items: MenuProps['items'] = [
         {
-            label: <a onClick={logOut}>退出登陆</a>,
+            label: <span style={{ cursor: 'pointer'}} onClick={logOut}>退出登陆</span>,
             key: '1',
         }
     ]
@@ -33,15 +33,15 @@ const Home: React.FC = () => {
                         <span className="title">维权管理系统</span>
                     </div>
                     <span className="userName">
-                        <Button title="刷新信息" type="primary" shape="circle" icon={<RedoOutlined />} onClick={fn} />&nbsp;&nbsp;
+                        <Button title="刷新信息" shape="circle" icon={<RedoOutlined />} onClick={fn} />&nbsp;&nbsp;
                         <span className="avatar" style={{backgroundImage: `url(http://localhost:3000${userInfo.avatar})`}}></span>
                         {userInfo.user_name}  &nbsp;&nbsp;
                         <Dropdown menu={{ items }} trigger={['click']}>
-                            <a onClick={(e) => e.preventDefault()}>
+                            <span style={{ cursor: 'pointer'}}>
                                 <Space>
                                     <DownOutlined />
                                 </Space>
-                            </a>
+                            </span>
                         </Dropdown>
                     </span>
                 </div>

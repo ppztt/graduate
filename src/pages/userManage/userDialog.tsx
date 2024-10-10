@@ -3,31 +3,35 @@ import { Modal, Form, Input, Select, message } from "antd"
 import { roleType, userType } from "@/type/userType"
 import $request from '@/api/api'
 const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any) => {
+    const selfInfo = JSON.parse(sessionStorage.getItem('userInfo') || '')
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [merchantList, setMerchantList] = useState<Array<userType>>([])
     const [roleList, setRoleList] = useState<Array<roleType>>([])
     const [userForm] = Form.useForm()
     const handleConfirm = async () => {
-        setIsLoading(true)
         try {
-            const params = await userForm.validateFields()
-            params.role_name = roleList.find((role: roleType) => role.role_level === params.role_level)?.role_name
-            params.merchant_name = merchantList.find((merchant: any) => merchant.id === params.merchant_id)?.merchant_name
-            const res = await $request.User.addUser(params)
-            if (res.result) {
-                message.success('新增用户成功')
-            }
+            userForm.validateFields().then(async (params: any) => {
+                setIsLoading(true)
+                params.role_name = roleList.find((role: roleType) => role.role_level === params.role_level)?.role_name
+                params.merchant_name = merchantList.find((merchant: any) => merchant.id === params.merchant_id)?.merchant_name
+                const res = isEdit ? await $request.User.editUser(userInfo.id, params) : await $request.User.addUser(params)
+                if (res.result) {
+                    message.success(`${isEdit ? '编辑' : '新增'}用户成功`)
+                } else {
+                    message.error(res.message || '信息有误')
+                }
+                handleShow(false)
+            }).catch(error => { console.log(error) })
         } catch (error) {
             console.log(error)
         }
-        handleShow(false)
     }
     const handleCancel = () => {
         handleShow(false)
     }
     const getMerchantList = async () => {
         try {
-            const res = await $request.Merchant.getMerchantList({size: -1})
+            const res = await $request.Merchant.getMerchantList({ size: -1 })
             if (res.result) {
                 setMerchantList(res.data.map((item: any) => {
                     return {
@@ -43,18 +47,21 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
     }
     const getRoleList = async () => {
         try {
-            const res = await $request.Role.getRoleList({ size: -1})
+            const res = await $request.Role.getRoleList({ size: -1 })
             if (res.result) {
-                setRoleList(res.data.map((item: any) => {
+                const list = res.data.map((item: any) => {
                     return {
-                        value: item.id,
+                        value: item.role_level,
                         label: item.role_name,
                         ...item
                     }
-                }))
+                }).filter((item: any) => {
+                    return item.role_level > selfInfo.role_level
+                })
+                setRoleList(list)
             }
         } catch (error) {
-            
+
         }
     }
     const closeModal = () => {
@@ -64,12 +71,13 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
     useEffect(() => {
         getMerchantList()
         getRoleList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     useEffect(() => {
         if (isEdit) {
             userForm.setFieldsValue(userInfo)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userInfo])
     return (
         <Modal
@@ -105,19 +113,7 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                     rules={[{ required: true, message: '请输入电话号码!' }]}>
                     <Input placeholder="电话号码" />
                 </Form.Item>
-
-                <Form.Item<userType>
-                    label="隶属组织"
-                    name="merchant_id"
-                    rules={[{ required: true, message: '请选择用户所属组织!' }]}>
-                    <Select
-                        allowClear
-                        style={{ width: '100%' }}
-                        placeholder="请选择隶属组织"
-                        options={merchantList}
-                    />
-                </Form.Item>
-
+                
                 <Form.Item<userType>
                     label="所属角色"
                     name="role_level"
@@ -130,12 +126,24 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
                     />
                 </Form.Item>
 
-                {/* <Form.Item<userType>
+                {userForm.getFieldsValue().role_level !== 1 && <Form.Item<userType>
+                    label="隶属组织"
+                    name="merchant_id"
+                    rules={[{ required: true, message: '请选择用户所属组织!' }]}>
+                    <Select
+                        allowClear
+                        style={{ width: '100%' }}
+                        placeholder="请选择隶属组织"
+                        options={merchantList}
+                    />
+                </Form.Item>}
+
+                <Form.Item<userType>
                     label="描述"
                     name="desc"
                     rules={[{ required: true, message: '请输入角色描述!' }]}>
-                    <Input placeholder="角色描述" />
-                </Form.Item> */}
+                    <Input.TextArea placeholder="角色描述" />
+                </Form.Item>
             </Form>
         </Modal>
     )

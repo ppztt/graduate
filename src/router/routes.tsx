@@ -44,6 +44,11 @@ const routes = [
                 title: '投诉管理'
             },
             {
+                element: '分类管理',
+                path: 'display',
+                title: '分类管理'
+            },
+            {
                 element: <UserManage/>,
                 path: 'user_manage',
                 title: '用户管理'
