@@ -9,11 +9,15 @@ import ContentManage from '@/pages/contentManage'
 import ComplainManage from '@/pages/complainManage'
 import DataCenter from "@/pages/dataCenter"
 import ClassificationManage from "@/pages/classificationManage"
+// gateway
+import GatewayHome from "@/pages/gateway/home"
+import GatewayLogin from "@/pages/gateway/login"
+const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '')
 const routes = [
     {
         path: '/',
         // 重定向组件Navigate
-        element: <Navigate to={'/back/login'} replace />
+        element: <Navigate to={userInfo.role_level <= 3 ? '/back/login' : '/gateway/login'} replace />
     },
     {
         path: '/back/login',
@@ -65,6 +69,16 @@ const routes = [
                 title: '个人中心'
             }
         ]
+    },
+    {
+        path: '/gateway/login',
+        element: <GatewayLogin/>
+    },
+    {
+        path: '/gateway',
+        element: <GatewayHome/>,
+        title: '门户中心',
+        children: []
     }
 ]
 export default routes

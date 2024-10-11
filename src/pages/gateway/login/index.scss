@@ -1,0 +1,23 @@
+.login-layout {
+    width: 100%;
+    height: 100%;
+    // background: url(../../assets/bg.png) no-repeat;
+    background-color: #EEE5DE;
+    .login-box {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 250px;
+        height: 200px;
+        padding: 20px;
+        background-color: #8B8B7A;
+        border-radius: 5px;
+        .login-form-button {
+            width: 100%;
+        }
+    }
+}
