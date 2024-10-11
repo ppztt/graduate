@@ -15,10 +15,10 @@ const Complain = {
         return del(`${reUrl}/back_way/complaint/del_complain_type/${id}`)
     },
     addComplainType: (params: any) => {
-        return post(`${reUrl}/back_way/complaint/del_complain_type/`, params)
+        return post(`${reUrl}/back_way/complaint/add_complain_type/`, params)
     },
     editComplainType: (id: Number, params: any) => {
-        return put(`${reUrl}/back_way/complaint/del_complain_type/${id}`, params)
+        return put(`${reUrl}/back_way/complaint/edit_complain_type/${id}`, params)
     }
 }
 

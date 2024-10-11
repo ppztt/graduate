@@ -23,7 +23,7 @@ const Merchant = {
         return put(`${reUrl}/back_way/merchant/edit_area/${id}`, params)
     },
     delArea: (id: number) => {
-        return del(`${reUrl}/back_way/merchant/edit_area/${id}`)
+        return del(`${reUrl}/back_way/merchant/delete_area/${id}`)
     }
 }
 export default Merchant

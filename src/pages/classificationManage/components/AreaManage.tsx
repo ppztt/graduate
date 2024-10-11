@@ -37,7 +37,7 @@ const AreaManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    <Button onClick={() => { setCurrentInfo(record); setIsEdit(true) }}>编辑</Button>
+                    <Button onClick={() => { setCurrentInfo(record); setIsEdit(true); setIsModalOpen(true) }}>编辑</Button>
                     <Popconfirm
                         title="删除"
                         description="确定删除该类型？"
@@ -81,6 +81,7 @@ const AreaManage: React.FC = () => {
             const res = await $request.Merchant.delArea(id)
             if (res.result) {
                 message.success('删除成功')
+                getTableData()
             }
         } catch (error) {
             console.log(error)
@@ -106,10 +107,16 @@ const AreaManage: React.FC = () => {
     }
     const closeModal = () => {
         areaForm.resetFields()
+        setCurrentInfo({area_name: '', desc: ''})
     }
     useEffect(() => {
-        // getTableData()
+        getTableData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    useEffect(() => {
+        areaForm.setFieldsValue(currentInfo)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentInfo])
     return (
         <div id="role-manage">
             <Button type="primary" style={{ marginBottom: '20px' }} onClick={() => { setIsModalOpen(true) }}>新增区域</Button>
