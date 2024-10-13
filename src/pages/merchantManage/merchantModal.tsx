@@ -8,26 +8,13 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
         wrapperCol: { span: 16 },
     }
     const [merchantForm] = Form.useForm<merchantTableType>()
+    const [areaList, setAreaList] = useState([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const floorList = [
-        {
-            value: 1,
-            label: 1
-        },
-        {
-            value: 2,
-            label: 2
-        },
-        {
-            value: 3,
-            label: 3
-        }
-    ]
     const info = {
         id: -1,
         merchant_name: '',
         merchant_desc: '',
-        address: '',
+        address: null,
         floor: ''
     }
     const handleConfirm = () => {
@@ -44,6 +31,22 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
             console.log(err)
         })
     }
+    const getAreaList = async () => {
+        try {
+            const res = await $request.Merchant.getAreaList({ size: -1 })
+            if (res.result) {
+                setAreaList(res.data.map((item: any) => {
+                    return {
+                        value: item.id,
+                        label: item.area_name,
+                        ...item
+                    }
+                }))
+            }
+        } catch (error) {
+
+        }
+    }
     const closeModal = () => {
         merchantForm.resetFields()
         setIsLoading(false)
@@ -58,6 +61,10 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit])
+    useEffect(() => {
+        getAreaList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return (
         <Modal
             title={isEdit ? '编辑用户' : '新增用户'}
@@ -80,19 +87,15 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
                 <Form.Item name="merchant_desc" label="商户描述" rules={[{ required: true, message: '请输入商户描述' }]}>
                     <Input.TextArea placeholder="请输入商户描述" />
                 </Form.Item>
-                <Form.Item name="address" label="地址" rules={[{ required: true }]}>
+                <Form.Item name="address" label="地址" rules={[{ required: true, message: '地址不能为空' }]}>
                     <Select
                         placeholder="请选择地点"
                         allowClear
-                        options={floorList}>
+                        options={areaList}>
                     </Select>
                 </Form.Item>
-                <Form.Item name="floor" label="楼层" rules={[{ required: true }]}>
-                    <Select
-                        placeholder="请选择楼层"
-                        allowClear
-                        options={floorList}>
-                    </Select>
+                <Form.Item name="floor" label="具体地址" rules={[{ required: true, message: '具体地址不能为空' }]}>
+                    <Input.TextArea placeholder="请输入具体地址" />
                 </Form.Item>
             </Form>
         </Modal>

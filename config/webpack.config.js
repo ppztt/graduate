@@ -322,6 +322,7 @@ module.exports = function (webpackEnv) {
         ...(modules.webpackAliases || {}),
         '@': path.resolve(__dirname, '../src')
       },
+      extensions:['.mjs','.js','.ts','.jsx','.tsx','.json'],
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
         // This often causes confusion because we only process files within src/ with babel.

@@ -1,0 +1,77 @@
+#essay {
+    .essay-item {
+        box-sizing: border-box;
+        cursor: pointer;
+        padding: 10px;
+        height: 100px;
+        background: #fff;
+        font-size: 12px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+        &:hover{
+            background: #f2f3f5;
+        }
+        .title {
+            font-size: 20px;
+            margin-bottom: 5px;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            /** 对象作为伸缩盒子模型显示 **/
+            -webkit-box-orient: vertical;
+            /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+            -webkit-line-clamp: 1;
+            /** 显示的行数 **/
+            overflow: hidden;
+            /** 隐藏超出的内容 **/
+            word-wrap: break-word;
+            /*英文强制换行*/
+        }
+
+        .content {
+            width: 80%;
+            margin-bottom: 10px;
+            color: #B2BDCC;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            /** 对象作为伸缩盒子模型显示 **/
+            -webkit-box-orient: vertical;
+            /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+            -webkit-line-clamp: 1;
+            /** 显示的行数 **/
+            overflow: hidden;
+            /** 隐藏超出的内容 **/
+            word-wrap: break-word;
+            /*英文强制换行*/
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+#essay-detail {
+    .back-btn {
+        cursor: pointer;
+        color: #1677ff;
+    }
+    .title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+        padding: 10px;
+    }
+    .info {
+        color: grey;
+        span {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    }
+    .content {
+        margin-top: 20px;
+        line-height: 28px;
+    }
+}

@@ -8,7 +8,7 @@ export const searchTypeList = [
         label: '商户描述'
     },
     {
-        value: 'adress',
+        value: 'address_cn',
         label: '地址'
     }
   ]

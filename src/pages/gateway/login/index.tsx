@@ -21,7 +21,7 @@ const GatewayLogin: React.FC = () => {
                 message.success('登录成功！')
                 sessionStorage.setItem('userInfo', JSON.stringify(res.data))
                 setTimeout(() => {
-                    navigate('/back_way/dash_board')
+                    navigate('/gateway_center/home_tabs')
                 }, 500)
             } else {
                 message.error(res.message)
@@ -35,8 +35,9 @@ const GatewayLogin: React.FC = () => {
         console.log('Failed:', errorInfo)
     }
     return (
-        <div className='login-layout'>
+        <div id='gateway-login'>
             <div className='login-box'>
+                <div className='title'>维权中心</div>
                 <Form
                     form={loginInfo}
                     name="login_form"
@@ -64,6 +65,9 @@ const GatewayLogin: React.FC = () => {
                         </Button>
                     </Form.Item>
                 </Form>
+                <div className='footer'>
+                    没有账号，去<span style={{ color: '#2D9CDE', cursor: 'pointer'}}>注册</span>
+                </div>
             </div>
         </div>
     )

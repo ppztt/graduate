@@ -3,6 +3,7 @@ export interface merchantTableType {
     merchant_name: string
     merchant_desc: string
     address: string
+    address_cn: string
     floor: number | string
     create_time?: string
     update_time?: string

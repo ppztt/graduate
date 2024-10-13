@@ -18,7 +18,8 @@ const ContentModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo, 
         setIsLoading(true)
         contentForm.validateFields().then(async (value) => {
             const params = value
-            const res = isEdit ? await $request.Merchant.editContent(currentInfo.id, params) : await $request.Merchant.addContent([params])
+            params.creator = JSON.parse(sessionStorage.getItem('userInfo') || '').user_name
+            const res = isEdit ? await $request.Content.editContent(currentInfo.id, params) : await $request.Content.addContent(params)
             if (res.result) {
                 changeShow(false)
                 setIsLoading(false)

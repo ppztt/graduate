@@ -12,12 +12,18 @@ import ClassificationManage from "@/pages/classificationManage"
 // gateway
 import GatewayHome from "@/pages/gateway/home"
 import GatewayLogin from "@/pages/gateway/login"
-const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '')
+import HomeTabs from "@/pages/gateway/home/components/homeTabs"
+import EssayDetail from "@/pages/gateway/home/components/essayDetail"
 const routes = [
     {
-        path: '/',
+        path: '/back',
         // 重定向组件Navigate
-        element: <Navigate to={userInfo.role_level <= 3 ? '/back/login' : '/gateway/login'} replace />
+        element: <Navigate to={'/back/login'} replace />
+    },
+    {
+        path: '/gateway',
+        // 重定向组件Navigate
+        element: <Navigate to={'/gateway/login'} replace />
     },
     {
         path: '/back/login',
@@ -75,10 +81,21 @@ const routes = [
         element: <GatewayLogin/>
     },
     {
-        path: '/gateway',
+        path: '/gateway_center',
         element: <GatewayHome/>,
         title: '门户中心',
-        children: []
+        children: [
+            {
+                element: <HomeTabs />,
+                path:'home_tabs',
+                title: '首页tab'
+            },
+            {
+                element: <EssayDetail />,
+                path: 'essay',
+                title: '文章内容'
+            }
+        ]
     }
 ]
 export default routes

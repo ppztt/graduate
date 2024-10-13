@@ -32,8 +32,8 @@ const ContentManage: React.FC = () => {
         },
         {
             title: '文章类型',
-            key: 'complaint_type',
-            dataIndex: 'complaint_type'
+            key: 'complaint_type_cn',
+            dataIndex: 'complaint_type_cn'
         },
         {
             title: "创建时间",
@@ -96,12 +96,13 @@ const ContentManage: React.FC = () => {
             const params = {
                 size: -1
             }
-            const res = $request.Complain.getComplainTypeList(params)
+            const res = await $request.Complain.getComplaintType(params)
+            console.log(res)
             if (res.result) {
                 setTypeList(res.data.map((item: any) => {
                     return {
                         value: item.id,
-                        label: item.name,
+                        label: item.type_name,
                         ...item
                     }
                 }))

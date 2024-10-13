@@ -41,7 +41,7 @@ const Merchant: React.FC = () => {
 			render: (_, record) => (
 				<Space size="middle">
 					{/* record：表格上的数据 */}
-					{`${record.address}${record.floor ? record.floor + '楼' : ''}`}
+					{`${record.address_cn}${record.floor || ''}`}
 				</Space>
 			)
 		},
