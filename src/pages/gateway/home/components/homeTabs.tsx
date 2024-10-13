@@ -14,6 +14,11 @@ const HomeTabs: FC = () => {
             key: 'Complain',
             label: '我要投诉',
             children: ''
+        },
+        {
+            key: 'Result',
+            label: '投诉结果',
+            children: ''
         }
     ]
     const onChange = (key: string) => {

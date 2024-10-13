@@ -16,7 +16,7 @@ const GatewayLogin: React.FC = () => {
                 user_name: username,
                 password
             }
-            const res = await $request.User.userLogin(params)
+            const res = await $request.Gateway.gatewayLogin(params)
             if (res.result) {
                 message.success('登录成功！')
                 sessionStorage.setItem('userInfo', JSON.stringify(res.data))
