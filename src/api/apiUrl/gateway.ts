@@ -4,6 +4,9 @@ const gateway = {
     gatewayLogin: (params: any) => {
         return post(reUrl + '/gateway/user/login', params)
     },
+    gatewayRegister: (params: any) => {
+        return post(`${reUrl}/gateway/user/register`, params)
+    },
     postComplain: (params: any) => {
         return post(`${reUrl}/gateway/complain/add_complain`, params)
     },

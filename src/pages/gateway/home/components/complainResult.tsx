@@ -50,6 +50,16 @@ const ComplainResult: FC = () => {
             title: '状态'
         },
         {
+            key: 'create_time',
+            dataIndex: 'create_time',
+            title: '创建时间'
+        },
+        {
+            key: 'update_time',
+            dataIndex: 'update_time',
+            title: '更新时间'
+        },
+        {
             title: '操作',
             key: 'action',
             render: (_, record) => (

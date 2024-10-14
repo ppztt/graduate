@@ -97,7 +97,6 @@ const ContentManage: React.FC = () => {
                 size: -1
             }
             const res = await $request.Complain.getComplaintType(params)
-            console.log(res)
             if (res.result) {
                 setTypeList(res.data.map((item: any) => {
                     return {
