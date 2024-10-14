@@ -1,18 +1,20 @@
 import { FC, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Tag } from 'antd'
+import { Tag, Spin } from 'antd'
 import $request from '@/api/api'
 import './style.scss'
 const Essay: FC = () => {
     const navigate = useNavigate()
     const [essayList, setEssayList] = useState<Array<any>>([])
-
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const getEssayList = async () => {
         try {
+            setIsLoading(true)
             const res = await $request.Content.getContentList({ size: -1})
             if (res.result) {
                 setEssayList(res.data)
             }
+            setIsLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -39,7 +41,7 @@ const Essay: FC = () => {
     }, [])
     return (
         <div id="essay">
-            {essayItem()}
+            <Spin spinning={isLoading}>{essayItem()}</Spin>
         </div>
     )
 }

@@ -2,6 +2,8 @@ import { FC, useState } from 'react'
 import { Tabs } from 'antd'
 import type { TabsProps } from 'antd'
 import Essay from './essay'
+import ComplainForm from './complainForm'
+import ComplainResult from './complainResult'
 const HomeTabs: FC = () => {
     const [currentKey, setCurrentKey] = useState('Essay')
     const items: TabsProps['items'] = [
@@ -13,12 +15,12 @@ const HomeTabs: FC = () => {
         {
             key: 'Complain',
             label: '我要投诉',
-            children: ''
+            children: currentKey === 'Complain' && <ComplainForm />
         },
         {
             key: 'Result',
             label: '投诉结果',
-            children: ''
+            children: currentKey === 'Result' && <ComplainResult />
         }
     ]
     const onChange = (key: string) => {

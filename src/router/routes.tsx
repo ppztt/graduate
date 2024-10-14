@@ -16,7 +16,7 @@ import HomeTabs from "@/pages/gateway/home/components/homeTabs"
 import EssayDetail from "@/pages/gateway/home/components/essayDetail"
 const routes = [
     {
-        path: '/back',
+        path: '/',
         // 重定向组件Navigate
         element: <Navigate to={'/back/login'} replace />
     },
