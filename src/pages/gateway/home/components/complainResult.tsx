@@ -115,6 +115,9 @@ const ComplainResult: FC = () => {
             <Modal
                 title={'投诉详情'}
                 open={isModalOpen}
+                onOk={() => { setIsModalOpen(false) }}
+                okText="确定"
+                cancelText="取消"
                 onCancel={handleCancel}
                 confirmLoading={isLoading}>
                     <div className='detail-info' style={{ padding: '0 20px'}}>

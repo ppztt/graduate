@@ -5,12 +5,16 @@ import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
 import $request from '@/api/api'
 import './index.scss'
+import ComplainModal from "./components/complainModal"
+import { complainType } from "@/type/complain"
 const ComplainManage: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [globalUserInfo, _] = useOutletContext<any>()
     const [searchValue, setSearchValue] = useState('')
     const [selectValue, setSelectValue] = useState('')
+    const [currentInfo, setCurrentInfo] = useState<complainType>({})
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isShow, setIsShow] = useState<boolean>(false)
     const [merchantList, setMerchantList] = useState<Array<any>>([])
     const [tableData, setTableData] = useState<Array<any>>([])
     // 不能写死pageSize
@@ -70,7 +74,7 @@ const ComplainManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    <Button type="link" onClick={() => { }}>编辑</Button>
+                    <Button type="link" onClick={() => { setIsShow(true); setCurrentInfo(record)}}>编辑</Button>
                     <Button danger type="text" onClick={() => { delComplain(record.id) }}>删除</Button>
                 </Space>
             ),
@@ -140,6 +144,9 @@ const ComplainManage: React.FC = () => {
 
         }
     }
+    const changeShow = (val: boolean) => {
+        setIsShow(val)
+    }
     useEffect(() => {
         getMerchantList()
         getTableData()
@@ -179,6 +186,7 @@ const ComplainManage: React.FC = () => {
             <Spin spinning={isLoading}>
                 <Table columns={columns} dataSource={tableData} pagination={{ ...paginationProp, position: ['bottomLeft'] }} />
             </Spin>
+            <ComplainModal isShow={isShow} changeShow={changeShow} complainInfo={currentInfo} />
         </div>
     )
 }

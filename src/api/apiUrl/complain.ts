@@ -7,6 +7,9 @@ const Complain = {
     delComplainList: (id: Number) => {
         return del(`${reUrl}/back_way/complaint/del_complain_list/${id}`)
     },
+    auditComplain: (params: any) => {
+        return post(`${reUrl}/back_way/complaint/audit_complain/`, params)
+    },
     // 投诉类型接口
     getComplaintType: (params: any) => {
         return get(`${reUrl}/back_way/complaint/get_complain_type/`, params)
