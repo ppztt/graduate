@@ -44,7 +44,7 @@ const Home: React.FC = () => {
             </Header>
             <Layout>
                 <Sider width="12%" className="layout-bg">
-                    <LocalMenu />
+                    <LocalMenu userInfo={globalUserInfo} />
                 </Sider>
                 <Content>
                     <div className="bread">

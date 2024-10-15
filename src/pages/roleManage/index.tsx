@@ -29,7 +29,7 @@ const RoleManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    {(record.role_level > 3) ?
+                    {(record.role_level <= 3) ?
                     <><Button onClick={() => { editInfo(record.id) }}>编辑</Button>
                     <Popconfirm
                         title="删除角色"
@@ -52,7 +52,7 @@ const RoleManage: React.FC = () => {
                 setIsLoading(false)
             }
         } catch (error) {
-
+            console.log(error)
         }
     }
     const deleteRole = async (id: number | string | undefined) => {
