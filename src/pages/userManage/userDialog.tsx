@@ -72,7 +72,7 @@ const UserDialog: React.FC<any> = ({ isShow, isEdit, userInfo, handleShow }: any
             if (res.result) {
                 const list = res.data.map((item: any) => {
                     return {
-                        value: item.role_level,
+                        value: Number(item.role_level),
                         label: item.role_name,
                         ...item
                     }

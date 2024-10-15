@@ -106,9 +106,8 @@ const ContentManage: React.FC = () => {
             if (res.result) {
                 setTypeList(res.data.map((item: any) => {
                     return {
-                        value: item.id,
-                        label: item.type_name,
-                        ...item
+                        value: Number(item.id),
+                        label: item.type_name
                     }
                 }))
             }
@@ -123,11 +122,11 @@ const ContentManage: React.FC = () => {
                 message.success('删除成功')
             }
         } catch (error) {
-
+            console.log(error)
         }
     }
     const openModal = (data: any) => {
-        setCurrentInfo(data)
+        setCurrentInfo({...data, complaint_type: Number(data.complaint_type)})
         setIsEdit(true)
         setIsShow(true)
     }

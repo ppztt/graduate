@@ -63,7 +63,6 @@ const LocalMenu: React.FC<{userInfo: any}> = ({ userInfo }) => {
                 const menu = JSON.parse(res.data[0].menu_list || '')
                 const local = items.filter((item: any) => menu.includes(item.key))
                 setLocalMenu(local)
-                console.log(local)
             }
         } catch (error) {
             console.log(error)

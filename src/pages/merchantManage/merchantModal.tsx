@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Select } from "antd"
+import { Modal, Form, Input, Select, message } from "antd"
 import React, { useEffect, useState } from "react"
 import { merchantTableType } from "@/type/merchantType"
 import $request from '@/api/api'
@@ -25,6 +25,7 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
             if (res.result) {
                 changeShow(false)
                 setIsLoading(false)
+                message.success('修改成功')
             }
         }).catch((err) => {
             setIsLoading(false)
@@ -57,7 +58,7 @@ const MerchantModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo 
     }
     useEffect(() => {
         if(isEdit) {
-            merchantForm.setFieldsValue(currentInfo)
+            merchantForm.setFieldsValue({...currentInfo, address: Number(currentInfo.address)})
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit])

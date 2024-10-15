@@ -152,6 +152,7 @@ const ComplainManage: React.FC = () => {
     }
     const changeShow = (val: boolean) => {
         setIsShow(val)
+        getTableData({ page: 1, size: 10})
     }
     useEffect(() => {
         getMerchantList()

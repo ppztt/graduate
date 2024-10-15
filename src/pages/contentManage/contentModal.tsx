@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Select } from "antd"
+import { Modal, Form, Input, Select, message } from "antd"
 import React, { useEffect, useState } from "react"
 import $request from '@/api/api'
 const ContentModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo, typeList }) => {
@@ -12,7 +12,7 @@ const ContentModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo, 
         id: -1,
         title: '',
         content: '',
-        complaint_type: ''
+        complaint_type: null
     }
     const handleConfirm = () => {
         setIsLoading(true)
@@ -20,8 +20,10 @@ const ContentModal: React.FC<any> = ({ isEdit, isShow, changeShow, currentInfo, 
             const params = value
             params.creator = JSON.parse(sessionStorage.getItem('userInfo') || '').user_name
             params.creator_id = JSON.parse(sessionStorage.getItem('userInfo') || '').id
+            params.complaint_type_cn = typeList.find((item: any) => item.id === params.complaint_type)?.type_name || ''
             const res = isEdit ? await $request.Content.editContent(currentInfo.id, params) : await $request.Content.addContent(params)
             if (res.result) {
+                message.success(isEdit ? '编辑成功' : '新增成功')
                 changeShow(false)
                 setIsLoading(false)
             }

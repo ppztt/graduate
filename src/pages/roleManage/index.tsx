@@ -29,16 +29,16 @@ const RoleManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    {(record.role_level <= 3) ?
-                    <><Button onClick={() => { editInfo(record.id) }}>编辑</Button>
-                    <Popconfirm
-                        title="删除角色"
-                        description="确定删除该角色？"
-                        onConfirm={() => { deleteRole(record.id) }}
-                        okText="确定"
-                        cancelText="取消">
-                        <Button danger>删除</Button>
-                    </Popconfirm></> : <Alert message="内置角色不支持操作！" type="info" />}
+                    {(record.role_level > 3) ?
+                        <><Button onClick={() => { editInfo(record.id) }}>编辑</Button>
+                            <Popconfirm
+                                title="删除角色"
+                                description="确定删除该角色？"
+                                onConfirm={() => { deleteRole(record.id) }}
+                                okText="确定"
+                                cancelText="取消">
+                                <Button danger>删除</Button>
+                            </Popconfirm></> : <Alert message="内置角色不支持操作！" type="info" />}
                 </Space>
             ),
         }
@@ -60,6 +60,7 @@ const RoleManage: React.FC = () => {
             const res = await $request.Role.delRole(id)
             if (res.result) {
                 message.success('删除成功')
+                getTableData()
             }
         } catch (error) {
             console.log(error)
@@ -67,21 +68,25 @@ const RoleManage: React.FC = () => {
     }
     const handleConfirm = async () => {
         try {
-            setIsLoading(true)
-            const params = roleForm.getFieldsValue()
-            params.menu_list = JSON.stringify(params.menu_list)
-            let method = 'addRole'
-            if (isEdit) {
-                method = 'editRole'
-                params.id = currentInfo.id
-            }
-            const res = await $request.Role[method](params)
-            if (res.result) {
-                message.success(`${isEdit ? '编辑' : '新增'}成功`)
-            }
-            setIsLoading(false)
-            setIsModalOpen(false)
-            getTableData()
+            roleForm.validateFields().then(async (values) => {
+                setIsLoading(true)
+                const params = roleForm.getFieldsValue()
+                params.menu_list = JSON.stringify(params.menu_list)
+                let method = 'addRole'
+                if (isEdit) {
+                    method = 'editRole'
+                    params.id = currentInfo.id
+                }
+                const res = await $request.Role[method](params)
+                if (res.result) {
+                    message.success(`${isEdit ? '编辑' : '新增'}成功`)
+                }
+                setIsLoading(false)
+                setIsModalOpen(false)
+                getTableData()
+            }).catch(error => {
+                console.log(error)
+            })
         } catch (error) {
             console.log(error)
         }

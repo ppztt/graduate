@@ -18,7 +18,9 @@ const LineChart: React.FC<lineType> = ({ complainList, typeList }) => {
     const fn: any = async () => {
         return new Promise((res, rej) => {
             const legendData = typeList.map(item => item.type_name)
-            const xAxisData = complainList.map(item => item.create_time).sort((a: any, b: any) => {
+            const xAxis = complainList.map(item => item.create_time)
+            const set = [...new Set(xAxis)]
+            const xAxisData = set.sort((a: any, b: any) => {
                 const x = dayjs(a.create_time) as unknown as number
                 const y = dayjs(b.create_time) as unknown as number
                 return x - y
@@ -37,7 +39,6 @@ const LineChart: React.FC<lineType> = ({ complainList, typeList }) => {
                     data: handleData(complainList.filter(i => Number(i.complain_type) === Number(item.id)), xAxisData)
                 }
             })
-            console.log(xAxisData)
             lineChart.setOption({
                 title: {
                     text: ''

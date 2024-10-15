@@ -94,7 +94,7 @@ const UserManage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     {/* record：表格上的数据 */}
-                    <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo(record) }}>编辑</Button>
+                    <Button type="link" onClick={() => { setIsEdit(true); setIsShow(true); setUserInfo({...record, role_level: Number(record.role_level)}) }}>编辑</Button>
                     <Button danger type="text" onClick={() => {delUser(record.id)}}>删除</Button>
                     <Button danger type="text" onClick={() => {resetPassword(record.id)}}>重置密码</Button>
                 </Space>
