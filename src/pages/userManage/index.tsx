@@ -26,6 +26,7 @@ const UserManage: React.FC = () => {
         pageSizeOptions: [10, 20, 50],
 		defaultPageSize: 10,
         showSizeChanger: true,
+        total: 0,
         onChange: (page: number, pageSize: number) => {
             changePage(page, pageSize)
         }
@@ -137,6 +138,10 @@ const UserManage: React.FC = () => {
             if (res.result) {
                 setTableData([...res.data])
                 setIsLoading(false)
+                setPaginationProp({
+                    ...paginationProp,
+                    total: res.count
+                })
             }
         } catch (error) {
             console.log(error)

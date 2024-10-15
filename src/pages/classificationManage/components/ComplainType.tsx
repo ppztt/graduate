@@ -12,6 +12,7 @@ const ComplainType: React.FC = () => {
         current: 1,
         pageSizeOptions: [10, 20, 50],
 		defaultPageSize: 10,
+        total: 0,
         showSizeChanger: true,
         onChange: (page: number, pageSize: number) => {
             changePage(page, pageSize)
@@ -62,6 +63,10 @@ const ComplainType: React.FC = () => {
             if (res.result) {
                 setTableData(res.data)
                 setIsLoading(false)
+                setPaginationProp({
+                    ...paginationProp,
+                    total: res.count
+                })
             }
         } catch (error) {
 
