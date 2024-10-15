@@ -41,6 +41,13 @@
         display: flex;
         width: 100%;
         height: calc(100% - 168px);
+        
+        .ant-spin-nested-loading {
+            height: calc(100%);
+            .ant-spin-container {
+                height: 100%;
+            }
+        }
         .pie{
             width: 40%;
             min-width: 300px;

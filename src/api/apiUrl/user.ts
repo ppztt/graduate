@@ -1,4 +1,4 @@
-import { reUrl, get, post, del, put } from '../index'
+import { reUrl, get, post, del } from '../index'
 
 const User = {
     userLogin: (params: Object) => {
@@ -21,6 +21,10 @@ const User = {
     },
     resetPassword: (id: number, params: Object, config: object) => {
         return post(`${reUrl}/back_way/user/reset_password/${id}`, params, config)
+    },
+    // 数据中心接口
+    getDateCenter: (params: {id: number}) => {
+        return get(`${reUrl}/back_way/user/get_data_collect`, params)
     }
 }
 export default User
