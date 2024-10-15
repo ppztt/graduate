@@ -99,7 +99,7 @@ const EditInfo: React.FC<any> = ({ userInfo }) => {
                 labelAlign="left"
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 20 }}
-                initialValues={{ ...userInfo }}
+                initialValues={{ ...userInfo, sex: Number(userInfo.sex) }}
                 onFinish={saveInfo}>
                 <Form.Item<personForm>
                     label="头像"
