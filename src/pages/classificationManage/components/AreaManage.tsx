@@ -65,6 +65,7 @@ const AreaManage: React.FC = () => {
                 setIsLoading(false)
                 setPaginationProp({
                     ...paginationProp,
+                    current: params.page,
                     total: res.count
                 })
             }
@@ -79,6 +80,7 @@ const AreaManage: React.FC = () => {
 			current,
 			defaultPageSize: pageSize
         })
+        console.log(page)
         getTableData({ page: current, size: pageSize})
     }
     const deleteArea = async (id: number) => {

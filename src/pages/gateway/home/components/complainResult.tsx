@@ -86,6 +86,7 @@ const ComplainResult: FC = () => {
                 setIsLoading(false)
                 setPaginationProp({
                     ...paginationProp,
+                    current: params.page,
                     total: res.count
                 })
             }
