@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useOutletContext } from "react-router-dom"
 import { Button, Form, Input, Select, Alert, message, Upload } from "antd"
 import { PlusOutlined } from '@ant-design/icons'
 import type { FormProps, GetProp, UploadProps } from 'antd'
@@ -6,6 +7,7 @@ import { personForm } from "@/type/personType"
 import $request from '@/api/api'
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
 const EditInfo: React.FC<any> = ({ userInfo }) => {
+    const [globalUserInfo, setGlobalUserInfo]= useOutletContext<any>()
     const [isNew, setIsNew] = useState(false)
     const [form] = Form.useForm<personForm>()
     const [imageUrl, setImageUrl] = useState<string>()
@@ -18,13 +20,13 @@ const EditInfo: React.FC<any> = ({ userInfo }) => {
             })
             file && formData.append('file', file.originFileObj)
             formData.delete('avatar')
-            console.log(values)
-            const res = await $request.User.editUser(userInfo.id, formData, {headers: {
+            const res = await $request.User.updateSelf(userInfo.id, formData, {headers: {
                 "Content-Type": "multipart/form-data"
             }})
             if (res?.result) {
                 message.success('修改成功')
                 sessionStorage.setItem('userInfo', JSON.stringify(res.data))
+                setGlobalUserInfo(res.data)
                 res.data.avatar && setImageUrl(`http://localhost:3000${res.data.avatar}`)
             }
         } catch (error) {

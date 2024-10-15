@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useOutletContext } from "react-router-dom"
 import { Space, Table, Button, Select, Input, Spin, message } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
@@ -8,11 +9,12 @@ import './index.scss'
 import UserDialog from "./userDialog"
 
 const UserManage: React.FC = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [globalUserInfo, _] = useOutletContext<any>()
     const [searchValue, setSearchValue] = useState('')
     const [selectValue, setSelectValue] = useState('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [roleList, setRoleList] = useState<Array<roleType>>([])
-    const [merchantList, setMerchantList] = useState<Array<any>>([])
     const [tableData, setTableData] = useState<Array<userType>>([])
     const [userInfo, setUserInfo] = useState<userType>({
         user_name: '',
@@ -32,32 +34,58 @@ const UserManage: React.FC = () => {
         {
             title: "用户名",
             key: "user_name",
-            dataIndex: 'user_name'
+            dataIndex: 'user_name',
+            render: (_, record) => (
+                record.user_name || '--'
+            )
+        },
+        {
+            title: '所在区域',
+            key: 'area_name',
+            dataIndex: 'area_name',
+            render: (_, record) => (
+                record.area_name || '--'
+            )
         },
         {
             title: '隶属商户',
             key: 'merchant_name',
-            dataIndex: 'merchant_name'
+            dataIndex: 'merchant_name',
+            render: (_, record) => (
+                record.merchant_name || '--'
+            )
         },
         {
             title: '用户角色',
             key: 'role_name',
-            dataIndex: 'role_name'
+            dataIndex: 'role_name',
+            render: (_, record) => (
+                record.role_name || '--'
+            )
         },
         {
             title: '描述',
             key: 'desc',
-            dataIndex: 'desc'
+            dataIndex: 'desc',
+            render: (_, record) => (
+                record.desc || '--'
+            )
         },
         {
             title: "创建时间",
             key: "create_time",
-            dataIndex: "create_time"
+            dataIndex: "create_time",
+            render: (_, record) => (
+                record.create_time|| '--'
+            )
         },
         {
             title: "更新时间",
             dataIndex: "update_time",
-            key: "update_time"
+            key: "update_time",
+            render: (_, record) => (
+                record.update_time || '--'
+            )
         },
         {
             title: '操作',
@@ -102,6 +130,7 @@ const UserManage: React.FC = () => {
             const params = {
                 page: paginationProp.current,
                 size: paginationProp.defaultPageSize,
+                area_id: globalUserInfo.area_id,
                 ...exact
             }
             const res = await $request.User.getUserList(params)
@@ -129,30 +158,12 @@ const UserManage: React.FC = () => {
             console.log(error)
         }
     }
-    const getMerchantList = async () => {
-        try {
-			const params = {
-				size: -1
-			}
-			const res = await $request.Merchant.getMerchantList(params)
-			if (res.result) {
-                setMerchantList(res.data.map((item: any) => {
-                    return {
-                        ...item,
-                        value: item.id,
-                        label: item.merchant_name
-                    }
-                }))
-			}
-		} catch (error) {
-			console.log(error)
-		}
-    }
     const delUser = async (id: Number) => {
         try {
             const res = await $request.User.delUser(id)
             if (res.result) {
                 message.success('删除成功')
+                getTableData()
             }
         } catch (error) {
             console.log(error)
@@ -170,7 +181,6 @@ const UserManage: React.FC = () => {
     }
     useEffect(() => {
         getRoleList()
-        getMerchantList()
         getTableData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

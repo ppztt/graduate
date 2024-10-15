@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react"
+import { useOutletContext } from 'react-router-dom'
 import { Space, Table, Button, Select, Input, Spin, message } from "antd"
 import { SearchOutlined } from '@ant-design/icons'
 import type { TableProps } from "antd"
 import $request from '@/api/api'
 import './index.scss'
 const ComplainManage: React.FC = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [globalUserInfo, _] = useOutletContext<any>()
     const [searchValue, setSearchValue] = useState('')
     const [selectValue, setSelectValue] = useState('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -96,6 +99,7 @@ const ComplainManage: React.FC = () => {
             const params = {
                 page: paginationProp.current,
                 size: paginationProp.defaultPageSize,
+                area_id: globalUserInfo.area_id,
                 ...exact
             }
             const res = await $request.Complain.getComplainList(params)

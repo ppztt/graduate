@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { Layout, Dropdown, Space, Button} from 'antd'
-import { DownOutlined, RedoOutlined } from '@ant-design/icons'
+import { Layout, Dropdown, Space } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
 import { Outlet, useNavigate } from "react-router-dom"
 import './index.scss'
 import LocalMenu from "./components/menus"
@@ -9,7 +9,7 @@ import LocalBreadcrumb from "./components/bread"
 const { Header, Sider, Content } = Layout
 
 const Home: React.FC = () => {
-    const [userInfo, setUserInfo] = useState<any>(JSON.parse(sessionStorage.getItem('userInfo') || ''))
+    const [globalUserInfo, setGlobalUserInfo] = useState<any>(JSON.parse(sessionStorage.getItem('userInfo') || ''))
     const navigate = useNavigate()
     const logOut = () => {
         localStorage.removeItem('token')
@@ -21,9 +21,6 @@ const Home: React.FC = () => {
             key: '1',
         }
     ]
-    const fn = () => {
-        setUserInfo(JSON.parse(sessionStorage.getItem('userInfo') || ''))
-    }
     return (
         <Layout id="home">
             <Header>
@@ -33,9 +30,8 @@ const Home: React.FC = () => {
                         <span className="title">维权管理系统</span>
                     </div>
                     <span className="userName">
-                        <Button title="刷新信息" shape="circle" icon={<RedoOutlined />} onClick={fn} />&nbsp;&nbsp;
-                        <span className="avatar" style={{backgroundImage: `url(http://localhost:3000${userInfo.avatar})`}}></span>
-                        {userInfo.user_name}  &nbsp;&nbsp;
+                        <span className="avatar" style={{backgroundImage: `url(http://localhost:3000${globalUserInfo.avatar})`}}></span>
+                        {globalUserInfo.user_name}  &nbsp;&nbsp;
                         <Dropdown menu={{ items }} trigger={['click']}>
                             <span style={{ cursor: 'pointer'}}>
                                 <Space>
@@ -56,7 +52,7 @@ const Home: React.FC = () => {
                     </div>
                     {/* 需要引入Outlet组件，作用跟router-view一样，表明组件在这里显示 */}
                     <div className="routerView">
-                        <Outlet></Outlet>
+                        <Outlet context={[globalUserInfo, setGlobalUserInfo]}></Outlet>
                     </div>
                 </Content>
             </Layout>

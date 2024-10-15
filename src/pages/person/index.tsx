@@ -5,7 +5,6 @@ import EditInfo from "./components/editInfo"
 import './index.scss'
 import $request from '@/api/api'
 const Person: React.FC = () => {
-
     const [isEdit, setIsEdit] = useState(false)
     const [useInfo, setUserInfo] = useState(JSON.parse(sessionStorage.getItem('userInfo') || ''))
     const changeEdit: Function = (): void => {

@@ -26,7 +26,7 @@ const ContentManage: React.FC = () => {
     })
     const columns: TableProps<any>['columns'] = [
         {
-            title: "用户名",
+            title: "标题",
             key: "title",
             dataIndex: 'title'
         },
