@@ -38,6 +38,7 @@ const Login: React.FC = () => {
     return (
         <div id='backway-login' className='login-layout'>
             <div className='login-box'>
+                <div className='title'>校园维权后台管理</div>
                 <Form
                     form={loginInfo}
                     name="login_form"

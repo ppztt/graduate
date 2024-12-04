@@ -9,6 +9,7 @@ import ContentManage from '@/pages/contentManage'
 import ComplainManage from '@/pages/complainManage'
 import DataCenter from "@/pages/dataCenter"
 import ClassificationManage from "@/pages/classificationManage"
+import TestDemo from "@/pages/test"
 // gateway
 import GatewayHome from "@/pages/gateway/home"
 import GatewayLogin from "@/pages/gateway/login"
@@ -73,6 +74,11 @@ const routes = [
                 path: 'person',
                 element: <Person/>,
                 title: '个人中心'
+            },
+            {   
+                path: 'test',
+                element: <TestDemo />,
+                title: '122'
             }
         ]
     },

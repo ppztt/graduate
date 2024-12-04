@@ -103,7 +103,9 @@ const ComplainResult: FC = () => {
         })
         getTableData({ page: current, size: pageSize})
     }
-    const handleCancel = () => { }
+    const handleCancel = () => { 
+        setIsModalOpen(false)
+    }
     const editInfo = (obj: any) => { 
         setDetailInfo(obj)
         setIsModalOpen(true)
