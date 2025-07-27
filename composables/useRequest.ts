@@ -2,6 +2,7 @@ interface RequestOptions {
     baseURL?: string
     headers?: Record<string, string>
     timeout?: number
+    credentials?: string
 }
 
 interface ResponseData<T = any> {
@@ -14,44 +15,29 @@ interface ResponseData<T = any> {
 const defaultOptions: RequestOptions = {
     baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
     timeout: 10000,
+    credentials: 'include'
 }
 
 // 请求拦截器
-const requestInterceptor = (options: any) => {
+const requestInterceptor = ({ options }: { options: any}) => {
+    if (!options.headers.get('Authorization')) {
+        options.headers.set('Authorization', window.localStorage.getItem('token') || '')
+    }
     return options
 }
 
 // 响应拦截器
-const responseInterceptor = (response: any) => {
-
-    // 处理响应数据
-    const data: ResponseData = response._data
-
-    // 根据业务逻辑处理不同状态码
-    if (data.code !== 200) {
-
-        // 处理未登录等特殊情况
-        if (data.code === 401) {
-            navigateTo('/login')
-        }
-
-        return Promise.reject(data)
+const responseInterceptor = ({ response }: { response: any }) => {
+    if (response.headers.get('Authorization')) {
+        window.localStorage.setItem('token', response.headers.get('Authorization'))
     }
+    const data: ResponseData = response._data
 
     return data.data
 }
 
 // 错误处理
 const errorHandler = (error: any) => {
-
-    // 错误提示
-    let errorMessage = '网络错误，请稍后重试'
-
-    if (error.message.includes('timeout')) {
-        errorMessage = '请求超时'
-    } else if (error.response) {
-        errorMessage = `请求失败: ${error.response.status}`
-    }
     return Promise.reject(error)
 }
 

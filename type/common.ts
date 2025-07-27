@@ -1,0 +1,14 @@
+export interface rule{
+    [key: string]: any
+}
+export interface responseType{
+    code?: Number
+    message?: string
+    result?: boolean
+    data?: Array<any> | object
+}
+export interface paginationType {
+    current: number
+    size: number
+    count: number
+}
