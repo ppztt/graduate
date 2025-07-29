@@ -235,18 +235,21 @@
     import * as XLSX from 'xlsx'
     import { columns, statusMap } from './config.js'
     import { onMounted, reactive, ref, getCurrentInstance } from "vue";
-    import { useRoute } from "vue-router";
+    import { useRoute } from "vue-router"
     import { type searchType, type regionType } from "../../../type/company";
     import { type paginationType } from '../../../type/common'
     import { formatDate, downLoad } from '../../../utils/index'
 
-    const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
-    const $success = proxy.$success
-    const $error = proxy.$error
+    definePageMeta({
+        title: '企业管理',
+        name: 'company'
+    })
+    const $request = useApi()
+    const $message = useMessage()
+    const router = useRouter()
 
-    const route = useRoute();
-    const company = ref<any>(null);
+    const route = useRoute()
+    const company = ref<any>(null)
     const paramsMap = {
       '经营者注册名称': 'regName',
       '社会统一信用代码': 'creditCode',
@@ -305,7 +308,7 @@
         ...assignParams
       }
       try {
-        const res = await $api.Company.getCompany(params)
+        const res = await $request.Company.getCompany(params)
         if (res.result) {
           unitDataList.value = [
             ...res.data
@@ -330,9 +333,9 @@
     const addCompany = async (params: Array<Object>) => {
       try {
         const userInfo = JSON.parse(localStorage.getItem('userInfo') || '')
-        const res = await $api.Company.addCompany({account: userInfo.name, ...params})
+        const res = await $request.Company.addCompany({account: userInfo.name, ...params})
         if (res.result) {
-          $success('添加成功')
+          $message('添加成功', 'success')
           getData()
         }
       } catch (error) {
@@ -356,7 +359,7 @@
                   return key === list[0][index]
                 })
                 if (!bol) {
-                  $error('请使用模板文件进行导入！')
+                  $message('请使用模板文件进行导入！', 'error')
                 } else {
                   const key = Object.values(paramsMap)
                   // 将标题行数据去除
@@ -381,7 +384,7 @@
     const exportData = () => {
     }
     const downLoadTemplate = () => {
-      $api.Company.getModelFile({}, {responseType: 'blob'}).then((res: any) => {
+      $request.Company.getModelFile({}, {responseType: 'blob'}).then((res: any) => {
         downLoad(res, 'model.xlsx')
       })
     }
@@ -395,22 +398,22 @@
       getData()
     }
     const openNew = (num: number, row: any) => {
-        // router.push({
-        //   name: 'companyDetails',
-        //   query: {
-        //     id: row.id,
-        //     isEdit: num
-        //   }
-        // })
+        router.push({
+          name: 'companyDetails',
+          query: {
+            id: row.id,
+            isEdit: num
+          }
+        })
     }
     const deleteConsumer = async (id: number) => {
         try {
-          const res = await $api.Company.delCompany(id)
+          const res = await $request.Company.delCompany(id)
           if (res.result) {
-            $success(res.message)
+            $message(res.message, 'success')
             getData()
           } else {
-            $error(res.message)
+            $message(res.message, 'error')
           }
         } catch (error) {
           console.log(error)
@@ -444,7 +447,7 @@
             district: '',
             ...assignParams
         }
-        const res = await $api.Company.getRegion(params)
+        const res = await $request.Company.getRegion(params)
         switch (type) {
             case '':
                 provinceList.value = res.data

@@ -81,12 +81,12 @@
     import { type roleType } from '../../../type/roleManage'
     import { type paginationType } from '../../../type/common'
     import type { FormRules, FormInstance } from 'element-plus'
-    import { menuList } from '../../../json/Home';
-
-    const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
-    const $error = proxy.$error
-    const $success = proxy.$success
+    import { menuList } from '../../../json/Home'
+    definePageMeta({
+        title: '角色管理'
+    })
+    const $request = useApi()
+    const $message = useMessage()
     let isEdit = ref<boolean>(false)
     const form = ref<FormInstance>()
     const pagination = ref<paginationType>({
@@ -139,7 +139,7 @@
                 size: pagination.value.size,
                 page: pagination.value.current
             }
-            const res = await $api.Role.getRoleList(params)
+            const res = await $request.Role.getRoleList(params)
             if (res.result) {
                 roleList.value = res.data
                 pagination.value.count = res.count
@@ -170,11 +170,11 @@
                     return formData.menu.includes(menu.path)
                 })
                 const fn:string = !isEdit.value ? 'addRole' : 'editRole'
-                $api.Role[fn](params).then((res: any) => {
+                $request.Role[fn](params).then((res: any) => {
                     if (res.result) {
-                        $success(`${isEdit.value ? '修改' : '添加'}成功`)
+                        $message(`${isEdit.value ? '修改' : '添加'}成功`, 'success')
                     } else {
-                        $error(`${isEdit.value ? '修改' : '添加'}失败`)
+                        $message(`${isEdit.value ? '修改' : '添加'}失败`, 'error')
                     }
                     dialogVisible.value = false
                     isEdit.value = false
@@ -206,11 +206,11 @@
     }
     const delRole = async (id: number) => {
         try {
-            const res = await $api.Role.delRole(id)
+            const res = await $request.Role.delRole(id)
             if (res.result) {
-                $success(res.message)
+                $message(res.message, 'success')
             } else {
-                $error(res.message)
+                $message(res.message, 'error')
             }
             getData()
         } catch(error) {

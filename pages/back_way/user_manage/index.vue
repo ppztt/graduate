@@ -76,11 +76,11 @@
     import userInfoDialog from './components/userInfoDialog.vue'
     import { formatDate } from '../../../utils';
     import { type paginationType } from '../../../type/common';
-
-    const { proxy }: any = getCurrentInstance() 
-    const $api = proxy.$api
-    const $success = proxy.$success
-    const $error = proxy.$error
+    definePageMeta({
+        title: '用户管理'
+    })
+    const $request = useApi()
+    const $message = useMessage()
 
     const columns = [
             {
@@ -158,7 +158,7 @@
             params.user_name = user_name.value
         }
         try {
-            const res = await $api.User.getData(params)
+            const res = await $request.User.getData(params)
             if (res.result) {
                 userList.value = res.data
                 pagination.value.count = res.count
@@ -179,7 +179,7 @@
     }
     const getRoleList = async () => {
         try {
-            const res = await $api.Role.getRoleList()
+            const res = await $request.Role.getRoleList({})
             if (res.result) {
                 roleList.value = res.data
             }
@@ -189,12 +189,12 @@
     }
     const delUser = async (id: number) => {
         try {
-            const res = await $api.User.delUser(id)
+            const res = await $request.User.delUser(id)
             if (res.result) {
-                $success(res.message)
+                $message(res.message, 'success')
                 getData()
             } else {
-                $error('删除失败')
+                $message('删除失败', 'error')
             }
         } catch(error) {
             console.log(error)
@@ -202,9 +202,9 @@
     }
     
     const resetPassword = (id: number) => {
-        $api.User.resetPassword(id).then((res: any) => {
+        $request.User.resetPassword(id).then((res: any) => {
             if (res.result) {
-                $success('重置成功')
+                $message('重置成功', 'success')
             }
         })
     }

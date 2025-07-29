@@ -131,8 +131,8 @@
 
 <script lang="ts" setup>
     import { reactive, ref, onMounted, getCurrentInstance, watch } from 'vue'
-    import { formType, regionType } from '@//type/company'
-    import { formatDate } from '@/utils/index'
+    import type { formType, regionType } from '../../type/company'
+    import { formatDate } from '../../utils/index'
     import type { FormRules, FormInstance } from 'element-plus'
 
     interface regionParams {
@@ -160,8 +160,7 @@
         }
     })
     const emit = defineEmits(['getMockData', 'confirm'])
-    const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
+    const $request = useApi()
 
     let isShow = ref(false)
     const base = reactive<baseType>({
@@ -251,7 +250,7 @@
             district: '',
             ...assignParams
         }
-        const res = await $api.Company.getRegion(params)
+        const res = await $request.Company.getRegion(params)
         switch (type) {
             case '':
                 provinceList.value = res.data

@@ -33,7 +33,10 @@
     import { useRoute, useRouter } from 'vue-router';
     import type { FormRules, FormInstance } from 'element-plus'
     import { formatDate } from '../../../../utils/index'
-
+    definePageMeta({
+        title: '投诉详情',
+        name: 'complaintDetail'
+    })
     const route = useRoute()
     const router = useRouter()
     const isLocal = computed(() => {
@@ -41,8 +44,8 @@
     })
 
     const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
-    const $success = proxy.$success
+    const $request = useApi()
+    const $message = useMessage()
     const $forceUpdate = proxy.$forceUpdate
     const defaultId = route.query.id
     const props = defineProps({
@@ -105,7 +108,7 @@
                 size: -1,
                 id
             }
-            const res = await $api.Complaint.getList(params)
+            const res = await $request.Complaint.getList(params)
             if (res.result) {
                 baseData.value = res.data[0]
                 $forceUpdate()
@@ -123,9 +126,9 @@
                     result: ruleForm.result,
                     status: 'completed'
                 }
-                $api.Complaint.editComplaint(params).then((res: any) => {
+                $request.Complaint.editComplaint(params).then((res: any) => {
                     if (res.result) {
-                        $success('编辑成功')
+                        $message('编辑成功', 'success')
                         router.push({
                             name: 'complaintMgt'
                         })

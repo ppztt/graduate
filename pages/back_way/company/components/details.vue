@@ -20,15 +20,17 @@
     import { ref, getCurrentInstance, onMounted } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
 
-    const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
+    definePageMeta({
+        title: '企业详情',
+        name: 'companyDetails'
+    })
+    const $request = useApi()
     const route = useRoute()
     const router = useRouter()
-    const $success = proxy.$success
-    const $error = proxy.$error
+    const $message = useMessage()
 
     const isEdit = !!(Number(route.query.isEdit))
-    const id = route.query.id
+    const id: any = route.query.id
     const statusMap: any = {
         normal: '正常'
     }
@@ -85,7 +87,7 @@
     const getData = async () => {
         try {
             const params = {id}
-            const res = await $api.Company.getCompany(params)
+            const res = await $request.Company.getCompany(params)
             if (res.result) {
                 baseData.value = res.data.map((item: any) => {
                     Object.keys(item).forEach((key: any) => {
@@ -100,16 +102,16 @@
     }
     const handleSubmit = async (params: any) => {
         try {
-            const res = await $api.Company.editCompany(id, params)
+            const res = await $request.Company.editCompany(id, params)
             if (res.result) {
-                $success('修改成功')
+                $message('修改成功', 'success')
                 router.go(-1)
             } else {
-                $error('修改失败')
+                $message('修改失败', 'error')
             }
         } catch (error) {
             console.log(error)
-            $error('系统错误')
+            $message('系统错误', 'error')
         }
     }
     onMounted(() => {

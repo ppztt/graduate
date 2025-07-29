@@ -14,9 +14,8 @@
 
     // 工具实例
     const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
-    const $success = proxy.$success
-    const $error = proxy.$error
+    const $request = useApi()
+    const $message = useMessage()
     const emit = defineEmits(['getData'])
     let isShow = ref(false)
 
@@ -24,11 +23,11 @@
         emit('getData')
     }
     const handleSubmit = (params: any) => {
-        $api.Company.addCompany(params).then((res: any) => {
+        $request.Company.addCompany(params).then((res: any) => {
             if (res.result) {
-                $success('添加成功')
+                $message('添加成功', 'success')
             } else {
-                $error(res.message || '添加失败')
+                $message(res.message || '添加失败', 'error')
             }
         })
         isShow.value = false

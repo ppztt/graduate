@@ -59,15 +59,17 @@
 
 <script setup lang="ts">
     import { formatDate } from '../../../utils';
-    import { ref, onMounted, getCurrentInstance } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
     import { type paginationType } from '../../../type/common'
-
+    definePageMeta({
+        title: '投诉管理',
+        name: 'complaintMgt'
+    })
     const route = useRoute()
     const router = useRouter()
-    const { proxy }: any = getCurrentInstance()
-    const $api = proxy.$api
-    const $success = proxy.$success
+    const $request = useApi()
+    const $message = useMessage()
 
     const statusMap: any = {
         handle: '处理中',
@@ -161,7 +163,7 @@
                 size: pagination.value.size,
                 ...assignParams
             }
-            const res = await $api.Complaint.getList(params)
+            const res = await $request.Complaint.getList(params)
             if (res.result) {
                 pagination.value.count = res.count
                 tableData.value = res.data
@@ -181,9 +183,9 @@
     }
     const delComplaint = async (row: any) => {
         try {
-            const res = await $api.Complaint.delComplaint({id: row.id})
+            const res = await $request.Complaint.delComplaint({id: row.id})
             if (res.result) {
-                $success(res.message)
+                $message(res.message, 'success')
                 getData()
             }
         } catch (error) {
